@@ -15,6 +15,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
 using SharpDX;
+using System.Collections.Generic;
 
 namespace Funky
 {
@@ -49,18 +50,23 @@ namespace Funky
         private TextBlock FPS;
 
         public Vector3 Eye;
-
-        private Sphere sphere;
+        
+        private List<GeometricObject> Shapes;
 
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps)
         {
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(MainPage.ImageSize / 2.0f, -60);
+            Eye = new Vector3(MainPage.ImageSize / 2.0f, -10000);
 
-            sphere = new Sphere(50,new Vector3(200,200,0), new Vector3(0,0,0), 
-                new SurfaceType(new Vector3(), new Vector3(), new Vector3()));
+            Shapes = new List<GeometricObject>();
+
+            Shapes.Add(new Sphere(50,new Vector3(150,200,0), new Vector4(255,0,0,255), 
+                new SurfaceType(new Vector3(), new Vector3(), new Vector3())));
+
+            Shapes.Add(new Sphere(75, new Vector3(250, 200, 0), new Vector4(255, 0, 255, 255),
+               new SurfaceType(new Vector3(), new Vector3(), new Vector3())));
 
         }
 
@@ -109,24 +115,29 @@ namespace Funky
             {
                 for (int x = 0; x < width; x++)
                 {
+                    Vector4 color = new Vector4(0, 0, 0, 0);
+                    int hit = 0;
 
-                    double d = sphere.intersection(new Ray(Eye, (new Vector3(x, y, 0)) - Eye));
-                    if (d > 0)
-                    {
-                        result[resultIndex++] = Convert.ToByte(0); // Green value of pixel
-                        result[resultIndex++] = Convert.ToByte(0); // Blue value of pixel
-                        result[resultIndex++] = Convert.ToByte(0); // Red value of pixel
-                        result[resultIndex++] = 255;            // Alpha value of pixel
-                    }
-                    else
+                    foreach (GeometricObject s in Shapes)
                     {
 
-                        // Shade pixel based on probability it's in the set
-                        result[resultIndex++] = Convert.ToByte(255); // Green value of pixel
-                        result[resultIndex++] = Convert.ToByte(255); // Blue value of pixel
-                        result[resultIndex++] = Convert.ToByte(255); // Red value of pixel
-                        result[resultIndex++] = 255;            // Alpha value of pixel
+                        double d = s.intersection(new Ray(Eye, (new Vector3(x, y, 0)) - Eye));
+                        if (d > 0)
+                        {
+
+                            color += s.color;
+                            hit++;
+                        }
+
                     }
+
+                    if(hit > 0) color /= (float)hit;
+
+                    //NOTICE the xyzw dont correspond to RGBA.
+                    result[resultIndex++] = Convert.ToByte(color.Y); // Green value of pixel
+                    result[resultIndex++] = Convert.ToByte(color.Z); // Blue value of pixel
+                    result[resultIndex++] = Convert.ToByte(color.X); // Red value of pixel
+                    result[resultIndex++] = Convert.ToByte(color.W); // Alpha value of pixel
                 }
             }
 

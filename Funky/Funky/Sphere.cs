@@ -14,7 +14,7 @@ namespace Funky
         public float INTERSECTION_TOLERANCE = 10.0f;
 
         //Sphere constructor
-        public Sphere(float r, Vector3 p, Vector3 c, SurfaceType s)
+        public Sphere(float r, Vector3 p, Vector4 c, SurfaceType s)
         {
             radius = r;
 
@@ -30,14 +30,13 @@ namespace Funky
 
         }
 
-        public double intersection(Ray ray)
+        public override double intersection(Ray ray)
         {
             // sRay is the position of the eye/camera, dRay is the direction of the ray.
             // the new start and end of the ray for these calculations.
             Vector3 sRay = new Vector3();
-            Vector3 dRay = new Vector3(ray.Direction.X, 
-                ray.Direction.Y, 
-                ray.Direction.Z);
+            Vector3 dRay = ray.Direction;
+            dRay.Normalize();
 
             //coefficients of quadratic equation, and discriminant
             double a, b, c, d, t;
@@ -45,7 +44,6 @@ namespace Funky
             // transform ray to put sphere centre at origin to make calculations cleaner.
             sRay = ray.Start - position;
 
-            dRay.Normalize();
             /*
             a = Vector3.Dot(ray.Direction, ray.Direction);
             b = 2 * Vector3.Dot(ray.Direction, ray.Start);

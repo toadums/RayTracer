@@ -1,1 +1,1 @@
-C:\Users\paul\Documents\Visual Studio 2012\Projects\Funky\Funky\Funky.csproj;neutral
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\Funky.csproj;neutral

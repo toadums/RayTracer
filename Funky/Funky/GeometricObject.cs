@@ -10,8 +10,15 @@ namespace Funky
     public abstract class GeometricObject
     {
         public SurfaceType surface;
-        public Vector3 color;
+        public Vector4 color;
         public Vector3 position;
         public Vector3 normal;
+
+        public virtual double intersection(Ray ray)
+        {
+            throw new Exception("INTERSECTION NOT IMPLEMENTED!!!");
+        }
+
+
     }
 }
