@@ -9,6 +9,7 @@ namespace Funky
 {
     class Light
     {
-        public Vector3 position; 
+        public Vector3 position;
+        public Vector3 color;
     }
 }

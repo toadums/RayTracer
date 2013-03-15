@@ -62,13 +62,13 @@ namespace Funky
             Eye = new Vector3(MainPage.ImageSize / 2.0f, -10000);
 
             Shapes = new List<GeometricObject>();
-            Lights = new List<Light>(){new Light(){position = new Vector3(300, 200, 200)}};
+            Lights = new List<Light>() { new Light() { position = new Vector3(300, 200, 100), color = new Vector3(255, 255, 255) } };
 
             Shapes.Add(new Sphere(50,new Vector3(50,200,200), new Vector4(255,0,0,255), 
-                new SurfaceType(new Vector3(200,100,100), new Vector3(100,100,100), new Vector3(50,50,50),50)));
+                new SurfaceType(new Vector3(200,100,100), new Vector3(100,40,78), new Vector3(50,50,50), new Vector3(234, 56, 78), 50)));
             /*
             Shapes.Add(new Sphere(75, new Vector3(250, 200, 100), new Vector4(255, 255, 0, 255),
-                new SurfaceType(new Vector3(), new Vector3(), new Vector3(),50)));
+                new SurfaceType(new Vector3(), new Vector3(), new Vector3(),50)));7
             */
 
         }
@@ -100,6 +100,11 @@ namespace Funky
                 // Redraw the WriteableBitmap
                 WB.Invalidate();
                 FPS.Text = "FPS = " + Utility.CalculateFrameRate().ToString();
+
+                foreach (Light l in Lights)
+                {
+                    //l.position.X -= 5;
+                }
 
             }
         }
@@ -135,29 +140,42 @@ namespace Funky
 
         private Vector3 AddRay(Ray ray, int depth)
         {
+            Vector3 curColor = new Vector3(0,0,0);
+            GeometricObject hitShape = null;
             foreach (GeometricObject shape in Shapes)
             {
                 double t = shape.intersection(ray);
 
                 if (t > 0.0)
                 {
+                    hitShape = shape;
+
                     foreach (Light light in Lights)
                     {
-                        if (!isVisible(light, FindPointOnRay(ray, t)))
+
+                        Vector3 hit = FindPointOnRay(ray, t);
+                        Vector3 dir = light.position - hit;
+                        dir.Normalize();
+                        Ray lightRay = new Ray(hit, dir);
+                        Vector3 norm = shape.NormalAt(hit, Eye);
+                        norm.Normalize();
+
+                        if (isVisible(light, hit, lightRay))
                         {
-                            return new Vector3(0, 0, 255);
+                            float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
+                            curColor += lambert * (light.color/255.0f) * (shape.surface.color/255.0f);
+                            curColor *= 255.0f;
                         }
-                        else
-                        {
-                            return new Vector3(255, 0, 0);
-                        }
+
                     }
                 }
             }
-            return new Vector3(0, 255, 0);
+            if (hitShape == null)
+                return new Vector3(255, 255, 0);
+            return new Vector3(Clamp(curColor.X, 0,255), Clamp(curColor.Y, 0,255),Clamp(curColor.Z, 0,255));
         }
 
-        private bool isVisible(Light L, Vector3 hitPoint)
+        private bool isVisible(Light L, Vector3 hitPoint, Ray ray)
         {
             Vector3 objectLight = L.position - hitPoint;
             double rayLength = objectLight.Length();
@@ -165,7 +183,7 @@ namespace Funky
 
             foreach (GeometricObject shape in Shapes)
             {
-                double t = shape.intersection(new Ray(hitPoint, objectLight));
+                double t = shape.intersection(ray);
                 if ( t < rayLength && t != 0.0)
                 {
                     // something is in the way.
@@ -190,7 +208,12 @@ namespace Funky
 
       }
 
-
+        private float Clamp(float val, float min, float max)
+        {
+            if (val < min) return min;
+            else if (val > max) return max;
+            else return val;
+        }
 
 
 
