@@ -224,18 +224,18 @@ namespace Funky
 		        p.W = 0.0f;
 		        return null;
 	        } else if (closest.IsLight){
-                FindPointOnRay(r, bestT);
+                p = FindPointOnRay(r, bestT);
 		        p.W = 0.0f;
 		        return closest;	
 	        }else {
 		        // Return closest point that was hit
-		        FindPointOnRay(r, bestT);
+		        p = FindPointOnRay(r, bestT);
 		        return closest;
 	        }
         }
 
 
-        double visibility(Vector4 p, GeometricObject light, ref Ray visRay, ref double dis){
+        double visibility(Vector4 p, GeometricObject light, ref Ray visRay){
 	
 	        Vector4 newP;
 
@@ -254,9 +254,8 @@ namespace Funky
 			
 			        v = new Vector3(p.X, p.Y, p.Z) - new Vector3(newP.X, newP.Y, newP.Z);			
 
-			        dis =  v.Length();
-			
-			        return 1;		
+			        return v.Length();
+					
 		        }else 
 			        return 0;
         }
@@ -276,8 +275,8 @@ namespace Funky
 			
 			        double dist = distance(p, temp);//TODO CHECK IF BLOCKED;
 			        Ray visRay = new Ray(new Vector3(0), new Vector3(0));
-			        double visD = 0.0;
-			        double vis = visibility(p, temp, ref visRay, ref visD);
+			        
+			        double visD = visibility(p, temp, ref visRay);
 
 			        Vector3 v = p3D-shape.position;
 
@@ -288,7 +287,7 @@ namespace Funky
 			        refVector.Normalize();
 
 			        double preStuff;
-			        if(vis > 0)
+			        if(visD > 0)
 				        preStuff = (1/(1+Math.Pow(dist,2)))*(2/visD);
 			        else 
 				        preStuff = 0;
