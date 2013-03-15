@@ -13,13 +13,15 @@ namespace Funky
         public Vector3 diffuse;
         public Vector3 ambient;
         public Vector3 specular;
+        public double reflectiveness;
         //public Vector3 transmissive;//?
 
-        public SurfaceType(Vector3 d, Vector3 a, Vector3 s)
+        public SurfaceType(Vector3 d, Vector3 a, Vector3 s, double r)
         {
             diffuse = d;
             ambient = a;
             specular = s;
+            reflectiveness = r;
         }
     }
 }

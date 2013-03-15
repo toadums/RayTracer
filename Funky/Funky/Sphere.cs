@@ -11,10 +11,9 @@ namespace Funky
     public class Sphere : GeometricObject
     {
         public float radius;
-        public float INTERSECTION_TOLERANCE = 10.0f;
 
         //Sphere constructor
-        public Sphere(float r, Vector3 p, Vector4 c, SurfaceType s)
+        public Sphere(float r, Vector3 p, Vector4 c, SurfaceType s, bool isLight = false)
         {
             radius = r;
 
@@ -22,6 +21,7 @@ namespace Funky
             position = p;
             color = c;
             surface = s;
+            IsLight = isLight;
         }
 
         //This function draws a sphere.
@@ -80,27 +80,30 @@ namespace Funky
 
         // calculate the normal of the sphere at the point of 
         // intersection, i, from the eye/camera, from.	
-        public Vector3 normal(Vector3 i, Vector3 from)
+        public override Vector3 NormalAt(Vector3 i, Vector3 from)
         {
             Vector3 normal = new Vector3();
-            normal.X = (i.X - position.X) / radius;
-            normal.Y = (i.Y - position.Y) / radius;
-            normal.Z = (i.Z - position.Z) / radius;
+            normal = (i - position) / radius;
 
             Vector3 r = new Vector3();
-            r.X = i.X - from.X;
-            r.Y = i.Y - from.Y;
-            r.Z = i.Z - from.Z;
+            r = i - from;
 
             // if the ray has some portion travelling in the same direction then it is coming from
             // inside the sphere, therefore we must flip the normal.
             if (Vector3.Dot(normal, r) > 0)
             {
-                normal.X *= -1;
-                normal.Y *= -1;
-                normal.Z *= -1;
+                normal *= -1;
             }
+
             return normal;
+
         }
+
+        public override string ToString()
+        {
+            return "Sphere: at:" + this.position.ToString() + "//// color: " + this.color.ToString() + "//// radius: " + this.radius + "//// light: " + this.IsLight.ToString();
+        }
+
+
     }
 }
