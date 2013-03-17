@@ -62,9 +62,10 @@ namespace Funky
             Eye = new Vector3(MainPage.ImageSize / 2.0f, -10000);
 
             Shapes = new List<GeometricObject>();
-            Lights = new List<Light>() { new Light() { position = new Vector3(300, 200, 100), color = new Vector3(255, 255, 255) } };
 
-            Shapes.Add(new Sphere(50,new Vector3(50,200,200), new Vector4(255,0,0,255), 
+            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y / 2.0f, 0), color = new Vector3(255, 255, 255) } };
+
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y/4.0f,new Vector3(MainPage.ImageSize.X/2.0f,MainPage.ImageSize.Y/2.0f,500), new Vector4(255,0,0,255), 
                 new SurfaceType(new Vector3(200,100,100), new Vector3(100,40,78), new Vector3(50,50,50), new Vector3(234, 56, 78), 50)));
             /*
             Shapes.Add(new Sphere(75, new Vector3(250, 200, 100), new Vector4(255, 255, 0, 255),
@@ -109,7 +110,6 @@ namespace Funky
             }
         }
 
-
         private byte[] Trace(int width, int height)
         {
             // 4 bytes required for each pixel
@@ -117,21 +117,37 @@ namespace Funky
             int resultIndex = 0;
 
             Vector3 color = new Vector3(0, 0, 0);
+
+            float numInnerPixels = 3;
+
             // Plot the Mandelbrot set on x-y plane
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Vector3 dir = (new Vector3(x, y, 0)) - Eye;
-                    dir.Normalize();
-                    Ray ray = new Ray(Eye, dir);
-                    color = AddRay(ray, 0);
+
+                    color = new Vector3(0, 0, 0);
+                    for (float innerPixelY = 1.0f / numInnerPixels; innerPixelY <= 1; innerPixelY += 1.0f / numInnerPixels)
+                    {
+                        for (float innerPixelX = 1.0f / numInnerPixels; innerPixelX <= 1; innerPixelX += 1.0f / numInnerPixels)
+                        {
+                            Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f/numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f/numInnerPixels * 2.0f)), 0)) - Eye;
+                            dir.Normalize();
+                            Ray ray = new Ray(Eye, dir);
+                            color += AddRay(ray, 0);
+                        }
+                    }
+
+                    color /= (numInnerPixels * numInnerPixels);
 
                     result[resultIndex++] = Convert.ToByte(color.Z); // Green value of pixel
                     result[resultIndex++] = Convert.ToByte(color.Y); // Blue value of pixel
                     result[resultIndex++] = Convert.ToByte(color.X); // Red value of pixel
                     result[resultIndex++] = Convert.ToByte(255); // Alpha value of pixel
-                     
+
+
+
+
                 }
             }
 
@@ -142,36 +158,43 @@ namespace Funky
         {
             Vector3 curColor = new Vector3(0,0,0);
             GeometricObject hitShape = null;
+            double closestShape = float.MaxValue;
+
             foreach (GeometricObject shape in Shapes)
             {
                 double t = shape.intersection(ray);
 
-                if (t > 0.0)
+                if (t > 0.0 && t < closestShape)
                 {
                     hitShape = shape;
-
-                    foreach (Light light in Lights)
-                    {
-
-                        Vector3 hit = FindPointOnRay(ray, t);
-                        Vector3 dir = light.position - hit;
-                        dir.Normalize();
-                        Ray lightRay = new Ray(hit, dir);
-                        Vector3 norm = shape.NormalAt(hit, Eye);
-                        norm.Normalize();
-
-                        if (isVisible(light, hit, lightRay))
-                        {
-                            float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
-                            curColor += lambert * (light.color/255.0f) * (shape.surface.color/255.0f);
-                            curColor *= 255.0f;
-                        }
-
-                    }
+                    closestShape = t;
+                    
                 }
             }
+
             if (hitShape == null)
                 return new Vector3(255, 255, 0);
+            else
+            {
+                foreach (Light light in Lights)
+                {
+
+                    Vector3 hit = FindPointOnRay(ray, closestShape);
+                    Vector3 dir = light.position - hit;
+                    dir.Normalize();
+                    Ray lightRay = new Ray(hit, dir);
+                    Vector3 norm = hitShape.NormalAt(hit, Eye);
+                    norm.Normalize();
+
+                    if (isVisible(light, hit, lightRay))
+                    {
+                        float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
+                        curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
+                        curColor *= 255.0f;
+                    }
+
+                }
+            }
             return new Vector3(Clamp(curColor.X, 0,255), Clamp(curColor.Y, 0,255),Clamp(curColor.Z, 0,255));
         }
 

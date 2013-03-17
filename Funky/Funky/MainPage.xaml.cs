@@ -30,7 +30,7 @@ namespace Funky
         WriteableBitmap WB;
         RayTracer Tracer;
 
-        public static Vector2 ImageSize = new Vector2(400, 400);
+        public static Vector2 ImageSize = new Vector2(800, 800);
         public static Vector2 WindowSize;
 
         public MainPage()
