@@ -48,11 +48,13 @@ namespace Funky
 
         public WriteableBitmap WB;
         private TextBlock FPS;
-        private int REFLECTION_FACTOR = 1;
+        private int REFLECTION_FACTOR = 3;
         public Vector3 Eye;
         
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
+
+        private const int NumBounces = 2;
 
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps)
         {
@@ -63,10 +65,17 @@ namespace Funky
 
             Shapes = new List<GeometricObject>();
 
-            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y / 2.0f, 0), color = new Vector3(255, 255, 255) } };
+            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X/2.0f, MainPage.ImageSize.Y / 2.0f, 0), color = new Vector3(255, 255, 255) } };
 
             Shapes.Add(new Sphere(MainPage.ImageSize.Y/4.0f,new Vector3(MainPage.ImageSize.X/2.0f,MainPage.ImageSize.Y/2.0f,500), new Vector4(255,0,0,255), 
                 new SurfaceType(new Vector3(200,100,100), new Vector3(100,40,78), new Vector3(50,50,50), new Vector3(234, 56, 78), 50)));
+
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 500), new Vector4(255, 0, 0, 255),
+                new SurfaceType(new Vector3(0, 100, 255), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(0, 0, 255), 50)));
+            
+
+
+
             /*
             Shapes.Add(new Sphere(75, new Vector3(250, 200, 100), new Vector4(255, 255, 0, 255),
                 new SurfaceType(new Vector3(), new Vector3(), new Vector3(),50)));7
@@ -118,7 +127,7 @@ namespace Funky
 
             Vector3 color = new Vector3(0, 0, 0);
 
-            float numInnerPixels = 3;
+            float numInnerPixels = 1;
 
             // Plot the Mandelbrot set on x-y plane
             for (int y = 0; y < height; y++)
@@ -138,7 +147,12 @@ namespace Funky
                         }
                     }
 
+
                     color /= (numInnerPixels * numInnerPixels);
+
+                    if(color.X < 0 || color.Y < 0 || color.Z < 0){
+                        color = new Vector3(255,255,0);
+                    }
 
                     result[resultIndex++] = Convert.ToByte(color.Z); // Green value of pixel
                     result[resultIndex++] = Convert.ToByte(color.Y); // Blue value of pixel
@@ -173,7 +187,8 @@ namespace Funky
             }
 
             if (hitShape == null)
-                return new Vector3(255, 255, 0);
+                if(depth == 0) return new Vector3(-1,-1,-1);
+                else return new Vector3(0, 0, 0);
             else
             {
                 foreach (Light light in Lights)
@@ -195,7 +210,20 @@ namespace Funky
 
                 }
             }
-            return new Vector3(Clamp(curColor.X, 0,255), Clamp(curColor.Y, 0,255),Clamp(curColor.Z, 0,255));
+            if (depth >= NumBounces) return Clamp(curColor);
+            else
+            {
+                Vector3 hit = FindPointOnRay(ray, closestShape);
+                Vector3 norm = hitShape.NormalAt(hit, Eye);
+                norm.Normalize();
+                Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, norm)) * norm;
+                dir.Normalize();
+                return Clamp(curColor + AddRay(new Ray(hit, dir), depth+1));
+
+            }
+
+
+
         }
 
         private bool isVisible(Light L, Vector3 hitPoint, Ray ray)
@@ -238,6 +266,19 @@ namespace Funky
             else return val;
         }
 
+        private Vector3 Clamp(Vector3 v)
+        {
+            if (v.X > 255) v.X = 255;
+            else if (v.X < 0) v.X = 0;
+
+            if (v.Y > 255) v.Y = 255;
+            else if (v.Y < 0) v.Y = 0;
+
+            if (v.Z > 255) v.Z = 255;
+            else if (v.Z < 0) v.Z = 0;
+
+            return v;
+        }
 
 
     }
