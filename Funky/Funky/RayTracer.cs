@@ -67,13 +67,15 @@ namespace Funky
 
             Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X/2.0f, MainPage.ImageSize.Y / 2.0f, 0), color = new Vector3(255, 255, 255) } };
 
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y/4.0f,new Vector3(MainPage.ImageSize.X/2.0f,MainPage.ImageSize.Y/2.0f,500), new Vector4(255,0,0,255), 
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y/4.0f,new Vector3(MainPage.ImageSize.X/2.0f,MainPage.ImageSize.Y/2.0f,2000), new Vector4(255,0,0,255), 
                 new SurfaceType(new Vector3(200,100,100), new Vector3(100,40,78), new Vector3(50,50,50), new Vector3(234, 56, 78), 50)));
 
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 500), new Vector4(255, 0, 0, 255),
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 2000), new Vector4(255, 0, 0, 255),
                 new SurfaceType(new Vector3(0, 100, 255), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(0, 0, 255), 50)));
-            
 
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f - MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 2000), new Vector4(29, 43, 200, 255),
+                new SurfaceType(new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50)));
+            
 
 
             /*
@@ -83,13 +85,13 @@ namespace Funky
 
         }
 
-
+        int i = 0;
         public async void Draw()
         {
 
             int pixelWidth = WB.PixelWidth;
             int pixelHeight = WB.PixelHeight;
-
+            int i = 0;
             while (true)
             {
                 // Asynchronously graph the Mandelbrot set on a background thread
@@ -106,6 +108,11 @@ namespace Funky
                 {
                     await stream.WriteAsync(result, 0, result.Length);
                 }
+                
+                StorageFolder folder = ApplicationData.Current.LocalFolder;
+
+                await WriteableBitmapSaveExtensions.SaveToFile(WB, folder, "img" + i++ + ".jpg");
+
 
                 // Redraw the WriteableBitmap
                 WB.Invalidate();
@@ -115,6 +122,14 @@ namespace Funky
                 {
                     //l.position.X -= 5;
                 }
+                
+                Shapes[1].position.X -= 1;
+                Shapes[1].position.Z += 2;
+                Shapes[2].position.X += 1;
+                Shapes[2].position.Z -= 2;
+
+
+                if (Shapes[2].position.X > MainPage.ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
 
             }
         }
@@ -127,7 +142,7 @@ namespace Funky
 
             Vector3 color = new Vector3(0, 0, 0);
 
-            float numInnerPixels = 1;
+            float numInnerPixels = 20;
 
             // Plot the Mandelbrot set on x-y plane
             for (int y = 0; y < height; y++)

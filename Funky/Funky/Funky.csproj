@@ -114,6 +114,7 @@
     <Compile Include="RayTracer.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="SurfaceType.cs" />
+    <Compile Include="WriteableBitmapSaveExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
