@@ -28,6 +28,7 @@ namespace Funky
             specular = s;
             reflectiveness = r;
             color = c;
+            int i = 0;
         }
     }
 }
