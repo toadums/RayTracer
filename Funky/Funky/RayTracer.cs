@@ -46,12 +46,12 @@ namespace Funky
 
     class RayTracer
     {
-
+        private Perlin perlinTexture;
         public WriteableBitmap WB;
         private TextBlock FPS;
         private int REFLECTION_FACTOR = 3;
         public Vector3 Eye;
-        
+
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
         private List<VirtualLight> VirtualLights;
@@ -60,6 +60,7 @@ namespace Funky
 
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
+            perlinTexture = new Perlin();
             WB = wb;
             FPS = fps;
 
@@ -67,25 +68,25 @@ namespace Funky
 
             Shapes = new List<GeometricObject>();
 
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y/4.0f,new Vector3(MainPage.ImageSize.X/2.0f,MainPage.ImageSize.Y/2.0f,2000), new Vector4(255,0,0,255), 
-                new SurfaceType(new Vector3(200,100,100), new Vector3(100,40,78), new Vector3(50,50,50), new Vector3(234, 56, 78), 50)));
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 4.0f, new Vector3(MainPage.ImageSize.X / 2.0f, MainPage.ImageSize.Y / 2.0f, 2000), new Vector4(255, 0, 0, 255),
+                new SurfaceType(textureType.bump, new Vector3(200, 100, 100), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(234, 56, 78), 0.50)));
 
             Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 2000), new Vector4(255, 0, 0, 255),
-                new SurfaceType(new Vector3(0, 100, 255), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(0, 0, 255), 50)));
+                new SurfaceType(textureType.standard, new Vector3(0, 100, 255), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(0, 0, 255), 0.50)));
 
             Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f - MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 2000), new Vector4(29, 43, 200, 255),
-                new SurfaceType(new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50)));
+                new SurfaceType(textureType.standard, new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 0.50)));
 
-            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y / 2.0f, 0),color = new Vector3(255, 255, 255)}};
+            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y / 2.0f, 0), color = new Vector3(255, 255, 255) } };
 
             VirtualLights = new List<VirtualLight>();
 
-            Random r  = new Random();
+            Random r = new Random();
 
             List<Vector3> virtualLightPositions = new List<Vector3>();
             for (int i = 0; i < NumVirtualLights; i++)
             {
-                virtualLightPositions.Add(new Vector3(r.Next(0,width),r.Next(0,height),0));
+                virtualLightPositions.Add(new Vector3(r.Next(0, width), r.Next(0, height), 0));
             }
 
             foreach (Vector3 VPLPos in virtualLightPositions)
@@ -110,7 +111,7 @@ namespace Funky
                         VPLSurface = VPLSurface
                     });
                 }
-            } 
+            }
         }
 
         int i = 0;
@@ -136,7 +137,7 @@ namespace Funky
                 {
                     await stream.WriteAsync(result, 0, result.Length);
                 }
-                
+
                 StorageFolder folder = ApplicationData.Current.LocalFolder;
 
                 await WriteableBitmapSaveExtensions.SaveToFile(WB, folder, "img" + i++ + ".jpg");
@@ -150,7 +151,7 @@ namespace Funky
                 {
                     //l.position.X -= 5;
                 }
-                
+
                 //Shapes[1].position.X -= 1;
                 //Shapes[1].position.Z += 2;
                 //Shapes[2].position.X += 1;
@@ -185,19 +186,20 @@ namespace Funky
                     {
                         for (float innerPixelX = 1.0f / numInnerPixels; innerPixelX <= 1; innerPixelX += 1.0f / numInnerPixels)
                         {
-                            
-                            Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f/numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f/numInnerPixels * 2.0f)), 0)) - Eye;
+
+                            Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f / numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f / numInnerPixels * 2.0f)), 0)) - Eye;
                             dir.Normalize();
                             Ray ray = new Ray(Eye, dir);
-                            color += AddRay(ray, 0);
+                            color += AddRay(ray, 0, 1);
                         }
                     }
 
 
                     color /= (numInnerPixels * numInnerPixels);
 
-                    if(color.X < 0 || color.Y < 0 || color.Z < 0){
-                        color = new Vector3(255,255,0);
+                    if (color.X < 0 || color.Y < 0 || color.Z < 0)
+                    {
+                        color = new Vector3(255, 255, 0);
                     }
 
                     result[resultIndex++] = Convert.ToByte(color.Z); // Green value of pixel
@@ -210,9 +212,9 @@ namespace Funky
             return result;
         }
 
-        private Vector3 AddRay(Ray ray, int depth)
+        private Vector3 AddRay(Ray ray, int depth, float coef)
         {
-            Vector3 curColor = new Vector3(0,0,0);
+            Vector3 curColor = new Vector3(0, 0, 0);
             GeometricObject hitShape = null;
             double closestShape = float.MaxValue;
             List<VirtualLight> closestSurfaceVPLS = new List<VirtualLight>();
@@ -225,7 +227,7 @@ namespace Funky
                 {
                     hitShape = shape;
                     closestShape = t;
-                    
+
                 }
             }
 
@@ -236,59 +238,61 @@ namespace Funky
                     closestSurfaceVPLS.Add(virtualLight);
                 }
             }
-
+            Vector3 vNormal;
             if (hitShape == null)
-                if(depth == 0) return new Vector3(-1,-1,-1);
+                if (depth == 0) return new Vector3(-1, -1, -1);
                 else return new Vector3(0, 0, 0);
             else
             {
-                foreach (Light light in Lights)
+                Vector3 hp = FindPointOnRay(ray, closestShape);
+                vNormal = hitShape.NormalAt(hp, Eye);
+                if (hitShape.surface.type == textureType.bump)
                 {
-                        Vector3 hit = FindPointOnRay(ray, closestShape);
-                        Vector3 dir = light.position - hit;
-                        dir.Normalize();
-                        Ray lightRay = new Ray(hit, dir);
-                        Vector3 norm = hitShape.NormalAt(hit, Eye);
-                        norm.Normalize();
+                    const double bumpLevel = 0.3;
+                    double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
+                    double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
+                    double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
 
-                        if (isVisible(light, hit, lightRay))
-                        {
-                            float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
-                            curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
-                            curColor *= 255.0f;
-                        }
+                    vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
+                    vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
+                    vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
+
+                    double temp = Vector3.Dot(vNormal, vNormal);
+                    if (temp != 0.0)
+                    {
+                        temp = 1.0 / Math.Sqrt(temp);
+                        vNormal = (float)temp * vNormal;
+                    }
                 }
 
-                List<VirtualLight> intersectList = VirtualLights.Intersect(closestSurfaceVPLS).ToList<VirtualLight>();
-                List<VirtualLight> difference = VirtualLights.ToList<VirtualLight>();
-                difference.RemoveAll(a => intersectList.Contains(a));
 
-                /*foreach (VirtualLight virtualLight in difference)
+                foreach (Light light in Lights)
                 {
                     Vector3 hit = FindPointOnRay(ray, closestShape);
-                    Vector3 dir = virtualLight.position - hit;
+                    Vector3 dir = light.position - hit;
                     dir.Normalize();
                     Ray lightRay = new Ray(hit, dir);
-                    Vector3 norm = hitShape.NormalAt(hit, Eye);
+                    Vector3 norm = vNormal; // 
                     norm.Normalize();
 
-                    if (isVisible(virtualLight, hit, lightRay))
+                    if (isVisible(light, hit, lightRay))
                     {
-                        float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
-                        curColor += lambert * (virtualLight.color*virtualLight.intensity / 255.0f) * (hitShape.surface.color / 255.0f);
+                        float lambert = Vector3.Dot(lightRay.Direction, norm) * coef;
+                        curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
                         curColor *= 255.0f;
                     }
-                }*/
+                }
+
+
             }
             if (depth >= NumBounces) return Clamp(curColor);
             else
             {
                 Vector3 hit = FindPointOnRay(ray, closestShape);
-                Vector3 norm = hitShape.NormalAt(hit, Eye);
-                norm.Normalize();
+                Vector3 norm = vNormal;
                 Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, norm)) * norm;
                 dir.Normalize();
-                return Clamp(curColor + AddRay(new Ray(hit, dir), depth+1));
+                return Clamp(curColor + AddRay(new Ray(hit, dir), depth + 1, coef * 1.0f / (float)hitShape.surface.reflectiveness));
             }
         }
 
@@ -312,7 +316,7 @@ namespace Funky
                 return FindPointOnRay(ray, closestShape);
             }
             else
-                return light.position;   
+                return light.position;
         }
 
         private GeometricObject calcVPLSurface(Ray ray, Light light)
@@ -347,7 +351,7 @@ namespace Funky
             foreach (GeometricObject shape in Shapes)
             {
                 double t = shape.intersection(ray);
-                if ( t < rayLength && t != 0.0)
+                if (t < rayLength && t != 0.0)
                 {
                     // something is in the way.
                     return false;
@@ -379,17 +383,18 @@ namespace Funky
         }
 
         // Find the point along the ray vector where the hit occurs.
-        private Vector3 FindPointOnRay(Ray ray, double t) {
-            
+        private Vector3 FindPointOnRay(Ray ray, double t)
+        {
+
             Vector3 intersect;
-            
+
             intersect.X = (float)(ray.Start.X + t * ray.Direction.X);
             intersect.Y = (float)(ray.Start.Y + t * ray.Direction.Y);
             intersect.Z = (float)(ray.Start.Z + t * ray.Direction.Z);
 
             return intersect;
 
-      }
+        }
 
         private float Clamp(float val, float min, float max)
         {
