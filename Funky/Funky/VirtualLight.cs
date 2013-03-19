@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace Funky
 {
-    class Light
+    class VirtualLight
     {
         public Vector3 position;
         public Vector3 color;
+        public float intensity;
+        public GeometricObject VPLSurface;
     }
 }
 

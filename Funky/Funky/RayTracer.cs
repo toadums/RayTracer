@@ -16,6 +16,7 @@ using Windows.Storage.Streams;
 using Windows.System.Threading;
 using SharpDX;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Funky
 {
@@ -53,10 +54,11 @@ namespace Funky
         
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
-
+        private List<VirtualLight> VirtualLights;
         private const int NumBounces = 2;
+        private const int NumVirtualLights = 100;
 
-        public RayTracer(ref WriteableBitmap wb, ref TextBlock fps)
+        public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
             WB = wb;
             FPS = fps;
@@ -64,8 +66,6 @@ namespace Funky
             Eye = new Vector3(MainPage.ImageSize / 2.0f, -10000);
 
             Shapes = new List<GeometricObject>();
-
-            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X/2.0f, MainPage.ImageSize.Y / 2.0f, 0), color = new Vector3(255, 255, 255) } };
 
             Shapes.Add(new Sphere(MainPage.ImageSize.Y/4.0f,new Vector3(MainPage.ImageSize.X/2.0f,MainPage.ImageSize.Y/2.0f,2000), new Vector4(255,0,0,255), 
                 new SurfaceType(new Vector3(200,100,100), new Vector3(100,40,78), new Vector3(50,50,50), new Vector3(234, 56, 78), 50)));
@@ -75,14 +75,42 @@ namespace Funky
 
             Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f - MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 2000), new Vector4(29, 43, 200, 255),
                 new SurfaceType(new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50)));
-            
 
+            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y / 2.0f, 0),color = new Vector3(255, 255, 255)}};
 
-            /*
-            Shapes.Add(new Sphere(75, new Vector3(250, 200, 100), new Vector4(255, 255, 0, 255),
-                new SurfaceType(new Vector3(), new Vector3(), new Vector3(),50)));7
-            */
+            VirtualLights = new List<VirtualLight>();
 
+            Random r  = new Random();
+
+            List<Vector3> virtualLightPositions = new List<Vector3>();
+            for (int i = 0; i < NumVirtualLights; i++)
+            {
+                virtualLightPositions.Add(new Vector3(r.Next(0,width),r.Next(0,height),0));
+            }
+
+            foreach (Vector3 VPLPos in virtualLightPositions)
+            {
+                Vector3 dir = (new Vector3(VPLPos.X, VPLPos.Y, 0)) - Eye;
+                dir.Normalize();
+                Ray ray = new Ray(Eye, dir);
+                Vector3 newLightPos = calcLightRay(ray, Lights[0]);
+
+                if (newLightPos.X != Lights[0].position.X && newLightPos.Y != Lights[0].position.Y && newLightPos.Z != Lights[0].position.Z)
+                {
+                    GeometricObject VPLSurface = calcVPLSurface(ray, Lights[0]);
+
+                    //GeometricObject testSphere = new Sphere(MainPage.ImageSize.Y / 16.0f, newLightPos, new Vector4(0, 0, 0, 255), new SurfaceType(new Vector3(200, 100, 100), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(255, 255, 255), 50));
+                    //Shapes.Add(testSphere);
+
+                    VirtualLights.Add(new VirtualLight()
+                    {
+                        position = newLightPos,
+                        color = Lights[0].color,
+                        intensity = .1f,
+                        VPLSurface = VPLSurface
+                    });
+                }
+            } 
         }
 
         int i = 0;
@@ -123,10 +151,10 @@ namespace Funky
                     //l.position.X -= 5;
                 }
                 
-                Shapes[1].position.X -= 1;
-                Shapes[1].position.Z += 2;
-                Shapes[2].position.X += 1;
-                Shapes[2].position.Z -= 2;
+                //Shapes[1].position.X -= 1;
+                //Shapes[1].position.Z += 2;
+                //Shapes[2].position.X += 1;
+                //Shapes[2].position.Z -= 2;
 
 
                 if (Shapes[2].position.X > MainPage.ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
@@ -142,7 +170,9 @@ namespace Funky
 
             Vector3 color = new Vector3(0, 0, 0);
 
-            float numInnerPixels = 20;
+            float numInnerPixels = 1;
+
+            Random r = new Random();
 
             // Plot the Mandelbrot set on x-y plane
             for (int y = 0; y < height; y++)
@@ -155,6 +185,7 @@ namespace Funky
                     {
                         for (float innerPixelX = 1.0f / numInnerPixels; innerPixelX <= 1; innerPixelX += 1.0f / numInnerPixels)
                         {
+                            
                             Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f/numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f/numInnerPixels * 2.0f)), 0)) - Eye;
                             dir.Normalize();
                             Ray ray = new Ray(Eye, dir);
@@ -173,10 +204,6 @@ namespace Funky
                     result[resultIndex++] = Convert.ToByte(color.Y); // Blue value of pixel
                     result[resultIndex++] = Convert.ToByte(color.X); // Red value of pixel
                     result[resultIndex++] = Convert.ToByte(255); // Alpha value of pixel
-
-
-
-
                 }
             }
 
@@ -188,6 +215,7 @@ namespace Funky
             Vector3 curColor = new Vector3(0,0,0);
             GeometricObject hitShape = null;
             double closestShape = float.MaxValue;
+            List<VirtualLight> closestSurfaceVPLS = new List<VirtualLight>();
 
             foreach (GeometricObject shape in Shapes)
             {
@@ -201,6 +229,14 @@ namespace Funky
                 }
             }
 
+            foreach (VirtualLight virtualLight in VirtualLights)
+            {
+                if (virtualLight.VPLSurface == hitShape)
+                {
+                    closestSurfaceVPLS.Add(virtualLight);
+                }
+            }
+
             if (hitShape == null)
                 if(depth == 0) return new Vector3(-1,-1,-1);
                 else return new Vector3(0, 0, 0);
@@ -208,22 +244,41 @@ namespace Funky
             {
                 foreach (Light light in Lights)
                 {
+                        Vector3 hit = FindPointOnRay(ray, closestShape);
+                        Vector3 dir = light.position - hit;
+                        dir.Normalize();
+                        Ray lightRay = new Ray(hit, dir);
+                        Vector3 norm = hitShape.NormalAt(hit, Eye);
+                        norm.Normalize();
 
+                        if (isVisible(light, hit, lightRay))
+                        {
+                            float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
+                            curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
+                            curColor *= 255.0f;
+                        }
+                }
+
+                List<VirtualLight> intersectList = VirtualLights.Intersect(closestSurfaceVPLS).ToList<VirtualLight>();
+                List<VirtualLight> difference = VirtualLights.ToList<VirtualLight>();
+                difference.RemoveAll(a => intersectList.Contains(a));
+
+                /*foreach (VirtualLight virtualLight in difference)
+                {
                     Vector3 hit = FindPointOnRay(ray, closestShape);
-                    Vector3 dir = light.position - hit;
+                    Vector3 dir = virtualLight.position - hit;
                     dir.Normalize();
                     Ray lightRay = new Ray(hit, dir);
                     Vector3 norm = hitShape.NormalAt(hit, Eye);
                     norm.Normalize();
 
-                    if (isVisible(light, hit, lightRay))
+                    if (isVisible(virtualLight, hit, lightRay))
                     {
                         float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
-                        curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
+                        curColor += lambert * (virtualLight.color*virtualLight.intensity / 255.0f) * (hitShape.surface.color / 255.0f);
                         curColor *= 255.0f;
                     }
-
-                }
+                }*/
             }
             if (depth >= NumBounces) return Clamp(curColor);
             else
@@ -234,11 +289,53 @@ namespace Funky
                 Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, norm)) * norm;
                 dir.Normalize();
                 return Clamp(curColor + AddRay(new Ray(hit, dir), depth+1));
-
             }
+        }
 
+        private Vector3 calcLightRay(Ray ray, Light light)
+        {
+            GeometricObject hitShape = null;
+            double closestShape = float.MaxValue;
 
+            foreach (GeometricObject shape in Shapes)
+            {
+                double t = shape.intersection(ray);
 
+                if (t > 0.0 && t < closestShape)
+                {
+                    hitShape = shape;
+                    closestShape = t;
+                }
+            }
+            if (hitShape != null)
+            {
+                return FindPointOnRay(ray, closestShape);
+            }
+            else
+                return light.position;   
+        }
+
+        private GeometricObject calcVPLSurface(Ray ray, Light light)
+        {
+            GeometricObject hitShape = null;
+            double closestShape = float.MaxValue;
+
+            foreach (GeometricObject shape in Shapes)
+            {
+                double t = shape.intersection(ray);
+
+                if (t > 0.0 && t < closestShape)
+                {
+                    hitShape = shape;
+                    closestShape = t;
+                }
+            }
+            if (hitShape != null)
+            {
+                return hitShape;
+            }
+            else
+                return null;
         }
 
         private bool isVisible(Light L, Vector3 hitPoint, Ray ray)
@@ -251,6 +348,26 @@ namespace Funky
             {
                 double t = shape.intersection(ray);
                 if ( t < rayLength && t != 0.0)
+                {
+                    // something is in the way.
+                    return false;
+                }
+
+            }
+            // there is nothing in the way.
+            return true;
+        }
+
+        private bool isVisible(VirtualLight L, Vector3 hitPoint, Ray ray)
+        {
+            Vector3 objectLight = L.position - hitPoint;
+            double rayLength = objectLight.Length();
+            objectLight.Normalize();
+
+            foreach (GeometricObject shape in Shapes)
+            {
+                double t = shape.intersection(ray);
+                if (t < rayLength && t != 0.0)
                 {
                     // something is in the way.
                     return false;
@@ -294,7 +411,5 @@ namespace Funky
 
             return v;
         }
-
-
     }
 }

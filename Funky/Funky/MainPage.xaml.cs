@@ -30,7 +30,8 @@ namespace Funky
         WriteableBitmap WB;
         RayTracer Tracer;
 
-        public static Vector2 ImageSize = new Vector2(1600, 1600);
+        public static Vector2 ImageSize = new Vector2(400, 400);
+
         public static Vector2 WindowSize;
 
         public MainPage()
@@ -45,9 +46,15 @@ namespace Funky
 
                 TheShit.Source = WB;
 
-                Tracer = new RayTracer(ref WB, ref FPS);
+
+                Tracer = new RayTracer(ref WB, ref FPS, (int)ImageSize.X, (int)ImageSize.Y);
 
                 Tracer.Draw();
+
+                
+
+                   
+
             };
         }
 
