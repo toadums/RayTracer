@@ -11,7 +11,7 @@ namespace Funky
     public class Sphere : GeometricObject
     {
         public float radius;
-
+        public Vector3 position;
         //Sphere constructor
         public Sphere(float r, Vector3 p, Vector4 c, SurfaceType s, bool isLight = false)
         {

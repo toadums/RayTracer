@@ -54,9 +54,9 @@ namespace Funky
         
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
-        private List<VirtualLight> VirtualLights;
         private const int NumBounces = 2;
-        private const int NumVirtualLights = 100;
+
+        private const int SphereDist = 2000;
 
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
@@ -67,53 +67,58 @@ namespace Funky
 
             Shapes = new List<GeometricObject>();
 
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y/4.0f,new Vector3(MainPage.ImageSize.X/2.0f,MainPage.ImageSize.Y/2.0f,2000), new Vector4(255,0,0,255), 
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 4.0f, new Vector3(MainPage.ImageSize.X / 2.0f, MainPage.ImageSize.Y / 2.0f, SphereDist), new Vector4(255, 0, 0, 255), 
                 new SurfaceType(new Vector3(200,100,100), new Vector3(100,40,78), new Vector3(50,50,50), new Vector3(234, 56, 78), 50)));
 
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 2000), new Vector4(255, 0, 0, 255),
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, SphereDist), new Vector4(255, 0, 0, 255),
                 new SurfaceType(new Vector3(0, 100, 255), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(0, 0, 255), 50)));
 
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f - MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, 2000), new Vector4(29, 43, 200, 255),
+            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f - MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, SphereDist), new Vector4(29, 43, 200, 255),
                 new SurfaceType(new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50)));
+            
+            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X/2.0f, MainPage.ImageSize.Y / 2.0f, 0),color = new Vector3(255, 255, 255)}};
+            /*
+            Shapes.Add(new Triangle(
+                new Vector3(MainPage.ImageSize.X / 2.0f, MainPage.ImageSize.Y / 3.0f, SphereDist - 1000),
+                    new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 4.0f, MainPage.ImageSize.Y / 3.0f + MainPage.ImageSize.Y / 5.0f, SphereDist-1000),
+                new Vector3(MainPage.ImageSize.X / 2.0f - MainPage.ImageSize.X / 4.0f, MainPage.ImageSize.Y / 3.0f + MainPage.ImageSize.Y / 5.0f, SphereDist-1000),
+                    new Vector4(200, 150, 20, 255),
+                new SurfaceType(new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50)));
+            */
+            /*
+            Shapes.Add(new Triangle(
+                new Vector3(0, 0, SphereDist - 500),
+                    new Vector3(MainPage.ImageSize.X, 0, SphereDist - 500),
+                new Vector3(MainPage.ImageSize.X / 2.0f, MainPage.ImageSize.Y / 2.0f, SphereDist + 1000)));
 
-            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y / 2.0f, 0),color = new Vector3(255, 255, 255)}};
 
-            VirtualLights = new List<VirtualLight>();
+            */
+            //Left side 1
+            Shapes.Add(new Triangle(
+               new Vector3(0, 0, 0),
+                   new Vector3(0,MainPage.ImageSize.Y, SphereDist*2),
+               new Vector3( 0,MainPage.ImageSize.Y, 0)));
+            
+            //Left side 2
+            Shapes.Add(new Triangle(
+               new Vector3(0, 0, 0),
+                   new Vector3(0, 0, SphereDist * 2),
+               new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2)));
 
-            Random r  = new Random();
+            //Right side 1
+            Shapes.Add(new Triangle(
+               new Vector3(MainPage.ImageSize.X, 0, 0),
+                   new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2),
+               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, 0)));
 
-            List<Vector3> virtualLightPositions = new List<Vector3>();
-            for (int i = 0; i < NumVirtualLights; i++)
-            {
-                virtualLightPositions.Add(new Vector3(r.Next(0,width),r.Next(0,height),0));
-            }
+            //Right side 2
+            Shapes.Add(new Triangle(
+               new Vector3(MainPage.ImageSize.X, 0, 0),
+                   new Vector3(MainPage.ImageSize.X, 0, SphereDist * 2),
+               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2)));
 
-            foreach (Vector3 VPLPos in virtualLightPositions)
-            {
-                Vector3 dir = (new Vector3(VPLPos.X, VPLPos.Y, 0)) - Eye;
-                dir.Normalize();
-                Ray ray = new Ray(Eye, dir);
-                Vector3 newLightPos = calcLightRay(ray, Lights[0]);
-
-                if (newLightPos.X != Lights[0].position.X && newLightPos.Y != Lights[0].position.Y && newLightPos.Z != Lights[0].position.Z)
-                {
-                    GeometricObject VPLSurface = calcVPLSurface(ray, Lights[0]);
-
-                    //GeometricObject testSphere = new Sphere(MainPage.ImageSize.Y / 16.0f, newLightPos, new Vector4(0, 0, 0, 255), new SurfaceType(new Vector3(200, 100, 100), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(255, 255, 255), 50));
-                    //Shapes.Add(testSphere);
-
-                    VirtualLights.Add(new VirtualLight()
-                    {
-                        position = newLightPos,
-                        color = Lights[0].color,
-                        intensity = .1f,
-                        VPLSurface = VPLSurface
-                    });
-                }
-            } 
         }
 
-        int i = 0;
         public async void Draw()
         {
 
@@ -157,7 +162,7 @@ namespace Funky
                 //Shapes[2].position.Z -= 2;
 
 
-                if (Shapes[2].position.X > MainPage.ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
+               // if (Shapes[2].position.X > MainPage.ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
 
             }
         }
@@ -229,56 +234,34 @@ namespace Funky
                 }
             }
 
-            foreach (VirtualLight virtualLight in VirtualLights)
+            if (hitShape is Triangle)
             {
-                if (virtualLight.VPLSurface == hitShape)
-                {
-                    closestSurfaceVPLS.Add(virtualLight);
-                }
             }
 
             if (hitShape == null)
-                if(depth == 0) return new Vector3(-1,-1,-1);
+            {
+                if (depth == 0) return new Vector3(-1, -1, -1);
                 else return new Vector3(0, 0, 0);
+            }
             else
             {
                 foreach (Light light in Lights)
                 {
-                        Vector3 hit = FindPointOnRay(ray, closestShape);
-                        Vector3 dir = light.position - hit;
-                        dir.Normalize();
-                        Ray lightRay = new Ray(hit, dir);
-                        Vector3 norm = hitShape.NormalAt(hit, Eye);
-                        norm.Normalize();
-
-                        if (isVisible(light, hit, lightRay))
-                        {
-                            float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
-                            curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
-                            curColor *= 255.0f;
-                        }
-                }
-
-                List<VirtualLight> intersectList = VirtualLights.Intersect(closestSurfaceVPLS).ToList<VirtualLight>();
-                List<VirtualLight> difference = VirtualLights.ToList<VirtualLight>();
-                difference.RemoveAll(a => intersectList.Contains(a));
-
-                /*foreach (VirtualLight virtualLight in difference)
-                {
                     Vector3 hit = FindPointOnRay(ray, closestShape);
-                    Vector3 dir = virtualLight.position - hit;
+                    Vector3 dir = light.position - hit;
                     dir.Normalize();
                     Ray lightRay = new Ray(hit, dir);
                     Vector3 norm = hitShape.NormalAt(hit, Eye);
                     norm.Normalize();
 
-                    if (isVisible(virtualLight, hit, lightRay))
+                    if (isVisible(light, hit, lightRay))
                     {
                         float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
-                        curColor += lambert * (virtualLight.color*virtualLight.intensity / 255.0f) * (hitShape.surface.color / 255.0f);
+                        curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
                         curColor *= 255.0f;
                     }
-                }*/
+                }
+
             }
             if (depth >= NumBounces) return Clamp(curColor);
             else
