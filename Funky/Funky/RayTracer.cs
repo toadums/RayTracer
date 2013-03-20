@@ -63,7 +63,7 @@ namespace Funky
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(MainPage.ImageSize / 2.0f, -10000);
+            Eye = new Vector3(MainPage.ImageSize.X/2.0f, MainPage.ImageSize.Y* 0.8f, -10000);
 
             Shapes = new List<GeometricObject>();
 
@@ -77,45 +77,93 @@ namespace Funky
                 new SurfaceType(new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50)));
             
             Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X/2.0f, MainPage.ImageSize.Y / 2.0f, 0),color = new Vector3(255, 255, 255)}};
-            /*
-            Shapes.Add(new Triangle(
-                new Vector3(MainPage.ImageSize.X / 2.0f, MainPage.ImageSize.Y / 3.0f, SphereDist - 1000),
-                    new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 4.0f, MainPage.ImageSize.Y / 3.0f + MainPage.ImageSize.Y / 5.0f, SphereDist-1000),
-                new Vector3(MainPage.ImageSize.X / 2.0f - MainPage.ImageSize.X / 4.0f, MainPage.ImageSize.Y / 3.0f + MainPage.ImageSize.Y / 5.0f, SphereDist-1000),
-                    new Vector4(200, 150, 20, 255),
-                new SurfaceType(new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50)));
-            */
-            /*
-            Shapes.Add(new Triangle(
-                new Vector3(0, 0, SphereDist - 500),
-                    new Vector3(MainPage.ImageSize.X, 0, SphereDist - 500),
-                new Vector3(MainPage.ImageSize.X / 2.0f, MainPage.ImageSize.Y / 2.0f, SphereDist + 1000)));
+           
 
-
-            */
             //Left side 1
             Shapes.Add(new Triangle(
                new Vector3(0, 0, 0),
                    new Vector3(0,MainPage.ImageSize.Y, SphereDist*2),
-               new Vector3( 0,MainPage.ImageSize.Y, 0)));
-            
+               new Vector3(0, MainPage.ImageSize.Y, 0),
+               new Vector4(0, 255, 0, 255),
+               new SurfaceType(new Vector3(0, 0, 255), new Vector3(0, 0, 0), new Vector3(255, 255, 255), new Vector3(0, 255, 255), 0)));
+
+
             //Left side 2
             Shapes.Add(new Triangle(
                new Vector3(0, 0, 0),
                    new Vector3(0, 0, SphereDist * 2),
-               new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2)));
+               new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2),
+               new Vector4(0, 255, 0, 255),
+               new SurfaceType(new Vector3(0, 0, 255), new Vector3(0, 0, 0), new Vector3(255, 255, 255), new Vector3(0, 255, 255), 0)));
 
-            //Right side 1
+
+            //Bottom side 1
             Shapes.Add(new Triangle(
-               new Vector3(MainPage.ImageSize.X, 0, 0),
+               new Vector3(0, MainPage.ImageSize.Y, 0),
+                   new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2),
+               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, 0),
+               new Vector4(0, 255, 0, 255),
+               new SurfaceType(new Vector3(0,255,0), new Vector3(0,255,0), new Vector3(255,255,255), new Vector3(0,255,0), 0)));
+
+
+            //Bottom side 2
+            Shapes.Add(new Triangle(
+               new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2),
                    new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2),
-               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, 0)));
+               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, 0),
+               new Vector4(0, 255, 0, 255),
+               new SurfaceType(new Vector3(0, 255, 0), new Vector3(0, 255, 0), new Vector3(255, 255, 255), new Vector3(0, 255, 0), 0)));
 
-            //Right side 2
+
+            
+            //Back side 1
+            Shapes.Add(new Triangle(
+               new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2),
+                   new Vector3(0, 0, SphereDist * 2),
+               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2),
+                              new Vector4(255, 0, 0, 255),
+               new SurfaceType(new Vector3(255, 0, 0), new Vector3(255, 0, 0), new Vector3(255, 0, 0), new Vector3(255, 0, 0), 0)));
+
+            //Back side 2
+            Shapes.Add(new Triangle(
+               new Vector3(0, 0, SphereDist * 2),
+                   new Vector3(MainPage.ImageSize.X, 0, SphereDist * 2),
+               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2),
+                              new Vector4(255, 0, 0, 255),
+               new SurfaceType(new Vector3(255, 0, 0), new Vector3(255, 0, 0), new Vector3(255, 0, 0), new Vector3(255, 0, 0), 0)));
+
+
+            //Top side 1
+            Shapes.Add(new Triangle(
+               new Vector3(0, 0, 0),
+               new Vector3(MainPage.ImageSize.X, 0, 0),
+                   new Vector3(0, 0, SphereDist * 2),
+                              new Vector4(0, 0, 255, 255),
+               new SurfaceType(new Vector3(0, 0, 255), new Vector3(0, 0, 255), new Vector3(0, 0, 255), new Vector3(0, 0, 255), 0)));
+            
+            //top side 2
+            Shapes.Add(new Triangle(
+               new Vector3(0, 0, SphereDist * 2),
+                   new Vector3(MainPage.ImageSize.X, 0, 0),
+               new Vector3(MainPage.ImageSize.X, 0, SphereDist * 2),
+                            new Vector4(0, 0, 255, 255),
+               new SurfaceType(new Vector3(0, 0, 255), new Vector3(0, 0, 255), new Vector3(0, 0, 255), new Vector3(0, 0, 255), 0)));
+
+            //Top side 1
             Shapes.Add(new Triangle(
                new Vector3(MainPage.ImageSize.X, 0, 0),
+               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, 0),
+                   new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.X, SphereDist * 2),
+                              new Vector4(255, 0, 255, 255),
+               new SurfaceType(new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), 0)));
+
+            //Top side 1
+            Shapes.Add(new Triangle(
                    new Vector3(MainPage.ImageSize.X, 0, SphereDist * 2),
-               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2)));
+               new Vector3(MainPage.ImageSize.X, 0, 0),
+                   new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.X, SphereDist * 2),
+                              new Vector4(255, 0, 255, 255),
+               new SurfaceType(new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), 0)));
 
         }
 
@@ -161,7 +209,6 @@ namespace Funky
                 //Shapes[2].position.X += 1;
                 //Shapes[2].position.Z -= 2;
 
-
                // if (Shapes[2].position.X > MainPage.ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
 
             }
@@ -175,9 +222,11 @@ namespace Funky
 
             Vector3 color = new Vector3(0, 0, 0);
 
-            float numInnerPixels = 1;
+            float numInnerPixels = 3;
 
             Random r = new Random();
+
+            int pixels = height * width;
 
             // Plot the Mandelbrot set on x-y plane
             for (int y = 0; y < height; y++)
@@ -194,7 +243,7 @@ namespace Funky
                             Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f/numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f/numInnerPixels * 2.0f)), 0)) - Eye;
                             dir.Normalize();
                             Ray ray = new Ray(Eye, dir);
-                            color += AddRay(ray, 0);
+                            color += AddRay(ray, 0, 1.0f);
                         }
                     }
 
@@ -209,13 +258,19 @@ namespace Funky
                     result[resultIndex++] = Convert.ToByte(color.Y); // Blue value of pixel
                     result[resultIndex++] = Convert.ToByte(color.X); // Red value of pixel
                     result[resultIndex++] = Convert.ToByte(255); // Alpha value of pixel
+
+                    if (x % 40 == 0 && y % 40 == 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine((float)x / (float)width * 100.0f);
+                    }
+
                 }
             }
 
             return result;
         }
 
-        private Vector3 AddRay(Ray ray, int depth)
+        private Vector3 AddRay(Ray ray, int depth, float coef)
         {
             Vector3 curColor = new Vector3(0,0,0);
             GeometricObject hitShape = null;
@@ -232,10 +287,6 @@ namespace Funky
                     closestShape = t;
                     
                 }
-            }
-
-            if (hitShape is Triangle)
-            {
             }
 
             if (hitShape == null)
@@ -256,7 +307,7 @@ namespace Funky
 
                     if (isVisible(light, hit, lightRay))
                     {
-                        float lambert = Vector3.Dot(lightRay.Direction, norm) * 1.0f;
+                        float lambert = Vector3.Dot(lightRay.Direction, norm) * coef;
                         curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
                         curColor *= 255.0f;
                     }
@@ -271,7 +322,7 @@ namespace Funky
                 norm.Normalize();
                 Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, norm)) * norm;
                 dir.Normalize();
-                return Clamp(curColor + AddRay(new Ray(hit, dir), depth+1));
+                return Clamp(curColor + AddRay(new Ray(hit, dir), depth+1, coef * ((float)hitShape.surface.reflectiveness/100.0f)));
             }
         }
 

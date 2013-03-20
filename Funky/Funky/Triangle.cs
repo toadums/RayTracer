@@ -19,6 +19,13 @@ namespace Funky
             this.surface = st;
         }
 
+        public Triangle(Vector3 a, Vector3 b, Vector3 c, Vector4 color)
+        {
+            Vertices = new Vector3[] { a, b, c };
+            this.color = color;
+            this.surface = new SurfaceType(new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), 100);
+        }
+
         public Triangle(Vector3 a, Vector3 b, Vector3 c)
         {
             Vertices = new Vector3[] { a, b, c };
