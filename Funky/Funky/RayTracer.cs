@@ -46,12 +46,11 @@ namespace Funky
 
     class RayTracer
     {
-
+        private Perlin perlinTexture;
         public WriteableBitmap WB;
         private TextBlock FPS;
-        private int REFLECTION_FACTOR = 3;
         public Vector3 Eye;
-        
+
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
         private const int NumBounces = 2;
@@ -60,6 +59,7 @@ namespace Funky
 
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
+            perlinTexture = new Perlin();
             WB = wb;
             FPS = fps;
 
@@ -165,6 +165,7 @@ namespace Funky
                               new Vector4(255, 0, 255, 255),
                new SurfaceType(new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), 0)));
 
+
         }
 
         public async void Draw()
@@ -189,7 +190,7 @@ namespace Funky
                 {
                     await stream.WriteAsync(result, 0, result.Length);
                 }
-                
+
                 StorageFolder folder = ApplicationData.Current.LocalFolder;
 
                 await WriteableBitmapSaveExtensions.SaveToFile(WB, folder, "img" + i++ + ".jpg");
@@ -203,7 +204,7 @@ namespace Funky
                 {
                     //l.position.X -= 5;
                 }
-                
+
                 //Shapes[1].position.X -= 1;
                 //Shapes[1].position.Z += 2;
                 //Shapes[2].position.X += 1;
@@ -224,11 +225,7 @@ namespace Funky
 
             float numInnerPixels = 3;
 
-            Random r = new Random();
-
-            int pixels = height * width;
-
-            // Plot the Mandelbrot set on x-y plane
+          
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -239,31 +236,27 @@ namespace Funky
                     {
                         for (float innerPixelX = 1.0f / numInnerPixels; innerPixelX <= 1; innerPixelX += 1.0f / numInnerPixels)
                         {
-                            
-                            Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f/numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f/numInnerPixels * 2.0f)), 0)) - Eye;
+                            Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f / numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f / numInnerPixels * 2.0f)), 0)) - Eye;
                             dir.Normalize();
                             Ray ray = new Ray(Eye, dir);
+
                             color += AddRay(ray, 0, 1.0f);
+
                         }
                     }
 
-
                     color /= (numInnerPixels * numInnerPixels);
 
-                    if(color.X < 0 || color.Y < 0 || color.Z < 0){
-                        color = new Vector3(255,255,0);
-                    }
-
-                    result[resultIndex++] = Convert.ToByte(color.Z); // Green value of pixel
-                    result[resultIndex++] = Convert.ToByte(color.Y); // Blue value of pixel
-                    result[resultIndex++] = Convert.ToByte(color.X); // Red value of pixel
-                    result[resultIndex++] = Convert.ToByte(255); // Alpha value of pixel
-
-                    if (x % 40 == 0 && y % 40 == 0)
+                    if (color.X < 0 || color.Y < 0 || color.Z < 0)
                     {
-                        System.Diagnostics.Debug.WriteLine((float)x / (float)width * 100.0f);
+                        color = new Vector3(255, 255, 0);
                     }
 
+                    result[resultIndex++] = Convert.ToByte(color.Z);    // Green value of pixel
+                    result[resultIndex++] = Convert.ToByte(color.Y);    // Blue value of pixel
+                    result[resultIndex++] = Convert.ToByte(color.X);    // Red value of pixel
+                    result[resultIndex++] = Convert.ToByte(255);        // Alpha value of pixel
+                
                 }
             }
 
@@ -272,42 +265,61 @@ namespace Funky
 
         private Vector3 AddRay(Ray ray, int depth, float coef)
         {
-            Vector3 curColor = new Vector3(0,0,0);
+            Vector3 curColor = new Vector3(0, 0, 0);
             GeometricObject hitShape = null;
-            double closestShape = float.MaxValue;
-            List<VirtualLight> closestSurfaceVPLS = new List<VirtualLight>();
+            double hitShapeDist = float.MaxValue;
+            Vector3 vNormal;
+            Vector3 hp;
 
             foreach (GeometricObject shape in Shapes)
             {
                 double t = shape.intersection(ray);
 
-                if (t > 0.0 && t < closestShape)
+                if (t > 0.0 && t < hitShapeDist)
                 {
                     hitShape = shape;
-                    closestShape = t;
-                    
-                }
-            }
+                    hitShapeDist = t;
 
             if (hitShape == null)
-            {
                 if (depth == 0) return new Vector3(-1, -1, -1);
                 else return new Vector3(0, 0, 0);
             }
             else
             {
+                hp = FindPointOnRay(ray, hitShapeDist);
+                vNormal = hitShape.NormalAt(hp, Eye);
+                vNormal.Normalize();
+                if (hitShape.surface.type == textureType.bump)
+                {
+
+                    const double bumpLevel = 0.5;
+                    double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
+                    double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
+                    double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
+
+                    vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
+                    vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
+                    vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
+
+                    double temp = Vector3.Dot(vNormal, vNormal);
+                    if (temp != 0.0)
+                    {
+                        temp = 1.0 / Math.Sqrt(temp);
+                        vNormal = (float)temp * vNormal;
+                    }
+                }
+
+
                 foreach (Light light in Lights)
                 {
-                    Vector3 hit = FindPointOnRay(ray, closestShape);
-                    Vector3 dir = light.position - hit;
-                    dir.Normalize();
-                    Ray lightRay = new Ray(hit, dir);
-                    Vector3 norm = hitShape.NormalAt(hit, Eye);
-                    norm.Normalize();
+                    Vector3 dir = light.position - hp;
 
-                    if (isVisible(light, hit, lightRay))
+                    dir.Normalize();
+                    Ray lightRay = new Ray(hp, dir);
+
+                    if (isVisible(light, hp, lightRay))
                     {
-                        float lambert = Vector3.Dot(lightRay.Direction, norm) * coef;
+                        float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
                         curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
                         curColor *= 255.0f;
                     }
@@ -317,10 +329,7 @@ namespace Funky
             if (depth >= NumBounces) return Clamp(curColor);
             else
             {
-                Vector3 hit = FindPointOnRay(ray, closestShape);
-                Vector3 norm = hitShape.NormalAt(hit, Eye);
-                norm.Normalize();
-                Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, norm)) * norm;
+                Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
                 dir.Normalize();
                 return Clamp(curColor + AddRay(new Ray(hit, dir), depth+1, coef * ((float)hitShape.surface.reflectiveness/100.0f)));
             }
@@ -346,53 +355,10 @@ namespace Funky
                 return FindPointOnRay(ray, closestShape);
             }
             else
-                return light.position;   
-        }
-
-        private GeometricObject calcVPLSurface(Ray ray, Light light)
-        {
-            GeometricObject hitShape = null;
-            double closestShape = float.MaxValue;
-
-            foreach (GeometricObject shape in Shapes)
-            {
-                double t = shape.intersection(ray);
-
-                if (t > 0.0 && t < closestShape)
-                {
-                    hitShape = shape;
-                    closestShape = t;
-                }
-            }
-            if (hitShape != null)
-            {
-                return hitShape;
-            }
-            else
-                return null;
+                return light.position;
         }
 
         private bool isVisible(Light L, Vector3 hitPoint, Ray ray)
-        {
-            Vector3 objectLight = L.position - hitPoint;
-            double rayLength = objectLight.Length();
-            objectLight.Normalize();
-
-            foreach (GeometricObject shape in Shapes)
-            {
-                double t = shape.intersection(ray);
-                if ( t < rayLength && t != 0.0)
-                {
-                    // something is in the way.
-                    return false;
-                }
-
-            }
-            // there is nothing in the way.
-            return true;
-        }
-
-        private bool isVisible(VirtualLight L, Vector3 hitPoint, Ray ray)
         {
             Vector3 objectLight = L.position - hitPoint;
             double rayLength = objectLight.Length();
@@ -413,17 +379,18 @@ namespace Funky
         }
 
         // Find the point along the ray vector where the hit occurs.
-        private Vector3 FindPointOnRay(Ray ray, double t) {
-            
+        private Vector3 FindPointOnRay(Ray ray, double t)
+        {
+
             Vector3 intersect;
-            
+
             intersect.X = (float)(ray.Start.X + t * ray.Direction.X);
             intersect.Y = (float)(ray.Start.Y + t * ray.Direction.Y);
             intersect.Z = (float)(ray.Start.Z + t * ray.Direction.Z);
 
             return intersect;
 
-      }
+        }
 
         private float Clamp(float val, float min, float max)
         {
