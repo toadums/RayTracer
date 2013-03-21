@@ -103,6 +103,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DrawGeometry.cs" />
+    <Compile Include="Perlin.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="VirtualLight.cs" />
     <Compile Include="GeometricObject.cs" />

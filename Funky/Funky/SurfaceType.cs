@@ -17,8 +17,10 @@ namespace Funky
         public Vector3 specular;
         public Vector3 color;
         public double reflectiveness;
+        public float SpecExponent;
 
         //public Vector3 transmissive;
+
 
         public SurfaceType(textureType t, Vector3 d, Vector3 a, Vector3 s, Vector3 c, double r)
         {
@@ -28,6 +30,18 @@ namespace Funky
             specular = s;
             reflectiveness = r;
             color = c;
+            SpecExponent = 0;
+        }
+
+        public SurfaceType(textureType t, Vector3 d, Vector3 a, Vector3 s, Vector3 c, double r, float se)
+        {
+            type = t;
+            diffuse = d;
+            ambient = a;
+            specular = s;
+            reflectiveness = r;
+            color = c;
+            SpecExponent = se;
         }
     }
 }

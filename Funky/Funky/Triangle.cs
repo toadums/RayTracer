@@ -23,14 +23,14 @@ namespace Funky
         {
             Vertices = new Vector3[] { a, b, c };
             this.color = color;
-            this.surface = new SurfaceType(new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), 100);
+            this.surface = new SurfaceType(textureType.standard, new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), 100);
         }
 
         public Triangle(Vector3 a, Vector3 b, Vector3 c)
         {
             Vertices = new Vector3[] { a, b, c };
             this.color = new Vector4(255,255,255, 255);
-            this.surface = new SurfaceType(new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), 100);
+            this.surface = new SurfaceType(textureType.standard, new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), 100);
             
         }
 
