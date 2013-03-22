@@ -48,8 +48,8 @@ namespace Funky
     {
         private const int SphereDist = 2000;
         private const float numInnerPixels = 1;
-        private const int NumBounces = 2;
-        public static Vector2 ImageSize = new Vector2(400);
+        private const int NumBounces = 3;
+        public static Vector2 ImageSize = new Vector2(1600);
 
         private Perlin perlinTexture;
         public WriteableBitmap WB;
@@ -165,7 +165,15 @@ namespace Funky
             return result;
         }
 
-        private Vector3 AddRay(Ray ray, int depth, float coef)
+        /// <summary>
+        /// Traces rays and calculates their color. Recursive method
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <param name="depth"></param>
+        /// <param name="coef"></param>
+        /// <param name="specOn">if at any point an object is not specular, all successive recursive calls will ignore specular</param>
+        /// <returns></returns>
+        private Vector3 AddRay(Ray ray, int depth, float coef, bool specOn = true)
         {
             Vector3 curColor = new Vector3(0, 0, 0);
             GeometricObject hitShape = null;
@@ -196,7 +204,7 @@ namespace Funky
                 if (hitShape.surface.type == textureType.bump)
                 {
 
-                    const double bumpLevel = 0.5;
+                    const double bumpLevel = 0.3;
                     double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
                     double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
                     double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
@@ -208,7 +216,7 @@ namespace Funky
                     double temp = Vector3.Dot(vNormal, vNormal);
                     if (temp != 0.0)
                     {
-                        temp = 1.0 / Math.Sqrt(temp);
+                        temp = 1.0 / Math.Sqrt(temp);   
                         vNormal = (float)temp * vNormal;
                     }
                 }
@@ -223,8 +231,23 @@ namespace Funky
 
                     if (isVisible(light, hp, lightRay))
                     {
+                        //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                         float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
                         curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
+
+                        if (hitShape.surface.SpecExponent != 0 && specOn)
+                        {
+                            Vector3 dir2 = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
+                            dir2.Normalize();
+                            //TODO might want to divide specular amount by SpecExponent/100 * something to decrease amount of specular. Because even if specularExponent = 1, it is still going to be madd specular
+                            curColor += hitShape.surface.specular / 255.0f * (float)Math.Pow(Math.Max(Vector3.Dot(lightRay.Direction, dir2), 0), hitShape.surface.SpecExponent);
+
+                        }
+                        else if(specOn)
+                        {
+                            specOn = false;
+                        }
+
                         curColor *= 255.0f;
                     }
                 }
@@ -235,7 +258,7 @@ namespace Funky
             {
                 Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
                 dir.Normalize();
-                return Clamp(curColor + AddRay(new Ray(hp, dir), depth+1, coef * ((float)hitShape.surface.reflectiveness/100.0f)));
+                return Clamp(curColor + AddRay(new Ray(hp, dir), depth+1, coef * ((float)hitShape.surface.reflectiveness/100.0f), specOn));
             }
         }
 

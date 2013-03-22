@@ -22,11 +22,11 @@
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.exe">
       <PackagePath>SharpDX Toolkit WinRT %28XAML%29.exe</PackagePath>
-      <Modified>2013-03-21T21:16:40.876</Modified>
+      <Modified>2013-03-22T17:38:44.854</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.pdb">
       <PackagePath>SharpDX Toolkit WinRT %28XAML%29.pdb</PackagePath>
-      <Modified>2013-03-21T21:16:40.859</Modified>
+      <Modified>2013-03-22T17:38:44.837</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.D3DCompiler.dll">
       <PackagePath>SharpDX.D3DCompiler.dll</PackagePath>
