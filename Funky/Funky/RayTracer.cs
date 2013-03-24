@@ -47,7 +47,7 @@ namespace Funky
     partial class RayTracer
     {
         private const int SphereDist = 2000;
-        private const float numInnerPixels = 3;
+        private const float numInnerPixels = 1;
         private const int NumBounces = 3;
         public static Vector2 ImageSize = new Vector2(1600);
 
@@ -291,24 +291,41 @@ namespace Funky
         private float isVisible(Light L, Vector3 hitPoint, Ray ray)
         {
 
-            Vector3 v = new Vector3(0);
+            float retVal = 0.0f;
+            float offset = 5;
 
-            Vector3 objectLight = L.position - hitPoint;
-            double rayLength = objectLight.Length();
-            objectLight.Normalize();
+            float numSegments = 207;
+            float numAlongSegment = 2;
 
-            foreach (GeometricObject shape in Shapes)
+            Vector3 dir;
+            Ray r;
+/*
+            if (FindClosestShape(ray) == L)
             {
-                double t = shape.intersection(ray);
-                if (t < rayLength && t != 0.0)
-                {
-                    // something is in the way.
-                    return 0.0f;
-                }
-
+                retVal += 1.0f/numRays;
             }
-            // there is nothing in the way.
-            return 0.1f;
+*/
+            for (float i = 0; i <= 2 * Math.PI; i += 2.0f * (float)Math.PI / (numSegments))
+            {
+
+                for (float j = 1; j <= numAlongSegment; j++)
+                {
+
+                    dir = L.position + new Vector3((float)Math.Cos(i) * L.radius / j + offset * (Math.Cos(i) < 0 ? 1 : -1), (float)Math.Sin(i) * L.radius / j + offset * (Math.Sin(i) < 0 ? 1 : -1), 0);
+                    dir = dir - ray.Start;
+                    dir.Normalize();
+
+                    r = new Ray(ray.Start, dir);
+
+                    if (FindClosestShape(r) == L)
+                        retVal += 1.0f / (numSegments * numAlongSegment);
+
+                }
+            }
+
+            return Clamp(retVal, 0, 1);
+            
+
         }
 
         private GeometricObject FindClosestShape(Ray r)
@@ -319,7 +336,7 @@ namespace Funky
             foreach (GeometricObject shape in Shapes)
             {
                 double t=shape.intersection(r);
-                if (shape.intersection(r) < dist)
+                if (t < dist && t > 0.0f)
                 {
                     closest = shape;
                     dist = t;
