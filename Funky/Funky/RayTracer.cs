@@ -47,7 +47,7 @@ namespace Funky
     partial class RayTracer
     {
         private const int SphereDist = 2000;
-        private const float numInnerPixels = 1;
+        private const float numInnerPixels = 3;
         private const int NumBounces = 3;
         public static Vector2 ImageSize = new Vector2(1600);
 
@@ -66,7 +66,7 @@ namespace Funky
             FPS = fps;
 
             Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y* 0.8f, -10000);
-
+                
             //Drawing Objects is done in the DrawGeometry.cs file
             DrawGeometry();
         }
@@ -229,7 +229,9 @@ namespace Funky
                     dir.Normalize();
                     Ray lightRay = new Ray(hp, dir);
 
-                    if (isVisible(light, hp, lightRay))
+                    float LightValue = 0.0f;
+
+                    if ((LightValue = isVisible(light, hp, lightRay)) > 0)
                     {
                         //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                         float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
@@ -247,8 +249,9 @@ namespace Funky
                         {
                             specOn = false;
                         }
-
+                        curColor *= LightValue;
                         curColor *= 255.0f;
+                       
                     }
                 }
 
@@ -285,8 +288,11 @@ namespace Funky
                 return light.position;
         }
 
-        private bool isVisible(Light L, Vector3 hitPoint, Ray ray)
+        private float isVisible(Light L, Vector3 hitPoint, Ray ray)
         {
+
+            Vector3 v = new Vector3(0);
+
             Vector3 objectLight = L.position - hitPoint;
             double rayLength = objectLight.Length();
             objectLight.Normalize();
@@ -297,12 +303,43 @@ namespace Funky
                 if (t < rayLength && t != 0.0)
                 {
                     // something is in the way.
-                    return false;
+                    return 0.0f;
                 }
 
             }
             // there is nothing in the way.
-            return true;
+            return 0.1f;
+        }
+
+        private GeometricObject FindClosestShape(Ray r)
+        {
+            double dist = float.MaxValue;
+            GeometricObject closest = null;
+
+            foreach (GeometricObject shape in Shapes)
+            {
+                double t=shape.intersection(r);
+                if (shape.intersection(r) < dist)
+                {
+                    closest = shape;
+                    dist = t;
+                }
+
+            }
+
+            foreach (Light light in Lights)
+            {
+                double t = light.intersection(r);
+                if (light.intersection(r) < dist)
+                {
+                    closest = light;
+                    dist = t;
+                }
+
+            }
+
+            return closest;
+
         }
 
         // Find the point along the ray vector where the hit occurs.
