@@ -280,58 +280,60 @@ namespace Funky
                     hitShape = shape;
                     hitShapeDist = t;
 
-            if (hitShape == null)
-                if (depth == 0) return new Vector3(-1, -1, -1);
-                else return new Vector3(0, 0, 0);
-            }
-            else
-            {
-                hp = FindPointOnRay(ray, hitShapeDist);
-                vNormal = hitShape.NormalAt(hp, Eye);
-                vNormal.Normalize();
-                if (hitShape.surface.type == textureType.bump)
-                {
-
-                    const double bumpLevel = 0.5;
-                    double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
-                    double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
-                    double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
-
-                    vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
-                    vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
-                    vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
-
-                    double temp = Vector3.Dot(vNormal, vNormal);
-                    if (temp != 0.0)
-                    {
-                        temp = 1.0 / Math.Sqrt(temp);
-                        vNormal = (float)temp * vNormal;
-                    }
+                    if (hitShape == null)
+                        if (depth == 0) return new Vector3(-1, -1, -1);
+                        else return new Vector3(0, 0, 0);
                 }
-
-
-                foreach (Light light in Lights)
+                else
                 {
-                    Vector3 dir = light.position - hp;
+                    hp = FindPointOnRay(ray, hitShapeDist);
+                    vNormal = hitShape.NormalAt(hp, Eye);
+                    vNormal.Normalize();
+                    if (hitShape.surface.type == textureType.bump)
+                    {
 
+                        const double bumpLevel = 0.5;
+                        double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
+                        double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
+                        double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
+
+                        vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
+                        vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
+                        vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
+
+                        double temp = Vector3.Dot(vNormal, vNormal);
+                        if (temp != 0.0)
+                        {
+                            temp = 1.0 / Math.Sqrt(temp);
+                            vNormal = (float)temp * vNormal;
+                        }
+                    }
+
+
+                    foreach (Light light in Lights)
+                    {
+                        Vector3 dir = light.position - hp;
+
+                        dir.Normalize();
+                        Ray lightRay = new Ray(hp, dir);
+
+                        if (isVisible(light, hp, lightRay))
+                        {
+                            float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
+                            curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
+                            curColor *= 255.0f;
+                        }
+                    }
+
+                }
+                if (depth >= NumBounces) return Clamp(curColor);
+                else
+                {
+                    Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
                     dir.Normalize();
-                    Ray lightRay = new Ray(hp, dir);
+                    return Clamp(curColor + AddRay(new Ray(hit, dir), depth + 1, coef * ((float)hitShape.surface.reflectiveness / 100.0f)));
 
-                    if (isVisible(light, hp, lightRay))
-                    {
-                        float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
-                        curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
-                        curColor *= 255.0f;
-                    }
                 }
-
-            }
-            if (depth >= NumBounces) return Clamp(curColor);
-            else
-            {
-                Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
-                dir.Normalize();
-                return Clamp(curColor + AddRay(new Ray(hit, dir), depth+1, coef * ((float)hitShape.surface.reflectiveness/100.0f)));
             }
         }
 
