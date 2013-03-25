@@ -22,7 +22,9 @@ namespace Funky
                 new SurfaceType(textureType.standard, new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50, 0)));
             
             Lights = new List<Light>() { new Light() { position = new Vector3(ImageSize.X/2.0f, ImageSize.Y / 2.0f, 0),color = new Vector3(255, 255, 255), radius=ImageSize.X / 20}};
-           
+
+            VirtualLights = new List<Light>() { new Light() { position = new Vector3(ImageSize.X / 2.0f, 25 + ImageSize.Y / 2.0f, 0), color = new Vector3(255, 255, 255), radius = ImageSize.X / 20 } };
+
             DrawBox();
         }
 

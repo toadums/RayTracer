@@ -58,6 +58,7 @@ namespace Funky
 
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
+        private List<Light> VirtualLights;
 
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
@@ -70,7 +71,9 @@ namespace Funky
             //Drawing Objects is done in the DrawGeometry.cs file
             DrawGeometry();
 
-            spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
+            //spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
+
+            Lights.AddRange(VirtualLights);
         }
 
         public async void Draw()
