@@ -49,7 +49,7 @@ namespace Funky
         private const int SphereDist = 2000;
         private const float numInnerPixels = 1;
         private const int NumBounces = 3;
-        public static Vector2 ImageSize = new Vector2(1600);
+        public static Vector2 ImageSize = new Vector2(200);
 
         private Perlin perlinTexture;
         public WriteableBitmap WB;
@@ -69,6 +69,8 @@ namespace Funky
                 
             //Drawing Objects is done in the DrawGeometry.cs file
             DrawGeometry();
+
+            spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
         }
 
         public async void Draw()
@@ -294,7 +296,7 @@ namespace Funky
             float retVal = 0.0f;
             float offset = 5;
 
-            float numSegments = 207;
+            float numSegments = 9;
             float numAlongSegment = 2;
 
             Vector3 dir;
