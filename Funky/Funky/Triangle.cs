@@ -12,28 +12,23 @@ namespace Funky
 
         Vector3[] Vertices;
 
-        public Triangle(Vector3 a, Vector3 b, Vector3 c, Vector4 color, SurfaceType st)
+        public Triangle()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor for a triangle. Points must be added in a clockwise manner
+        /// </summary>
+        /// <param name="a">first point</param>
+        /// <param name="b">second point</param>
+        /// <param name="c">third point</param>
+        /// <param name="st">the surface texture (color, texture, etc)</param>
+        public Triangle(Vector3 a, Vector3 b, Vector3 c, SurfaceType st)
         {
             Vertices = new Vector3[] { a, b, c };
-            this.color = color;
             this.surface = st;
         }
-
-        public Triangle(Vector3 a, Vector3 b, Vector3 c, Vector4 color)
-        {
-            Vertices = new Vector3[] { a, b, c };
-            this.color = color;
-            this.surface = new SurfaceType(textureType.standard, new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), 100);
-        }
-
-        public Triangle(Vector3 a, Vector3 b, Vector3 c)
-        {
-            Vertices = new Vector3[] { a, b, c };
-            this.color = new Vector4(255,255,255, 255);
-            this.surface = new SurfaceType(textureType.standard, new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), new Vector3(255, 255, 255), 100);
-            
-        }
-
 
         public override double intersection(Ray ray)
         {
@@ -66,6 +61,7 @@ namespace Funky
             if (v < 0.0 || u + v > 1.0) return 0.0;
 
             float t = f * Vector3.Dot(e2, q);
+
             return t;
         }
 
@@ -77,7 +73,7 @@ namespace Funky
 
         public override string ToString()
         {
-            return "Triangle: color: " + this.color.ToString() + "//// radius: ";
+            return "Triangle";
         }
 
     }

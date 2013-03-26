@@ -10,9 +10,6 @@ namespace Funky
     public abstract class GeometricObject
     {
         public SurfaceType surface;
-        public Vector4 color;
-        public Vector3 normal;
-        public bool IsLight;
         public static float INTERSECTION_TOLERANCE = 10.0f;
 
         public virtual double intersection(Ray ray)

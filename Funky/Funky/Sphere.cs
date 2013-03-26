@@ -10,8 +10,15 @@ namespace Funky
 
     public class Sphere : GeometricObject
     {
+
         public float radius;
         public Vector3 position;
+
+        public Sphere()
+        {
+
+        }
+        
         //Sphere constructor
         public Sphere(float r, Vector3 p, Vector4 c, SurfaceType s, bool isLight = false)
         {
@@ -19,9 +26,7 @@ namespace Funky
 
             // position is the point at the centre of the sphere.
             position = p;
-            color = c;
             surface = s;
-            IsLight = isLight;
         }
 
         //This function draws a sphere.
@@ -101,7 +106,7 @@ namespace Funky
 
         public override string ToString()
         {
-            return "Sphere: at:" + this.position.ToString() + "//// color: " + this.color.ToString() + "//// radius: " + this.radius + "//// light: " + this.IsLight.ToString();
+            return "Sphere: at:" + this.position.ToString() + "////  radius: " + this.radius + "//// ";
         }
 
 
