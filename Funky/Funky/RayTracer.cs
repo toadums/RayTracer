@@ -44,8 +44,13 @@ namespace Funky
     }
 
 
-    class RayTracer
+    partial class RayTracer
     {
+        private const int SphereDist = 2000;
+        private const float numInnerPixels = 1;
+        private const int NumBounces = 3;
+        public static Vector2 ImageSize = new Vector2(200);
+
         private Perlin perlinTexture;
         public WriteableBitmap WB;
         private TextBlock FPS;
@@ -53,9 +58,7 @@ namespace Funky
 
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
-        private const int NumBounces = 2;
-
-        private const int SphereDist = 2000;
+        private List<Light> VirtualLights;
 
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
@@ -63,109 +66,14 @@ namespace Funky
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(MainPage.ImageSize.X/2.0f, MainPage.ImageSize.Y* 0.8f, -10000);
+            Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y* 0.8f, -10000);
+                
+            //Drawing Objects is done in the DrawGeometry.cs file
+            DrawGeometry();
 
-            Shapes = new List<GeometricObject>();
+            //spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
 
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 4.0f, new Vector3(MainPage.ImageSize.X / 2.0f, MainPage.ImageSize.Y / 2.0f, SphereDist), new Vector4(255, 0, 0, 255), 
-                new SurfaceType(new Vector3(200,100,100), new Vector3(100,40,78), new Vector3(50,50,50), new Vector3(234, 56, 78), 50)));
-
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f + MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, SphereDist), new Vector4(255, 0, 0, 255),
-                new SurfaceType(new Vector3(0, 100, 255), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(0, 0, 255), 50)));
-
-            Shapes.Add(new Sphere(MainPage.ImageSize.Y / 15.0f, new Vector3(MainPage.ImageSize.X / 2.0f - MainPage.ImageSize.X / 3.0f, MainPage.ImageSize.Y / 2.0f, SphereDist), new Vector4(29, 43, 200, 255),
-                new SurfaceType(new Vector3(33, 212, 43), new Vector3(100, 40, 78), new Vector3(50, 50, 50), new Vector3(12, 235, 92), 50)));
-            
-            Lights = new List<Light>() { new Light() { position = new Vector3(MainPage.ImageSize.X/2.0f, MainPage.ImageSize.Y / 2.0f, 0),color = new Vector3(255, 255, 255)}};
-           
-
-            //Left side 1
-            Shapes.Add(new Triangle(
-               new Vector3(0, 0, 0),
-                   new Vector3(0,MainPage.ImageSize.Y, SphereDist*2),
-               new Vector3(0, MainPage.ImageSize.Y, 0),
-               new Vector4(0, 255, 0, 255),
-               new SurfaceType(new Vector3(0, 0, 255), new Vector3(0, 0, 0), new Vector3(255, 255, 255), new Vector3(0, 255, 255), 0)));
-
-
-            //Left side 2
-            Shapes.Add(new Triangle(
-               new Vector3(0, 0, 0),
-                   new Vector3(0, 0, SphereDist * 2),
-               new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2),
-               new Vector4(0, 255, 0, 255),
-               new SurfaceType(new Vector3(0, 0, 255), new Vector3(0, 0, 0), new Vector3(255, 255, 255), new Vector3(0, 255, 255), 0)));
-
-
-            //Bottom side 1
-            Shapes.Add(new Triangle(
-               new Vector3(0, MainPage.ImageSize.Y, 0),
-                   new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2),
-               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, 0),
-               new Vector4(0, 255, 0, 255),
-               new SurfaceType(new Vector3(0,255,0), new Vector3(0,255,0), new Vector3(255,255,255), new Vector3(0,255,0), 0)));
-
-
-            //Bottom side 2
-            Shapes.Add(new Triangle(
-               new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2),
-                   new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2),
-               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, 0),
-               new Vector4(0, 255, 0, 255),
-               new SurfaceType(new Vector3(0, 255, 0), new Vector3(0, 255, 0), new Vector3(255, 255, 255), new Vector3(0, 255, 0), 0)));
-
-
-            
-            //Back side 1
-            Shapes.Add(new Triangle(
-               new Vector3(0, MainPage.ImageSize.Y, SphereDist * 2),
-                   new Vector3(0, 0, SphereDist * 2),
-               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2),
-                              new Vector4(255, 0, 0, 255),
-               new SurfaceType(new Vector3(255, 0, 0), new Vector3(255, 0, 0), new Vector3(255, 0, 0), new Vector3(255, 0, 0), 0)));
-
-            //Back side 2
-            Shapes.Add(new Triangle(
-               new Vector3(0, 0, SphereDist * 2),
-                   new Vector3(MainPage.ImageSize.X, 0, SphereDist * 2),
-               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, SphereDist * 2),
-                              new Vector4(255, 0, 0, 255),
-               new SurfaceType(new Vector3(255, 0, 0), new Vector3(255, 0, 0), new Vector3(255, 0, 0), new Vector3(255, 0, 0), 0)));
-
-
-            //Top side 1
-            Shapes.Add(new Triangle(
-               new Vector3(0, 0, 0),
-               new Vector3(MainPage.ImageSize.X, 0, 0),
-                   new Vector3(0, 0, SphereDist * 2),
-                              new Vector4(0, 0, 255, 255),
-               new SurfaceType(new Vector3(0, 0, 255), new Vector3(0, 0, 255), new Vector3(0, 0, 255), new Vector3(0, 0, 255), 0)));
-            
-            //top side 2
-            Shapes.Add(new Triangle(
-               new Vector3(0, 0, SphereDist * 2),
-                   new Vector3(MainPage.ImageSize.X, 0, 0),
-               new Vector3(MainPage.ImageSize.X, 0, SphereDist * 2),
-                            new Vector4(0, 0, 255, 255),
-               new SurfaceType(new Vector3(0, 0, 255), new Vector3(0, 0, 255), new Vector3(0, 0, 255), new Vector3(0, 0, 255), 0)));
-
-            //Top side 1
-            Shapes.Add(new Triangle(
-               new Vector3(MainPage.ImageSize.X, 0, 0),
-               new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.Y, 0),
-                   new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.X, SphereDist * 2),
-                              new Vector4(255, 0, 255, 255),
-               new SurfaceType(new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), 0)));
-
-            //Top side 1
-            Shapes.Add(new Triangle(
-                   new Vector3(MainPage.ImageSize.X, 0, SphereDist * 2),
-               new Vector3(MainPage.ImageSize.X, 0, 0),
-                   new Vector3(MainPage.ImageSize.X, MainPage.ImageSize.X, SphereDist * 2),
-                              new Vector4(255, 0, 255, 255),
-               new SurfaceType(new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), new Vector3(255, 0, 255), 0)));
-
-
+            Lights.AddRange(VirtualLights);
         }
 
         public async void Draw()
@@ -210,7 +118,7 @@ namespace Funky
                 //Shapes[2].position.X += 1;
                 //Shapes[2].position.Z -= 2;
 
-               // if (Shapes[2].position.X > MainPage.ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
+               // if (Shapes[2].position.X > ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
 
             }
         }
@@ -223,7 +131,6 @@ namespace Funky
 
             Vector3 color = new Vector3(0, 0, 0);
 
-            float numInnerPixels = 3;
 
           
             for (int y = 0; y < height; y++)
@@ -263,7 +170,15 @@ namespace Funky
             return result;
         }
 
-        private Vector3 AddRay(Ray ray, int depth, float coef)
+        /// <summary>
+        /// Traces rays and calculates their color. Recursive method
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <param name="depth"></param>
+        /// <param name="coef"></param>
+        /// <param name="specOn">if at any point an object is not specular, all successive recursive calls will ignore specular</param>
+        /// <returns></returns>
+        private Vector3 AddRay(Ray ray, int depth, float coef, bool specOn = true)
         {
             Vector3 curColor = new Vector3(0, 0, 0);
             GeometricObject hitShape = null;
@@ -279,59 +194,81 @@ namespace Funky
                 {
                     hitShape = shape;
                     hitShapeDist = t;
-
-                    if (hitShape == null)
-                        if (depth == 0) return new Vector3(-1, -1, -1);
-                        else return new Vector3(0, 0, 0);
                 }
-                else
+            }
+
+            if (hitShape == null)
+            {
+                if (depth == 0) return new Vector3(-1, -1, -1);
+                else return new Vector3(0, 0, 0);
+            }
+            else
+            {
+                hp = FindPointOnRay(ray, hitShapeDist);
+                vNormal = hitShape.NormalAt(hp, Eye);
+                vNormal.Normalize();
+                if (hitShape.surface.type == textureType.bump)
                 {
-                    hp = FindPointOnRay(ray, hitShapeDist);
-                    vNormal = hitShape.NormalAt(hp, Eye);
-                    vNormal.Normalize();
-                    if (hitShape.surface.type == textureType.bump)
+
+                    const double bumpLevel = 0.3;
+                    double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
+                    double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
+                    double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
+
+                    vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
+                    vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
+                    vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
+
+
+                    double temp = Vector3.Dot(vNormal, vNormal);
+                    if (temp != 0.0)
                     {
-
-                        const double bumpLevel = 0.5;
-                        double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
-                        double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
-                        double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
-
-                        vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
-                        vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
-                        vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
-
-                        double temp = Vector3.Dot(vNormal, vNormal);
-                        if (temp != 0.0)
-                        {
-                            temp = 1.0 / Math.Sqrt(temp);
-                            vNormal = (float)temp * vNormal;
-                        }
+                        temp = 1.0 / Math.Sqrt(temp);
+                        vNormal = (float)temp * vNormal;
                     }
+
 
 
                     foreach (Light light in Lights)
                     {
                         Vector3 dir = light.position - hp;
-
+                        float dist = dir.Length();
                         dir.Normalize();
                         Ray lightRay = new Ray(hp, dir);
 
-                        if (isVisible(light, hp, lightRay))
+                        float LightValue = 0.0f;
+
+                        if ((LightValue = isVisible(light, hp, lightRay)) > 0)
                         {
+                            //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                             float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
                             curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
-                            curColor *= 255.0f;
-                        }
-                    }
 
-                }
-                if (depth >= NumBounces) return Clamp(curColor);
-                else
-                {
-                    Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
-                    dir.Normalize();
-                    return Clamp(curColor + AddRay(new Ray(hit, dir), depth + 1, coef * ((float)hitShape.surface.reflectiveness / 100.0f)));
+                            if (hitShape.surface.SpecExponent != 0 && specOn)
+                            {
+                                Vector3 dir2 = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
+                                dir2.Normalize();
+                                //TODO might want to divide specular amount by SpecExponent/100 * something to decrease amount of specular. Because even if specularExponent = 1, it is still going to be madd specular
+                                curColor += hitShape.surface.specular / 255.0f * (float)Math.Pow(Math.Max(Vector3.Dot(lightRay.Direction, dir2), 0), hitShape.surface.SpecExponent);
+
+                            }
+                            else if (specOn)
+                            {
+                                specOn = false;
+                            }
+                            curColor *= LightValue;
+                            curColor *= 255.0f;
+
+                        }
+
+                    }
+                    if (depth >= NumBounces) return Clamp(curColor);
+                    else
+                    {
+                        Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
+                        dir.Normalize();
+                        return Clamp(curColor + AddRay(new Ray(hit, dir), depth + 1, coef * ((float)hitShape.surface.reflectiveness / 100.0f)));
+                    }
 
                 }
             }
@@ -360,24 +297,75 @@ namespace Funky
                 return light.position;
         }
 
-        private bool isVisible(Light L, Vector3 hitPoint, Ray ray)
+        private float isVisible(Light L, Vector3 hitPoint, Ray ray)
         {
-            Vector3 objectLight = L.position - hitPoint;
-            double rayLength = objectLight.Length();
-            objectLight.Normalize();
+
+            float retVal = 0.0f;
+            float offset = 5;
+
+            float numSegments = 9;
+            float numAlongSegment = 2;
+
+            Vector3 dir;
+            Ray r;
+/*
+            if (FindClosestShape(ray) == L)
+            {
+                retVal += 1.0f/numRays;
+            }
+*/
+            for (float i = 0; i <= 2 * Math.PI; i += 2.0f * (float)Math.PI / (numSegments))
+            {
+
+                for (float j = 1; j <= numAlongSegment; j++)
+                {
+
+                    dir = L.position + new Vector3((float)Math.Cos(i) * L.radius / j + offset * (Math.Cos(i) < 0 ? 1 : -1), (float)Math.Sin(i) * L.radius / j + offset * (Math.Sin(i) < 0 ? 1 : -1), 0);
+                    dir = dir - ray.Start;
+                    dir.Normalize();
+
+                    r = new Ray(ray.Start, dir);
+
+                    if (FindClosestShape(r) == L)
+                        retVal += 1.0f / (numSegments * numAlongSegment);
+
+                }
+            }
+
+            return Clamp(retVal, 0, 1);
+            
+
+        }
+
+        private GeometricObject FindClosestShape(Ray r)
+        {
+            double dist = float.MaxValue;
+            GeometricObject closest = null;
 
             foreach (GeometricObject shape in Shapes)
             {
-                double t = shape.intersection(ray);
-                if (t < rayLength && t != 0.0)
+                double t=shape.intersection(r);
+                if (t < dist && t > 0.0f)
                 {
-                    // something is in the way.
-                    return false;
+                    closest = shape;
+                    dist = t;
                 }
 
             }
-            // there is nothing in the way.
-            return true;
+
+            foreach (Light light in Lights)
+            {
+                double t = light.intersection(r);
+                if (light.intersection(r) < dist)
+                {
+                    closest = light;
+                    dist = t;
+                }
+
+            }
+
+            return closest;
+
         }
 
         // Find the point along the ray vector where the hit occurs.

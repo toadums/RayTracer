@@ -103,8 +103,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DrawGeometry.cs" />
+    <Compile Include="Perlin.cs" />
     <Compile Include="Triangle.cs" />
-    <Compile Include="VirtualLight.cs" />
     <Compile Include="GeometricObject.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -116,6 +117,7 @@
     <Compile Include="RayTracer.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="SurfaceType.cs" />
+    <Compile Include="VirtualLightRayTrace.cs" />
     <Compile Include="WriteableBitmapSaveExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
