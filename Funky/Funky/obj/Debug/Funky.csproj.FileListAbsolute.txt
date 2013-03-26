@@ -282,5 +282,3 @@ C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.Toolkit.
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.XAudio2.pri.xml
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.XInput.pri.xml
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\ProjectArchitectures.txt
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX\priconfig.xml.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX\Resources.resfiles.intermediate

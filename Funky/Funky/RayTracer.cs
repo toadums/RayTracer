@@ -46,6 +46,9 @@ namespace Funky
 
     partial class RayTracer
     {
+
+        private const bool UseVPL = false;
+
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 1;
@@ -74,9 +77,13 @@ namespace Funky
             //Drawing Objects is done in the DrawGeometry.cs file
             DrawGeometry();
             VirtualLights = new List<Light>();
-            spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
 
-            Lights.AddRange(VirtualLights);
+            if (UseVPL)
+            {
+                spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
+
+                Lights.AddRange(VirtualLights);
+            }
         }
 
         public async void Draw()
@@ -258,8 +265,7 @@ namespace Funky
                         //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                         float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
                         curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
-
-                                          
+                       
                         if (hitShape.surface.SpecExponent != 0 && specOn)
                         {
                             Vector3 temp = light.position - hp;
