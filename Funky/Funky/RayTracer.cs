@@ -70,9 +70,9 @@ namespace Funky
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y* 0.8f, -10000);
+            Eye = new Vector3(ImageSize.X / 2.0f, ImageSize.Y * 0.8f, -10000);
 
-            System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path);      
+            System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path);
 
             //Drawing Objects is done in the DrawGeometry.cs file
             DrawGeometry();
@@ -107,13 +107,12 @@ namespace Funky
                 using (Stream stream = WB.PixelBuffer.AsStream())
                 {
                     await stream.WriteAsync(result, 0, result.Length);
+
                 }
 
                 StorageFolder folder = ApplicationData.Current.LocalFolder;
 
-
                 await WriteableBitmapSaveExtensions.SaveToFile(WB, folder, "img" + i++ + ".jpg");
-
 
                 // Redraw the WriteableBitmap
                 WB.Invalidate();
@@ -123,11 +122,11 @@ namespace Funky
                 {
                     //l.position.X -= 5;
                 }
-/*
-                Lights[0].position.X += 5;
-                Lights[0].position.Y += 5;
-                Lights[0].position.Z += 50;
-                */
+                /*
+                                Lights[0].position.X += 5;
+                                Lights[0].position.Y += 5;
+                                Lights[0].position.Z += 50;
+                                */
                 //if (Shapes[2].position.X > ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
 
             }
@@ -184,7 +183,7 @@ namespace Funky
                     {
 
                         s = s.Replace("= ", " =");
-                        
+
                         System.Diagnostics.Debug.WriteLine(s);
                     }
 
@@ -222,7 +221,8 @@ namespace Funky
                 }
             }
 
-            if (hitShape == null) {
+            if (hitShape == null)
+            {
                 if (depth == 0) return new Vector3(-1, -1, -1);
                 else return new Vector3(0, 0, 0);
             }
@@ -246,7 +246,7 @@ namespace Funky
                     double temp = Vector3.Dot(vNormal, vNormal);
                     if (temp != 0.0)
                     {
-                        temp = 1.0 / Math.Sqrt(temp);   
+                        temp = 1.0 / Math.Sqrt(temp);
                         vNormal = (float)temp * vNormal;
                     }
                 }
@@ -265,7 +265,7 @@ namespace Funky
                         //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                         float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
                         curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
-                       
+
                         if (hitShape.surface.SpecExponent != 0 && specOn)
                         {
                             Vector3 temp = light.position - hp;
@@ -275,7 +275,7 @@ namespace Funky
                             curColor += hitShape.surface.specular / 255.0f * (float)Math.Pow(Math.Max(Vector3.Dot(ray.Direction, dir2), 0), hitShape.surface.SpecExponent);
 
                         }
-                        else if(specOn)
+                        else if (specOn)
                         {
                             specOn = false;
                         }
@@ -293,7 +293,7 @@ namespace Funky
                 //calculate reflections
                 Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
                 dir.Normalize();
-                curColor += AddRay(new Ray(hp, dir), depth+1, coef * ((float)hitShape.surface.reflectiveness/100.0f), specOn, rIndex);
+                curColor += AddRay(new Ray(hp, dir), depth + 1, coef * ((float)hitShape.surface.reflectiveness / 100.0f), specOn, rIndex);
 
                 //calculate refractionz
                 float refr = hitShape.surface.Refraction;
@@ -308,9 +308,9 @@ namespace Funky
                     {
                         Vector3 T = (n * ray.Direction) + (n * cosI - (float)Math.Sqrt(cosT2)) * vNormal;
 
-                       Vector3 temp = AddRay(new Ray(hp + T * 0.001f, T), depth + 1, coef, specOn, refrIndex);
+                        Vector3 temp = AddRay(new Ray(hp + T * 0.001f, T), depth + 1, coef, specOn, refrIndex);
 
-                        Vector3 absorbance = hitShape.surface.color/255.0f * 0.15f * 10;
+                        Vector3 absorbance = hitShape.surface.color / 255.0f * 0.15f * 10;
                         Vector3 transparency = new Vector3((float)Math.Exp(absorbance.X), (float)Math.Exp(absorbance.Y), (float)Math.Exp(absorbance.Z));
 
                         curColor += temp * transparency;
@@ -360,12 +360,12 @@ namespace Funky
 
             Vector3 dir;
             Ray r;
-/*
-            if (FindClosestShape(ray) == L)
-            {
-                retVal += 1.0f/numRays;
-            }
-*/
+            /*
+                        if (FindClosestShape(ray) == L)
+                        {
+                            retVal += 1.0f/numRays;
+                        }
+            */
             for (float i = 0; i <= 2 * Math.PI; i += 2.0f * (float)Math.PI / (numSegments))
             {
 
@@ -385,7 +385,7 @@ namespace Funky
             }
 
             return Clamp(retVal, 0, 1);
-            
+
 
         }
 
@@ -396,7 +396,7 @@ namespace Funky
 
             foreach (GeometricObject shape in Shapes)
             {
-                double t=shape.intersection(r);
+                double t = shape.intersection(r);
                 if (t < dist && t > 0.0f)
                 {
                     closest = shape;
