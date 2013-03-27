@@ -49,7 +49,7 @@ namespace Funky
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 1;
-        public static Vector2 ImageSize = new Vector2(1600);
+        public static Vector2 ImageSize = new Vector2(400);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -115,7 +115,7 @@ namespace Funky
                 WB.Invalidate();
                 FPS.Text = "FPS = " + Utility.CalculateFrameRate().ToString();
 
-                foreach (Light l in Lights)
+                /*foreach (Light l in Lights)
                 {
                     l.position.X -= 5;
                 }
@@ -127,7 +127,7 @@ namespace Funky
                 ((Sphere)Shapes[2]).position.X += 5;
                 ((Sphere)Shapes[2]).position.Z -= 50;
                 
-                if (((Sphere)Shapes[2]).position.X > ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
+                if (((Sphere)Shapes[2]).position.X > ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;*/
 
             }
         }
@@ -336,7 +336,7 @@ namespace Funky
 
         }
 
-        private Vector3 calcLightRay(Ray ray, Light light)
+        private Vector3 calcLightRay(Ray ray)
         {
             GeometricObject hitShape = null;
             double closestShape = float.MaxValue;
@@ -356,7 +356,7 @@ namespace Funky
                 return FindPointOnRay(ray, closestShape);
             }
             else
-                return light.position;
+                return new Vector3(float.MaxValue,float.MaxValue,float.MaxValue);
         }
 
         private float isVisible(Light L, Vector3 hitPoint, Ray ray)

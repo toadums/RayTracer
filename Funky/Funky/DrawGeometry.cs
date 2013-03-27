@@ -85,7 +85,7 @@ namespace Funky
             });*/
 
             Lights = new List<Light>();
-            Lights.Add(new Light() { position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y -20, 1000), color = new Vector3(255, 255, 255), radius = ImageSize.X / 20, intensity = 1.0f });
+            Lights.Add(new Light() { position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y -20, 0), color = new Vector3(255, 255, 255), radius = ImageSize.X / 20, intensity = 1.0f });
             //Lights.Add(new Light() { position = new Vector3(ImageSize.X / 2.0f, 20, 1000), color = new Vector3(255, 255, 255), radius = ImageSize.X / 20, intensity = 1.0f });
              /* Lights.Add(new Light() { 
                   position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y - 20, 1000), 

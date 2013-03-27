@@ -10,7 +10,7 @@ namespace Funky
 {
     partial class RayTracer
     {
-        int NumVirtualLights = 5;
+        int NumVirtualLights = 10;
 
         public void spawnVPL(Light light,float width,float height)
         {
@@ -27,7 +27,22 @@ namespace Funky
                 Vector3 dir = (new Vector3(VPLPos.X, VPLPos.Y, 0)) - Eye;
                 dir.Normalize();
                 Ray ray = new Ray(Eye, dir);
-                Vector3 newLightPos = calcLightRay(ray, light);
+                Vector3 newLightPos = calcLightRay(ray);
+
+                if (newLightPos.X == float.MaxValue)
+                {
+                    continue;
+                }
+
+                Vector3 dir2 = light.position - newLightPos;
+                dir2.Normalize();
+
+                Ray ray2 = new Ray(newLightPos, dir2);
+
+                if (isVisible(light, VPLPos, ray2) <= 0)
+                {
+                    continue;
+                }
 
                 if (newLightPos.X != float.MaxValue && newLightPos.Y != float.MaxValue && newLightPos.Z != float.MaxValue)
                 {
