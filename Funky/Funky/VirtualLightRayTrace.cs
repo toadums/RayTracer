@@ -10,7 +10,7 @@ namespace Funky
 {
     partial class RayTracer
     {
-        int NumVirtualLights = 1;
+        int NumVirtualLights = 5;
 
         public void spawnVPL(Light light,float width,float height)
         {
@@ -38,7 +38,8 @@ namespace Funky
                     VirtualLights.Add(new Light()
                     {
                         position = newLightPos,
-                        color = light.color
+                        color = light.color,
+                        intensity = .2f
                     });
                 }
             }

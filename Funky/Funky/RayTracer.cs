@@ -46,13 +46,10 @@ namespace Funky
 
     partial class RayTracer
     {
-
-        private const bool UseVPL = false;
-
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 1;
-        public static Vector2 ImageSize = new Vector2(400);
+        public static Vector2 ImageSize = new Vector2(1600);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -70,20 +67,19 @@ namespace Funky
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(ImageSize.X / 2.0f, ImageSize.Y * 0.8f, -10000);
+            Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y* 0.8f, -10000);
 
-            System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path);
+            System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path);      
 
             //Drawing Objects is done in the DrawGeometry.cs file
             DrawGeometry();
             VirtualLights = new List<Light>();
+            spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
 
-            if (UseVPL)
-            {
-                spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
+            Lights.AddRange(VirtualLights);
 
-                Lights.AddRange(VirtualLights);
-            }
+            Lights.Remove(Lights[0]);
+            //Lights.Remove(Lights[0]);
         }
 
         public async void Draw()
@@ -107,12 +103,13 @@ namespace Funky
                 using (Stream stream = WB.PixelBuffer.AsStream())
                 {
                     await stream.WriteAsync(result, 0, result.Length);
-
                 }
 
                 StorageFolder folder = ApplicationData.Current.LocalFolder;
 
+
                 await WriteableBitmapSaveExtensions.SaveToFile(WB, folder, "img" + i++ + ".jpg");
+
 
                 // Redraw the WriteableBitmap
                 WB.Invalidate();
@@ -120,18 +117,20 @@ namespace Funky
 
                 foreach (Light l in Lights)
                 {
-                    //l.position.X -= 5;
+                    l.position.X -= 5;
                 }
-                /*
-                                Lights[0].position.X += 5;
-                                Lights[0].position.Y += 5;
-                                Lights[0].position.Z += 50;
-                                */
-                //if (Shapes[2].position.X > ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
+
+                Lights[0].position.X += 5;
+                Lights[0].position.Y += 5;
+                Lights[0].position.Z += 50;
+
+                ((Sphere)Shapes[2]).position.X += 5;
+                ((Sphere)Shapes[2]).position.Z -= 50;
+                
+                if (((Sphere)Shapes[2]).position.X > ImageSize.X / 2.0f + ((Sphere)Shapes[0]).radius) break;
 
             }
         }
-
 
         private byte[] Trace(int width, int height)
         {
@@ -141,16 +140,21 @@ namespace Funky
             // 4 bytes required for each pixel
             byte[] result = new byte[width * height * 4];
             int resultIndex = 0;
+            int count = 0;
 
             float totalNum = width * height;
 
             Vector3 color = new Vector3(0, 0, 0);
+
+            List<Task> tasks = new List<Task>();
 
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
 
+                    //tasks.Add(new Task(() => DoWork(x, y, 100 * y + x, 100 * y + x + 1, 100 * y + x + 2, 100 * y + x + 3)));
+                    
                     color = new Vector3(0, 0, 0);
                     for (float innerPixelY = 1.0f / numInnerPixels; innerPixelY <= 1; innerPixelY += 1.0f / numInnerPixels)
                     {
@@ -183,13 +187,20 @@ namespace Funky
                     {
 
                         s = s.Replace("= ", " =");
-
+                        
                         System.Diagnostics.Debug.WriteLine(s);
                     }
 
 
                 }
             }
+
+            /*Parallel.ForEach(tasks, task =>
+                {
+                    task.RunSynchronously();
+                }
+            );*/
+
 
             return result;
         }
@@ -221,8 +232,7 @@ namespace Funky
                 }
             }
 
-            if (hitShape == null)
-            {
+            if (hitShape == null) {
                 if (depth == 0) return new Vector3(-1, -1, -1);
                 else return new Vector3(0, 0, 0);
             }
@@ -246,43 +256,44 @@ namespace Funky
                     double temp = Vector3.Dot(vNormal, vNormal);
                     if (temp != 0.0)
                     {
-                        temp = 1.0 / Math.Sqrt(temp);
+                        temp = 1.0 / Math.Sqrt(temp);   
                         vNormal = (float)temp * vNormal;
                     }
                 }
 
 
-                foreach (Light light in Lights)
-                {
-                    Vector3 dir = light.position - hp;
-                    dir.Normalize();
-                    Ray lightRay = new Ray(hp, dir);
-
-                    float LightValue = 0.0f;
-
-                    if ((LightValue = isVisible(light, hp, lightRay)) > 0)
+                    //Parallel.ForEach(Lights, light =>
+                    foreach (Light light in Lights)
                     {
-                        //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
-                        float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
-                        curColor += lambert * (light.color / 255.0f) * (hitShape.surface.color / 255.0f);
+                        Vector3 dir = light.position - hp;
+                        dir.Normalize();
+                        Ray lightRay = new Ray(hp, dir);
 
-                        if (hitShape.surface.SpecExponent != 0 && specOn)
+                        float LightValue = 0.0f;
+
+                        if ((LightValue = isVisible(light, hp, lightRay)) > 0)
                         {
-                            Vector3 temp = light.position - hp;
-                            Vector3 dir2 = temp - (2.0f * Vector3.Dot(temp, vNormal)) * vNormal;
-                            dir2.Normalize();
-                            //TODO might want to divide specular amount by SpecExponent/100 * something to decrease amount of specular. Because even if specularExponent = 1, it is still going to be madd specular
-                            curColor += hitShape.surface.specular / 255.0f * (float)Math.Pow(Math.Max(Vector3.Dot(ray.Direction, dir2), 0), hitShape.surface.SpecExponent);
+                            //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
+                            float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
+                            curColor += light.intensity*lambert * ((light.color / 255.0f)) * (hitShape.surface.color / 255.0f);
 
-                        }
-                        else if (specOn)
-                        {
-                            specOn = false;
-                        }
 
-                        curColor *= LightValue;
+                            if (hitShape.surface.SpecExponent != 0 && specOn)
+                            {
+                                Vector3 temp = light.position - hp;
+                                Vector3 dir2 = temp - (2.0f * Vector3.Dot(temp, vNormal)) * vNormal;
+                                dir2.Normalize();
+                                //TODO might want to divide specular amount by SpecExponent/100 * something to decrease amount of specular. Because even if specularExponent = 1, it is still going to be madd specular
+                                curColor += light.intensity * (hitShape.surface.specular / 255.0f * (float)Math.Pow(Math.Max(Vector3.Dot(ray.Direction, dir2), 0), hitShape.surface.SpecExponent));
+
+                            }
+                            else if (specOn)
+                            {
+                                specOn = false;
+                            }
+                            curColor *= LightValue;
+                        }
                     }
-                }
 
                 curColor *= 255.0f;
 
@@ -293,7 +304,7 @@ namespace Funky
                 //calculate reflections
                 Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
                 dir.Normalize();
-                curColor += AddRay(new Ray(hp, dir), depth + 1, coef * ((float)hitShape.surface.reflectiveness / 100.0f), specOn, rIndex);
+                curColor += AddRay(new Ray(hp, dir), depth+1, coef * ((float)hitShape.surface.reflectiveness/100.0f), specOn, rIndex);
 
                 //calculate refractionz
                 float refr = hitShape.surface.Refraction;
@@ -308,9 +319,9 @@ namespace Funky
                     {
                         Vector3 T = (n * ray.Direction) + (n * cosI - (float)Math.Sqrt(cosT2)) * vNormal;
 
-                        Vector3 temp = AddRay(new Ray(hp + T * 0.001f, T), depth + 1, coef, specOn, refrIndex);
+                       Vector3 temp = AddRay(new Ray(hp + T * 0.001f, T), depth + 1, coef, specOn, refrIndex);
 
-                        Vector3 absorbance = hitShape.surface.color / 255.0f * 0.15f * 10;
+                        Vector3 absorbance = hitShape.surface.color/255.0f * 0.15f * 10;
                         Vector3 transparency = new Vector3((float)Math.Exp(absorbance.X), (float)Math.Exp(absorbance.Y), (float)Math.Exp(absorbance.Z));
 
                         curColor += temp * transparency;
@@ -360,12 +371,12 @@ namespace Funky
 
             Vector3 dir;
             Ray r;
-            /*
-                        if (FindClosestShape(ray) == L)
-                        {
-                            retVal += 1.0f/numRays;
-                        }
-            */
+/*
+            if (FindClosestShape(ray) == L)
+            {
+                retVal += 1.0f/numRays;
+            }
+*/
             for (float i = 0; i <= 2 * Math.PI; i += 2.0f * (float)Math.PI / (numSegments))
             {
 
@@ -385,7 +396,7 @@ namespace Funky
             }
 
             return Clamp(retVal, 0, 1);
-
+            
 
         }
 
@@ -396,7 +407,7 @@ namespace Funky
 
             foreach (GeometricObject shape in Shapes)
             {
-                double t = shape.intersection(r);
+                double t=shape.intersection(r);
                 if (t < dist && t > 0.0f)
                 {
                     closest = shape;

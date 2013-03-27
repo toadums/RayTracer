@@ -42,7 +42,7 @@ namespace Funky
                     specular = new Vector3(50, 50, 50),
                     color = new Vector3(12, 235, 92),
                     reflectiveness = 50,
-                    SpecExponent = 0,
+                    SpecExponent = 5,
                     Refraction = 0,
                     RefractionIndex = 0
                 }
@@ -60,13 +60,13 @@ namespace Funky
                     specular = new Vector3(50, 50, 50),
                     color = new Vector3(235, 2, 92),
                     reflectiveness = 50,
-                    SpecExponent = 0,
+                    SpecExponent = 5,
                     Refraction = 0,
                     RefractionIndex = 0
                 }
             });
 
-            Shapes.Add(new Sphere()
+            /*Shapes.Add(new Sphere()
             {
                 position = new Vector3(ImageSize.X / 2.0f - ImageSize.X / 3.0f, ImageSize.Y / 2.0f, SphereDist + 200),
                 radius = ImageSize.X / 15.0f,
@@ -82,11 +82,11 @@ namespace Funky
                     Refraction = 0,
                     RefractionIndex = 0
                 }
-            });
+            });*/
 
             Lights = new List<Light>();
-            Lights.Add(new Light() { position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y -20, 1000), color = new Vector3(255, 255, 255), radius = ImageSize.X / 20 });
-            Lights.Add(new Light() { position = new Vector3(ImageSize.X / 2.0f, 20, 1000), color = new Vector3(255, 255, 255), radius = ImageSize.X / 20 });
+            Lights.Add(new Light() { position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y -20, 1000), color = new Vector3(255, 255, 255), radius = ImageSize.X / 20, intensity = 1.0f });
+            //Lights.Add(new Light() { position = new Vector3(ImageSize.X / 2.0f, 20, 1000), color = new Vector3(255, 255, 255), radius = ImageSize.X / 20, intensity = 1.0f });
              /* Lights.Add(new Light() { 
                   position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y - 20, 1000), 
                   color = new Vector3(255, 255, 255), 

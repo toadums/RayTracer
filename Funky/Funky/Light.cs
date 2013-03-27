@@ -11,6 +11,7 @@ namespace Funky
     {
         public Vector3 position;
         public Vector3 color;
+        public float intensity;
         
         private float INTERSECTION_TOLERANCE = 0.1f;
         public float radius;

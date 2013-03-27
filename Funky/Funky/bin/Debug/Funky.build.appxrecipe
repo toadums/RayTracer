@@ -55,42 +55,6 @@
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.XInput.dll">
       <PackagePath>SharpDX.XInput.dll</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.xml">
-      <PackagePath>SharpDX.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.D3DCompiler.xml">
-      <PackagePath>SharpDX.D3DCompiler.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Direct2D1.xml">
-      <PackagePath>SharpDX.Direct2D1.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Direct3D11.xml">
-      <PackagePath>SharpDX.Direct3D11.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.DXGI.xml">
-      <PackagePath>SharpDX.DXGI.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.MediaFoundation.xml">
-      <PackagePath>SharpDX.MediaFoundation.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Toolkit.xml">
-      <PackagePath>SharpDX.Toolkit.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Toolkit.Game.xml">
-      <PackagePath>SharpDX.Toolkit.Game.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Toolkit.Graphics.xml">
-      <PackagePath>SharpDX.Toolkit.Graphics.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Toolkit.Input.xml">
-      <PackagePath>SharpDX.Toolkit.Input.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.XAudio2.xml">
-      <PackagePath>SharpDX.XAudio2.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.XInput.xml">
-      <PackagePath>SharpDX.XInput.xml</PackagePath>
-    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\Assets\Logo.png">
       <PackagePath>Assets\Logo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
