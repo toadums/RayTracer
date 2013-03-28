@@ -100,10 +100,6 @@ C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX\en-us\Sha
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\Funky.csproj.GenerateResource.Cache
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.pri
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX\LanguageQualifiers.txt
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\priconfig.xml.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\layout.resfiles.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\resources.resfiles.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles.intermediate
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\priconfig.xml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\layout.resfiles
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\resources.resfiles
@@ -246,5 +242,3 @@ C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.Toolkit.
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.XAudio2.pri.xml
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.XInput.pri.xml
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\ProjectArchitectures.txt
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX\priconfig.xml.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX\Resources.resfiles.intermediate
