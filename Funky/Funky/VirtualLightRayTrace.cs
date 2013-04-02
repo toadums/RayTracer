@@ -10,7 +10,7 @@ namespace Funky
 {
     partial class RayTracer
     {
-        int NumVirtualLights = 10;
+        int NumVirtualLights = 5;
 
         public void spawnVPL(Light light,float width,float height)
         {
@@ -28,10 +28,15 @@ namespace Funky
                 dir.Normalize();
                 Ray ray = new Ray(Eye, dir);
                 Vector3 newLightPos = calcLightRay(ray);
+                SurfaceType hitSurface;
 
                 if (newLightPos.X == float.MaxValue)
                 {
                     continue;
+                }
+                else
+                {
+                    hitSurface = findSurfaceType(ray);
                 }
 
                 Vector3 dir2 = light.position - newLightPos;
@@ -54,10 +59,33 @@ namespace Funky
                     {
                         position = newLightPos,
                         color = light.color,
-                        intensity = .2f
+                        intensity = (float)hitSurface.reflectiveness/(float)100
                     });
                 }
             }
+        }
+
+        private SurfaceType findSurfaceType(Ray ray)
+        {
+            GeometricObject hitShape = null;
+            double closestShape = float.MaxValue;
+
+            foreach (GeometricObject shape in Shapes)
+            {
+                double t = shape.intersection(ray);
+
+                if (t > 0.0 && t < closestShape)
+                {
+                    hitShape = shape;
+                    closestShape = t;
+                }
+            }
+            if (hitShape != null)
+            {
+                return hitShape.surface;
+            }
+            else
+                return null;
         }
     }
 }
