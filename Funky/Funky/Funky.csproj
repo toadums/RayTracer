@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="DrawGeometry.cs" />
     <Compile Include="Perlin.cs" />
+    <Compile Include="Square.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="GeometricObject.cs" />
     <Compile Include="Light.cs" />

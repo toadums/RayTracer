@@ -39,10 +39,7 @@ namespace Funky
             Vector3 e1 = p1 - p0;
             Vector3 e2 = p2 - p0;
 
-            Vector3 e1e2 = Vector3.Cross(e1, e2);
             Vector3 p = Vector3.Cross(ray.Direction, e2);
-
-            e1e2.Normalize();
 
             float a = Vector3.Dot(e1, p);
 

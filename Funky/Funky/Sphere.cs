@@ -49,12 +49,6 @@ namespace Funky
             // transform ray to put sphere centre at origin to make calculations cleaner.
             sRay = ray.Start - position;
 
-            /*
-            a = Vector3.Dot(ray.Direction, ray.Direction);
-            b = 2 * Vector3.Dot(ray.Direction, ray.Start);
-            c = Vector3.Dot(ray.Start, ray.Start) - (radius * radius);
-            */
-
             a = Vector3.Dot(dRay, dRay);
             b = 2*Vector3.Dot(dRay, sRay);
             c = Vector3.Dot(sRay, sRay) - radius * radius;

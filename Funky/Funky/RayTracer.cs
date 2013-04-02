@@ -51,7 +51,7 @@ namespace Funky
 
         private const float numInnerPixels = 1;
 
-        private const int NumBounces = 1;
+        private const int NumBounces = 2;
         public static Vector2 ImageSize = new Vector2(400);
         private float SphereDist = 1000;
 
@@ -231,14 +231,14 @@ namespace Funky
         /// <param name="coef"></param>
         /// <param name="specOn">if at any point an object is not specular, all successive recursive calls will ignore specular</param>
         /// <returns></returns>
-        private Vector3 AddRay(Ray ray, int depth, float coef, float pastLight = 1)
+        private Vector3 AddRay(Ray ray, int depth, float coef, float lastRIndex = 1)
         {
             Vector3 curColor = new Vector3(0, 0, 0);
             GeometricObject hitShape = null;
             double hitShapeDist = float.MaxValue;
             Vector3 vNormal;
             Vector3 hp;
-                    float LightValue = 0.0f;
+            float LightValue = 0.0f;
 
             foreach (GeometricObject shape in Shapes)
             {
@@ -251,7 +251,8 @@ namespace Funky
                 }
             }
 
-            if (hitShape == null) {
+            if (hitShape == null)
+            {
                 if (depth == 0) return new Vector3(-1, -1, -1);
                 else return new Vector3(0, 0, 0);
             }
@@ -263,7 +264,7 @@ namespace Funky
                 if (hitShape.surface.type == textureType.bump)
                 {
 
-                    const double bumpLevel = 0.3;
+                    const double bumpLevel = 0.2;
                     double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
                     double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
                     double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
@@ -275,16 +276,16 @@ namespace Funky
                     double temp = Vector3.Dot(vNormal, vNormal);
                     if (temp != 0.0)
                     {
-                        temp = 1.0 / Math.Sqrt(temp);   
+                        temp = 1.0 / Math.Sqrt(temp);
                         vNormal = (float)temp * vNormal;
                     }
                 }
-                if(hitShape is Sphere)
-                    if (((Sphere)hitShape).position.X > ImageSize.X / 2.0f )
+                if (hitShape is Sphere)
+                    if (((Sphere)hitShape).position.X > ImageSize.X / 2.0f)
                     {
                         int i = 0;
                     }
-                    
+
                 foreach (Light light in Lights)
                 {
                     Vector3 dir = light.position - hp;
@@ -294,18 +295,19 @@ namespace Funky
 
                     if ((LightValue = isVisible(light, hp, lightRay)) > 0)
                     {
+
                         //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                         float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
-                        curColor += light.intensity*lambert * ((light.color)) * (hitShape.surface.color);
+                        curColor += light.intensity * lambert * ((light.color)) * (hitShape.surface.color);
 
                         Vector3 blinn = lightRay.Direction - ray.Direction;
                         blinn.Normalize();
 
                         float blinnValue = (float)Math.Pow(Math.Max(0, Vector3.Dot(vNormal, blinn)), hitShape.surface.SpecExponent);
 
-                        curColor += hitShape.surface.specular * light.color * blinnValue;
+                        curColor += hitShape.surface.specular * light.color * blinnValue * coef;
 
-                        curColor *= LightValue * pastLight;
+                        curColor *= LightValue;
                     }
                 }
 
@@ -313,11 +315,30 @@ namespace Funky
             if (depth >= NumBounces) return Clamp(curColor);
             else
             {
-                
+
                 //calculate reflections
                 Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
                 dir.Normalize();
-                curColor += AddRay(new Ray(hp, dir), depth+1, coef * ((float)hitShape.surface.reflectiveness/100.0f), LightValue);
+                curColor += AddRay(new Ray(hp, dir), depth + 1, coef * ((float)hitShape.surface.reflectiveness / 100.0f));
+
+                //calculate refraction (nigguh)
+                float refr = hitShape.surface.RefractionIndex;
+                if (refr > 0)
+                {
+                    float n = lastRIndex/refr;
+
+                    float cos = Vector3.Dot(ray.Direction, vNormal);
+                    float sin = (float)Math.Pow(n, 2) * (1 - (float)Math.Pow(cos,2));
+                    if (Math.Pow(sin,2) <= 1)
+                    {
+                        Vector3 transmissiveDir = n * ray.Direction - (n * cos + (float)Math.Sqrt(1 - (float)Math.Pow(sin, 2))) * vNormal;
+                        transmissiveDir.Normalize();
+                        curColor+= AddRay(new Ray(hp, transmissiveDir), depth + 1, coef, refr);
+
+
+
+                    }
+                }
 
             }
 
@@ -360,12 +381,6 @@ namespace Funky
 
             Vector3 dir;
             Ray r;
-/*
-            if (FindClosestShape(ray) == L)
-            {
-                retVal += 1.0f/numRays;
-            }
-*/
 
             for (float i = 0; i <= 2 * Math.PI; i += 2.0f * (float)Math.PI / (numSegments))
             {
@@ -398,7 +413,7 @@ namespace Funky
             foreach (GeometricObject shape in Shapes)
             {
                 double t=shape.intersection(r);
-                if (t < dist && t > 0.0f)
+                if (t < dist && t > 0.0f && shape.surface.RefractionIndex < 1)
                 {
                     closest = shape;
                     dist = t;
