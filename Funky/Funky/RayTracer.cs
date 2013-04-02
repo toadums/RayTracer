@@ -52,7 +52,7 @@ namespace Funky
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 2;
-        public static Vector2 ImageSize = new Vector2(400);
+        public static Vector2 ImageSize = new Vector2(1600);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -175,8 +175,8 @@ namespace Funky
                             Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f / numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f / numInnerPixels * 2.0f)), 0)) - Eye;
                             dir.Normalize();
                             Ray ray = new Ray(Eye, dir);
-
-                            color += AddRay(ray, 0, 1.0f);
+                            float ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable = 0;
+                            color += AddRay(ray, 0, 1.0f, ref ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable);
 
                         }
                     }
@@ -231,7 +231,7 @@ namespace Funky
         /// <param name="coef"></param>
         /// <param name="specOn">if at any point an object is not specular, all successive recursive calls will ignore specular</param>
         /// <returns></returns>
-        private Vector3 AddRay(Ray ray, int depth, float coef, float lastRIndex = 1)
+        private Vector3 AddRay(Ray ray, int depth, float coef, ref float prevDist, float lastRIndex = 1)
         {
             Vector3 curColor = new Vector3(0, 0, 0);
             GeometricObject hitShape = null;
@@ -248,6 +248,7 @@ namespace Funky
                 {
                     hitShape = shape;
                     hitShapeDist = t;
+                    prevDist = (float)t;
                 }
             }
 
@@ -319,7 +320,8 @@ namespace Funky
                 //calculate reflections
                 Vector3 dir = ray.Direction - (2.0f * Vector3.Dot(ray.Direction, vNormal)) * vNormal;
                 dir.Normalize();
-                curColor += AddRay(new Ray(hp, dir), depth + 1, coef * ((float)hitShape.surface.reflectiveness / 100.0f));
+                float UGH = 0;
+                curColor += AddRay(new Ray(hp, dir), depth + 1, coef * ((float)hitShape.surface.reflectiveness / 100.0f), ref UGH);
 
                 //calculate refraction (nigguh)
                 float refr = hitShape.surface.RefractionIndex;
@@ -333,9 +335,13 @@ namespace Funky
                     {
                         Vector3 transmissiveDir = n * ray.Direction - (n * cos + (float)Math.Sqrt(1 - (float)Math.Pow(sin, 2))) * vNormal;
                         transmissiveDir.Normalize();
-                        curColor+= AddRay(new Ray(hp, transmissiveDir), depth + 1, coef, refr);
+                        float dist = 0;
+                        Vector3 theColor = AddRay(new Ray(hp, transmissiveDir), depth + 1, coef, ref dist, refr);
 
+                        Vector3 absorbance = hitShape.surface.color * 0.0000015f * -dist;
+                        Vector3 trans = new Vector3((float)Math.Exp(absorbance.X), (float)Math.Exp(absorbance.Y), (float)Math.Exp(absorbance.Z));
 
+                        curColor += theColor * trans;
 
                     }
                 }

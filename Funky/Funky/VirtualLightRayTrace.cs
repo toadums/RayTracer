@@ -1,5 +1,4 @@
 ﻿using SharpDX;
-using SharpDX.DirectWrite;
 using System;
 using System.Collections.Generic;
 using System.Linq;

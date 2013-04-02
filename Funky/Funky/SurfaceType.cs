@@ -18,7 +18,6 @@ namespace Funky
         public Vector3 color;
         public double reflectiveness;
         public float SpecExponent;
-        public float Refraction = 0;
         public float RefractionIndex = 0;
 
 
