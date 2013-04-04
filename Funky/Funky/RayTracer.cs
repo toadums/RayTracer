@@ -51,8 +51,8 @@ namespace Funky
 
         private const float numInnerPixels = 1;
 
-        private const int NumBounces = 2;
-        public static Vector2 ImageSize = new Vector2(1600);
+        private const int NumBounces = 0;
+        public static Vector2 ImageSize = new Vector2(100);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -75,7 +75,6 @@ namespace Funky
             System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path);      
 
             //Drawing Objects is done in the DrawGeometry.cs file
-            DrawGeometry();
 
             if (UseVPL)
             {
@@ -90,8 +89,12 @@ namespace Funky
             }
         }
 
+
         public async void Draw()
         {
+
+            await DrawGeometry();
+
 
             int pixelWidth = WB.PixelWidth;
             int pixelHeight = WB.PixelHeight;
@@ -242,6 +245,7 @@ namespace Funky
 
             foreach (GeometricObject shape in Shapes)
             {
+                if (shape == null) continue;
                 double t = shape.intersection(ray);
 
                 if (t > 0.0 && t < hitShapeDist)

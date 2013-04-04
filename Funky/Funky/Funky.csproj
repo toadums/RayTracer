@@ -104,6 +104,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="DrawGeometry.cs" />
+    <Compile Include="objLoader.cs" />
     <Compile Include="Perlin.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="Triangle.cs" />
@@ -126,6 +127,9 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="SharpDX Toolkit WinRT (XAML)_TemporaryKey.pfx" />
+    <None Include="teapot.obj">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png" />

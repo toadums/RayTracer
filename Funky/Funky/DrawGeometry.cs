@@ -16,30 +16,57 @@ namespace Funky
 
         }
 
-        private void DrawGeometry(){
+        private async Task DrawGeometry(){
+            
             Shapes = new List<GeometricObject>();
-
+            /*
             Shapes.Add(new Sphere()
             {
                 position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f, SphereDist),
                 radius = ImageSize.X / 4.0f,
                 surface = new SurfaceType()
                 {
-                    type = textureType.standard,
+                    type = textureType.bump,
                     ambient = new Vector3(.4f, .4f, .4f),
                     diffuse = new Vector3(.4f, .4f, .4f),
                     specular = new Vector3(1, 1, 1),
                     color = new Vector3(.4f, .4f, .4f),
                     reflectiveness = 0,
                     SpecExponent = 1000,
-                    RefractionIndex = 1f
+                    RefractionIndex = 1.0f
                 }
             });
-            
-            
-            for (float i = ImageSize.X / 50.0f; i < ImageSize.X - ImageSize.X / 50.0f; i += ImageSize.X / 5)
+
+            */
+            Lights = new List<Light>();
+            Lights.Add(new Light()
             {
-                for (float j = ImageSize.X / 50.0f; j < ImageSize.X - ImageSize.X / 50.0f; j += ImageSize.X / 5)
+                position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f + 190, 700),
+                color = new Vector3(1, 1, 1),
+                radius = ImageSize.X / 20,
+                intensity = 1.0f
+            });
+
+            objLoader loader = new objLoader();
+
+            Task tas = loader.CreateTriangles(@"teapot.obj");
+            await tas;
+            Task addTask = Task.Factory.StartNew(new Action(() =>
+            {
+                foreach (Triangle t in loader.Triangles)
+                {
+                    Shapes.Add(t);
+                }
+
+            }));
+
+            await addTask;
+
+
+            /*
+            for (float i = ImageSize.X / 50.0f; i < ImageSize.X - ImageSize.X / 50.0f; i += ImageSize.X / 10)
+            {
+                for (float j = ImageSize.X / 50.0f; j < ImageSize.X - ImageSize.X / 50.0f; j += ImageSize.X / 10)
                 {
 
                     float r = new Random().NextFloat(0, 1);
@@ -53,7 +80,7 @@ namespace Funky
                     Shapes.Add(new Sphere()
                     {
                         position = new Vector3(i, j, SphereDist * 2.0f),
-                        radius = ImageSize.X / 20.0f,
+                        radius = ImageSize.X / 30,
                         surface = new SurfaceType()
                         {
                             type = textureType.standard,
@@ -70,7 +97,7 @@ namespace Funky
 
                 }
             }
-
+            */
 
             /*
             
@@ -174,14 +201,9 @@ namespace Funky
                     RefractionIndex = 0
                 }
             });
-           
-                        */
-            Lights = new List<Light>();
-            Lights.Add(new Light() { 
-                position = new Vector3(ImageSize.X/2.0f, ImageSize.Y/2.0f + 190, 700), 
-                color = new Vector3(1, 1, 1), 
-                radius = ImageSize.X / 20, 
-                intensity = 1.0f });
+            */
+
+            
 
             
             //Lights.Add(new Light() { position = new Vector3(ImageSize.X / 2.0f, 20, 1000), color = new Vector3(1, 1, 1), radius = ImageSize.X / 20, intensity = 1.0f });
@@ -241,8 +263,8 @@ namespace Funky
                 new Vector3(ImageSize.X, 0, SphereDist * 4),
                 new Vector3(ImageSize.X, ImageSize.Y, SphereDist * 4),
                 new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 0, 0), 0)));
+            
             /*
-
             //Top side 1
             Shapes.Add(new Triangle(
                 new Vector3(0, 0, 0),
@@ -270,8 +292,8 @@ namespace Funky
                 new Vector3(ImageSize.X, 0, 0),
                 new Vector3(ImageSize.X, ImageSize.X, SphereDist * 4),
                 new SurfaceType(textureType.standard, new Vector3(1, 0, 1), new Vector3(1, 0, 1), new Vector3(0, 0, 0), new Vector3(1, 0, 1), 0)));
+            
             */
-
 
         }
 

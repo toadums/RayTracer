@@ -246,3 +246,7 @@ C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\LanguageQualifiers.txt
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.pri.xml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\ProjectArchitectures.txt
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\priconfig.xml.intermediate
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\layout.resfiles.intermediate
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\resources.resfiles.intermediate
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles.intermediate

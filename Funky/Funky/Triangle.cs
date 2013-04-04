@@ -70,7 +70,7 @@ namespace Funky
 
         public override string ToString()
         {
-            return "Triangle";
+            return "Triangle: 1: " + Vertices[0] + ", 2: " + Vertices[1] + ", 3: " + Vertices[2];
         }
 
     }
