@@ -214,6 +214,14 @@ C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.Toolkit.
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.XAudio2.pri.xml
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.XInput.pri.xml
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\ProjectArchitectures.txt
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT (XAML).exe
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT (XAML).pdb
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\resources.pri
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\AppxManifest.xml
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\Funky.build.appxrecipe
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.xml
+C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.pri
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\App.g.i.cs
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\App.g.cs
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\Common\StandardStyles.g.i.cs
@@ -224,15 +232,6 @@ C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\XamlTypeInfo.g.cs
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\App.xaml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\Common\StandardStyles.xaml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\MainPage.xaml
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\Funky.csprojResolveAssemblyReference.cache
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT (XAML).exe
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT (XAML).pdb
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\resources.pri
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\AppxManifest.xml
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\Funky.build.appxrecipe
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.xml
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.pri
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX Toolkit WinRT (XAML).exe
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX Toolkit WinRT (XAML).pdb
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX\en-us\SharpDX.Properties.Resources.resw
@@ -246,7 +245,3 @@ C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\LanguageQualifiers.txt
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.pri.xml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\ProjectArchitectures.txt
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\priconfig.xml.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\layout.resfiles.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\resources.resfiles.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles.intermediate

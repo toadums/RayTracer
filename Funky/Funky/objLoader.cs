@@ -26,7 +26,7 @@ namespace Funky
             Triangles = new List<Triangle>();
         }
 
-        public async Task CreateTriangles(string filename)
+        public async Task CreateTriangles(string filename, float scale, Vector3 position)
         {
 
             var folder = Package.Current.InstalledLocation;
@@ -36,13 +36,26 @@ namespace Funky
             int count = 0;
 
             string[] read = wholeFile.Split('\n');
-
+            Vector2 X = new Vector2(float.MaxValue, float.MinValue), Y = new Vector2(float.MaxValue, float.MinValue), Z = new Vector2(float.MaxValue, float.MinValue);
             foreach (string s in read)
             {
                 if (s.Length == 0) continue;
                 if (s[0] == 'v')
                 {
                     count++;
+                    string[] temp = s.Split(' ');
+                    float x = float.Parse(temp[1]);
+                    if (x < X.X) X.X = x;
+                    if (x > X.Y) X.Y = x;
+
+                    float y = float.Parse(temp[2]);
+                    if (y < Y.X) Y.X = y;
+                    if (y > Y.Y) Y.Y = y;
+
+                    float z = float.Parse(temp[3]);
+                    if (z < Z.X) Z.X = z;
+                    if (z > Z.Y) Z.Y = z;
+                    
                 }
             }
 
@@ -55,7 +68,18 @@ namespace Funky
                 if (s[0] == 'v')
                 {
                     string[] temp = s.Split(' ');
-                    vertices[count] = new Vector3(float.Parse(temp[1]) * RayTracer.ImageSize.X / 10.0f + RayTracer.ImageSize.X / 2.0f, (float.Parse(temp[2]) * RayTracer.ImageSize.X / 10.0f + RayTracer.ImageSize.X / 2.0f), float.Parse(temp[3]) * RayTracer.ImageSize.X / 10.0f + 2000);
+
+                    float a = float.Parse(temp[1]);
+                    float b = -float.Parse(temp[2]);
+                    float c = float.Parse(temp[3]);
+
+                    vertices[count] = new Vector3(
+
+                        (a >= 0 ? (a / X.Y) : -(a / X.X)) * scale + position.X,
+                        (b >= 0 ? (b / Y.Y) : -(b / Y.X)) * scale + position.Y,
+                        c + position.Z
+                        );
+                    System.Diagnostics.Debug.WriteLine(vertices[count]);
                     count++;
                 }
             }
@@ -78,11 +102,13 @@ namespace Funky
 
                     Vector3 col = new Vector3(r, g, bl);
 
-                    Triangles.Add(new Triangle(vertices[c], vertices[b], vertices[a],
+                    Triangles.Add(new Triangle(vertices[a], vertices[b], vertices[c],
                         new SurfaceType()
                         {
-                            color = col,
+                            color = new Vector3(0.64253f, 0.12354f, 0986345f),
                             type = textureType.standard,
+                            specular = new Vector3(1,1,1),
+                            SpecExponent = 500,
                         }));
                     //if (count++ > 100) break;
 

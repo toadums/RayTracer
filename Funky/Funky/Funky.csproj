@@ -130,6 +130,7 @@
     <None Include="teapot.obj">
       <SubType>Designer</SubType>
     </None>
+    <None Include="teddy.obj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png" />

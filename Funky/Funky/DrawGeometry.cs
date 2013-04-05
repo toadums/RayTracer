@@ -41,7 +41,7 @@ namespace Funky
             Lights = new List<Light>();
             Lights.Add(new Light()
             {
-                position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f + 190, 700),
+                position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f + 190, 4000),
                 color = new Vector3(1, 1, 1),
                 radius = ImageSize.X / 20,
                 intensity = 1.0f
@@ -49,7 +49,7 @@ namespace Funky
 
             objLoader loader = new objLoader();
 
-            Task tas = loader.CreateTriangles(@"teapot.obj");
+            Task tas = loader.CreateTriangles(@"cow.obj", ImageSize.X / 3.0f, new Vector3(ImageSize.X / 2.0f, ImageSize.Y/ 2.0f, 2000));
             await tas;
             Task addTask = Task.Factory.StartNew(new Action(() =>
             {
@@ -249,7 +249,7 @@ namespace Funky
                 new Vector3(ImageSize.X, ImageSize.Y, SphereDist * 4),
                 new Vector3(ImageSize.X, ImageSize.Y, 0),
                 new SurfaceType(textureType.standard, new Vector3(0, 1, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 0), new Vector3(0, 1, 0), 0)));
-            */
+            
             //Back side 1
             Shapes.Add(new Triangle(
                 new Vector3(0, ImageSize.Y, SphereDist * 4),
@@ -264,7 +264,7 @@ namespace Funky
                 new Vector3(ImageSize.X, ImageSize.Y, SphereDist * 4),
                 new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(1, 0, 0), 0)));
             
-            /*
+            
             //Top side 1
             Shapes.Add(new Triangle(
                 new Vector3(0, 0, 0),

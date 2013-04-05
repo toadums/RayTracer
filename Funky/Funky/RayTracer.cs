@@ -52,7 +52,7 @@ namespace Funky
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 0;
-        public static Vector2 ImageSize = new Vector2(100);
+        public static Vector2 ImageSize = new Vector2(800);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -70,7 +70,7 @@ namespace Funky
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y* 0.8f, -10000);
+            Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y* 0.8f, 10000);
 
             System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path);      
 

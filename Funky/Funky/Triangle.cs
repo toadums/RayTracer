@@ -11,10 +11,11 @@ namespace Funky
     {
 
         Vector3[] Vertices;
+        Vector3 Normal;
 
         public Triangle()
         {
-
+            Normal = new Vector3(float.MaxValue);
         }
 
         /// <summary>
@@ -28,6 +29,9 @@ namespace Funky
         {
             Vertices = new Vector3[] { a, b, c };
             this.surface = st;
+
+            Normal = new Vector3(float.MaxValue);
+
         }
 
         public override double intersection(Ray ray)
@@ -64,7 +68,8 @@ namespace Funky
 
         public override Vector3 NormalAt(Vector3 i, Vector3 from)
         {
-            return Vector3.Cross(Vertices[0] - Vertices[1], Vertices[2] - Vertices[1]);
+            if (Normal.X != float.MaxValue) return Normal;
+            else return Vector3.Cross(Vertices[0] - Vertices[1], Vertices[2] - Vertices[1]);
         }
 
 
