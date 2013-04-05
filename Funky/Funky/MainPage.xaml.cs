@@ -15,7 +15,6 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
 using SharpDX;
-using SharpDX.Toolkit.Input;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 

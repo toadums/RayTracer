@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Machine>GRIFF-PC</Machine>
-    <WindowsUser>Griff</WindowsUser>
+    <WindowsUser>Griffin</WindowsUser>
     <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
     <PackageArchitecture>neutral</PackageArchitecture>
     <RegisteredManifestChecksum>8CB4101EDBCEBBE696397A46CE72ED9848B6BF600ADA30BACACD713F6458DE5B</RegisteredManifestChecksum>
@@ -13,104 +13,68 @@
     <RegisteredVersion>1.0.0.0</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\AppxManifest.xml">
+    <AppXManifest Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-04-05T19:02:24.191</Modified>
+      <Modified>2013-04-05T21:07:37.807</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.exe">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.exe">
       <PackagePath>SharpDX Toolkit WinRT %28XAML%29.exe</PackagePath>
-      <Modified>2013-04-05T19:32:41.529</Modified>
+      <Modified>2013-04-05T22:01:48.849</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.pdb">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.pdb">
       <PackagePath>SharpDX Toolkit WinRT %28XAML%29.pdb</PackagePath>
-      <Modified>2013-04-05T19:32:41.513</Modified>
+      <Modified>2013-04-05T22:01:48.830</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.D3DCompiler.dll">
-      <PackagePath>SharpDX.D3DCompiler.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.232</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Direct2D1.dll">
-      <PackagePath>SharpDX.Direct2D1.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.263</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Direct3D11.dll">
-      <PackagePath>SharpDX.Direct3D11.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.278</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll">
       <PackagePath>SharpDX.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.403</Modified>
+      <Modified>2013-04-05T21:04:18.040</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.DXGI.dll">
-      <PackagePath>SharpDX.DXGI.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.247</Modified>
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.xml">
+      <PackagePath>SharpDX.xml</PackagePath>
+      <Modified>2013-04-05T21:04:18.181</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.MediaFoundation.dll">
-      <PackagePath>SharpDX.MediaFoundation.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.294</Modified>
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\teapot.obj">
+      <PackagePath>teapot.obj</PackagePath>
+      <Modified>2013-04-05T21:05:05.032</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Toolkit.dll">
-      <PackagePath>SharpDX.Toolkit.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.356</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Toolkit.Game.dll">
-      <PackagePath>SharpDX.Toolkit.Game.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.310</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Toolkit.Graphics.dll">
-      <PackagePath>SharpDX.Toolkit.Graphics.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.325</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.Toolkit.Input.dll">
-      <PackagePath>SharpDX.Toolkit.Input.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.341</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.XAudio2.dll">
-      <PackagePath>SharpDX.XAudio2.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.356</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.XInput.dll">
-      <PackagePath>SharpDX.XInput.dll</PackagePath>
-      <Modified>2013-04-05T19:01:39.372</Modified>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\Assets\Logo.png">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\Assets\Logo.png">
       <PackagePath>Assets\Logo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-03-27T22:51:44.555</Modified>
+      <Modified>2013-04-05T21:04:17.838</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\Assets\SmallLogo.png">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\Assets\SmallLogo.png">
       <PackagePath>Assets\SmallLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-03-27T22:51:44.556</Modified>
+      <Modified>2013-04-05T21:04:17.838</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\Assets\SplashScreen.png">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\Assets\SplashScreen.png">
       <PackagePath>Assets\SplashScreen.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-03-27T22:51:44.556</Modified>
+      <Modified>2013-04-05T21:04:17.853</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\Assets\StoreLogo.png">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\Assets\StoreLogo.png">
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-03-27T22:51:44.557</Modified>
+      <Modified>2013-04-05T21:04:17.853</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\App.xaml">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\App.xaml">
       <PackagePath>App.xaml</PackagePath>
-      <Modified>2013-03-27T22:51:44.552</Modified>
+      <Modified>2013-04-05T21:04:16.824</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\Common\StandardStyles.xaml">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\Common\StandardStyles.xaml">
       <PackagePath>Common\StandardStyles.xaml</PackagePath>
-      <Modified>2013-03-27T22:51:44.563</Modified>
+      <Modified>2013-04-05T21:04:17.869</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\MainPage.xaml">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\MainPage.xaml">
       <PackagePath>MainPage.xaml</PackagePath>
-      <Modified>2013-04-04T21:53:01.669</Modified>
+      <Modified>2013-04-05T21:04:17.635</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\resources.pri">
+    <AppxPackagedFile Include="C:\Users\Griffin\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2013-04-05T19:02:24.051</Modified>
+      <Modified>2013-04-05T21:07:37.661</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

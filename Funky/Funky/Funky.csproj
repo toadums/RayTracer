@@ -104,7 +104,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="DrawGeometry.cs" />
+    <Compile Include="objLoader.cs" />
     <Compile Include="Perlin.cs" />
+    <Compile Include="Square.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="GeometricObject.cs" />
     <Compile Include="Light.cs" />
@@ -125,6 +127,11 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="SharpDX Toolkit WinRT (XAML)_TemporaryKey.pfx" />
+    <Content Include="teapot.obj">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="teddy.obj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png" />
@@ -151,40 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.D3DCompiler">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.D3DCompiler.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.Direct2D1.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.MediaFoundation">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.MediaFoundation.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Toolkit">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Toolkit.Game">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.Toolkit.Game.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Toolkit.Graphics">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.Toolkit.Graphics.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Toolkit.Input">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.Toolkit.Input.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XAudio2">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.XAudio2.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XInput">
-      <HintPath>..\..\..\..\SharpDX2.5\Bin\Standard-winrt\SharpDX.XInput.dll</HintPath>
+      <HintPath>..\..\..\..\SharpDX_2.5\Bin\Signed-winrt\SharpDX.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

@@ -1,5 +1,4 @@
 ﻿using SharpDX;
-using SharpDX.DirectWrite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace Funky
 {
     partial class RayTracer
     {
-        int NumVirtualLights = 5;
+        int NumVirtualLights = 20;
         bool drawSpheres = false;
 
         public void spawnVPL(Light light,float width,float height)
@@ -92,5 +91,32 @@ namespace Funky
             else
                 return null;
         }
+
+        private Vector3 calcLightRay(Ray ray)
+        {
+            GeometricObject hitShape = null;
+            double closestShape = float.MaxValue;
+
+
+            foreach (GeometricObject shape in Shapes)
+            {
+                double t = shape.intersection(ray);
+
+
+                if (t > 0.0 && t < closestShape)
+                {
+                    hitShape = shape;
+                    closestShape = t;
+                }
+            }
+            if (hitShape != null)
+            {
+                return FindPointOnRay(ray, closestShape);
+            }
+            else
+                return new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+        }
+
+
     }
 }

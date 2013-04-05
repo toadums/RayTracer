@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace Funky
 {
-    class Triangle : GeometricObject
+    class Square : GeometricObject
     {
-
+        
         Vector3[] Vertices;
-        Vector3 Normal;
 
-        public Triangle()
+        public Square()
         {
-            Normal = new Vector3(float.MaxValue);
+
         }
 
         /// <summary>
@@ -25,13 +24,10 @@ namespace Funky
         /// <param name="b">second point</param>
         /// <param name="c">third point</param>
         /// <param name="st">the surface texture (color, texture, etc)</param>
-        public Triangle(Vector3 a, Vector3 b, Vector3 c, SurfaceType st)
+        public Square(Vector3 a, Vector3 b, Vector3 c, Vector3 d, SurfaceType st)
         {
-            Vertices = new Vector3[] { a, b, c };
+            Vertices = new Vector3[] { a, b, c,d };
             this.surface = st;
-
-            Normal = new Vector3(float.MaxValue);
-
         }
 
         public override double intersection(Ray ray)
@@ -43,9 +39,12 @@ namespace Funky
             Vector3 e1 = p1 - p0;
             Vector3 e2 = p2 - p0;
 
+            Vector3 e1e2 = Vector3.Cross(e1, e2);
             Vector3 p = Vector3.Cross(ray.Direction, e2);
 
-            float a = Vector3.Dot(e1, p);
+            e1e2.Normalize();
+
+            float a = Vector3.Dot(e1e2, p);
 
             if (a < 0.000001) return 0.0;
 
@@ -68,14 +67,13 @@ namespace Funky
 
         public override Vector3 NormalAt(Vector3 i, Vector3 from)
         {
-            if (Normal.X != float.MaxValue) return Normal;
-            else return Vector3.Cross(Vertices[0] - Vertices[1], Vertices[2] - Vertices[1]);
+            return Vector3.Cross(Vertices[0] - Vertices[1], Vertices[2] - Vertices[1]);
         }
 
 
         public override string ToString()
         {
-            return "Triangle: 1: " + Vertices[0] + ", 2: " + Vertices[1] + ", 3: " + Vertices[2];
+            return "Triangle";
         }
 
     }
