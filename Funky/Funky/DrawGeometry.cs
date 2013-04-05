@@ -40,8 +40,8 @@ namespace Funky
                     ambient = new Vector3(0, 100, 255),
                     diffuse = new Vector3(100, 40, 78),
                     specular = new Vector3(50, 50, 50),
-                    color = new Vector3(0,0, 0),
-                    reflectiveness = 100,
+                    color = new Vector3(2,235, 92),
+                    reflectiveness = 0,
                     SpecExponent = 1000,
                     Refraction = 0,
                     RefractionIndex = 0
