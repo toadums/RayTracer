@@ -49,7 +49,7 @@ namespace Funky
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 1;
-        public static Vector2 ImageSize = new Vector2(1600);
+        public static Vector2 ImageSize = new Vector2(200);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -60,6 +60,8 @@ namespace Funky
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
         private List<Light> VirtualLights;
+
+        bool useVirtualLighting = true;
 
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
@@ -73,13 +75,17 @@ namespace Funky
 
             //Drawing Objects is done in the DrawGeometry.cs file
             DrawGeometry();
-            VirtualLights = new List<Light>();
-            spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
 
-            Lights.AddRange(VirtualLights);
+            if (useVirtualLighting)
+            {
+                VirtualLights = new List<Light>();
+                spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
 
-            //Lights.Remove(Lights[0]);
-            //Lights.Remove(Lights[0]);
+                Lights.AddRange(VirtualLights);
+
+                //Lights.Remove(Lights[0]);
+                //Lights.Remove(Lights[0]);
+            }
         }
 
         public async void Draw()

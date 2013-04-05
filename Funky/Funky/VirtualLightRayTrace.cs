@@ -10,7 +10,7 @@ namespace Funky
 {
     partial class RayTracer
     {
-        int NumVirtualLights = 5;
+        int NumVirtualLights = 20;
 
         public void spawnVPL(Light light,float width,float height)
         {
@@ -59,7 +59,7 @@ namespace Funky
                     {
                         position = newLightPos,
                         color = light.color,
-                        intensity = (float)hitSurface.reflectiveness/(float)100
+                        intensity = (float)(1.0f/(float)NumVirtualLights)
                     });
                 }
             }
