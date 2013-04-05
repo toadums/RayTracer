@@ -49,7 +49,7 @@ namespace Funky
 
             objLoader loader = new objLoader();
 
-            Task tas = loader.CreateTriangles(@"cow.obj", ImageSize.X / 3.0f, new Vector3(ImageSize.X / 2.0f, ImageSize.Y/ 2.0f, 2000));
+            Task tas = loader.CreateTriangles(@"capsule.obj", ImageSize.X / 3.0f, new Vector3(ImageSize.X / 2.0f, ImageSize.Y/ 2.0f, 2000));
             await tas;
             Task addTask = Task.Factory.StartNew(new Action(() =>
             {

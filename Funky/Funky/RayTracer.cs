@@ -52,7 +52,7 @@ namespace Funky
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 0;
-        public static Vector2 ImageSize = new Vector2(800);
+        public static Vector2 ImageSize = new Vector2(100);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;

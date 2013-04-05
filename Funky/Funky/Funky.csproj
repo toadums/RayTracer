@@ -126,6 +126,8 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="capsule.mtl" />
+    <None Include="capsule.obj" />
     <None Include="SharpDX Toolkit WinRT (XAML)_TemporaryKey.pfx" />
     <None Include="teapot.obj">
       <SubType>Designer</SubType>
@@ -137,6 +139,7 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="capsule0.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
