@@ -103,6 +103,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Cube.cs" />
     <Compile Include="DrawGeometry.cs" />
     <Compile Include="objLoader.cs" />
     <Compile Include="Perlin.cs" />
@@ -127,11 +128,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="SharpDX Toolkit WinRT (XAML)_TemporaryKey.pfx" />
-    <Content Include="teapot.obj">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="teddy.obj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.png" />

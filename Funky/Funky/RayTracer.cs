@@ -47,12 +47,12 @@ namespace Funky
     partial class RayTracer
     {
 
-        private const bool UseVPL = true;
+        private const bool UseVPL = false;
 
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 0;
-        public static Vector2 ImageSize = new Vector2(400);
+        public static Vector2 ImageSize = new Vector2(800);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -70,7 +70,8 @@ namespace Funky
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(ImageSize.X / 2.0f, ImageSize.Y * 0.8f, -10000);
+            //Eye = new Vector3(278,273,-800);
+            Eye = new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f - 100, -4000);
 
             System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path); 
         }
@@ -87,7 +88,7 @@ namespace Funky
 
                 Lights.AddRange(VirtualLights);
 
-                Lights.Remove(Lights[0]);
+                //Lights.Remove(Lights[0]);
             }
 
             int pixelWidth = WB.PixelWidth;
@@ -150,7 +151,6 @@ namespace Funky
             // 4 bytes required for each pixel
             byte[] result = new byte[width * height * 4];
             int resultIndex = 0;
-            int count = 0;
 
             float totalNum = width * height;
 
@@ -282,7 +282,7 @@ namespace Funky
                 if (hitShape is Sphere)
                     if (((Sphere)hitShape).position.X > ImageSize.X / 2.0f)
                     {
-                        int i = 0;
+
                     }
 
                 foreach (Light light in Lights)
