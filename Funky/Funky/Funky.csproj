@@ -120,7 +120,6 @@
     <Compile Include="Sphere.cs" />
     <Compile Include="SurfaceType.cs" />
     <Compile Include="VirtualLightRayTrace.cs" />
-    <Compile Include="WriteableBitmapSaveExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -128,6 +127,7 @@
     </AppxManifest>
     <None Include="capsule.mtl" />
     <None Include="capsule.obj" />
+    <None Include="packages.config" />
     <None Include="SharpDX Toolkit WinRT (XAML)_TemporaryKey.pfx" />
     <None Include="teapot.obj">
       <SubType>Designer</SubType>
@@ -159,8 +159,17 @@
     <Folder Include="Content\" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Facebook">
+      <HintPath>..\packages\Facebook.6.4.0\lib\win8\Facebook.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>..\..\..\..\SharpDX_2.5\Bin\Signed-winrt\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="WinRTXamlToolkit">
+      <HintPath>..\..\..\..\winrt toolkit\WinRTXamlToolkit\bin\Debug\WinRTXamlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="WriteableBitmapEx.WinRT">
+      <HintPath>..\..\..\..\..\Downloads\WriteableBitmapEx_v1.0.7.0\WriteableBitmapEx_v1.0.7.0\WinRT\WriteableBitmapEx.WinRT.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

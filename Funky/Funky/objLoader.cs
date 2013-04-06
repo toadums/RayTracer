@@ -9,7 +9,6 @@ using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -17,6 +16,7 @@ using Windows.System.Threading;
 using SharpDX;
 using System.Collections.Generic;
 using System.Linq;
+using WinRTXamlToolkit.Imaging;
 
 namespace Funky
 {
@@ -47,6 +47,7 @@ namespace Funky
 
             string[] read = wholeFile.Split('\n');
             byte[] pixels = new byte[1];
+            WriteableBitmap wbmp = null;
             Vector2 X = new Vector2(float.MaxValue, float.MinValue), Y = new Vector2(float.MaxValue, float.MinValue), Z = new Vector2(float.MaxValue, float.MinValue);
 
             string mtlFilename = string.Empty;
@@ -83,20 +84,21 @@ namespace Funky
                         {
                             string texFilename = ms.Split(' ')[1];
                             var texFile = await folder.GetFileAsync(texFilename);
+                                                        var properties = await texFile.Properties.GetImagePropertiesAsync();
 
-                            var stream = await texFile.OpenReadAsync();
-                            var properties = await texFile.Properties.GetImagePropertiesAsync();
+                            wbmp = new WriteableBitmap((Int32)properties.Width, (Int32)properties.Height);
 
-                            WriteableBitmap bm = new WriteableBitmap((Int32)properties.Width, (Int32)properties.Height);
-                            bm.SetSource(stream);
-                            pixels = new byte[bm.PixelWidth * bm.PixelHeight * 4];
-                            using (Stream pixelStream = bm.PixelBuffer.AsStream())
+                            await wbmp.LoadAsync(texFile);
+
+                            pixels = new byte[wbmp.PixelWidth * wbmp.PixelHeight * 4];
+
+                            using (Stream pixelStream = wbmp.PixelBuffer.AsStream())
                             {
-                                await pixelStream.WriteAsync(pixels, 0, pixels.Length);
+                                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
                             }
+                            wbmp.Invalidate();
                         }
                     }
-
                 }
 
             }
@@ -163,9 +165,36 @@ namespace Funky
                     if (s.Contains("/"))
                     {
                         string[] temp = s.Split(' ');
+
                         a = int.Parse(temp[1].Split('/')[0]) - 1;
                         b = int.Parse(temp[2].Split('/')[0]) - 1;
                         c = int.Parse(temp[3].Split('/')[0]) - 1;
+
+                        int aa = int.Parse(temp[1].Split('/')[1]) - 1;
+                        int bb = int.Parse(temp[2].Split('/')[1]) - 1;
+                        int cc = int.Parse(temp[3].Split('/')[1]) - 1;
+
+                        Vector2 texPos = new Vector2((Texture[aa].X + Texture[bb].X + Texture[cc].X) / 2.0f, (Texture[aa].Y + Texture[bb].Y + Texture[cc].Y) / 2.0f);
+
+                        int index = (int)((texPos.X * wbmp.PixelWidth + texPos.Y) * 4.0f);
+
+                        
+
+
+
+
+
+
+                        Triangles.Add(new Triangle(vertices[a], vertices[b], vertices[c],
+                         new SurfaceType()
+                         {
+                             color = new Vector3((float)pixels[index]/255.0f, (float)pixels[index+1]/255.0f,(float)pixels[index+2]/255.0f),
+                             type = textureType.standard,
+                             specular = new Vector3(1, 1, 1),
+                             SpecExponent = 500,
+                         }));
+
+
                     }
                     else
                     {
@@ -174,16 +203,19 @@ namespace Funky
                          a = int.Parse(temp[1]) - 1;
                          b = int.Parse(temp[2]) - 1;
                          c = int.Parse(temp[3]) - 1;
+
+                         Triangles.Add(new Triangle(vertices[a], vertices[b], vertices[c],
+                         new SurfaceType()
+                         {
+                             color = new Vector3(0.64253f, 0.12354f, 0986345f),
+                             type = textureType.standard,
+                             specular = new Vector3(1, 1, 1),
+                             SpecExponent = 500,
+                         }));
+
                     }
 
-                    Triangles.Add(new Triangle(vertices[a], vertices[b], vertices[c],
-                        new SurfaceType()
-                        {
-                            color = new Vector3(0.64253f, 0.12354f, 0986345f),
-                            type = textureType.standard,
-                            specular = new Vector3(1,1,1),
-                            SpecExponent = 500,
-                        }));
+                    
                     //if (count++ > 100) break;
 
                 }

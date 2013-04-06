@@ -17,6 +17,7 @@ using Windows.System.Threading;
 using SharpDX;
 using System.Collections.Generic;
 using System.Linq;
+using WinRTXamlToolkit.Imaging;
 
 namespace Funky
 {
@@ -52,7 +53,7 @@ namespace Funky
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 0;
-        public static Vector2 ImageSize = new Vector2(100);
+        public static Vector2 ImageSize = new Vector2(400);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
