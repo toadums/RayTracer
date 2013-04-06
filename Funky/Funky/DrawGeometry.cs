@@ -174,7 +174,10 @@ namespace Funky
 
             Cube cube = new Cube(new Vector3(ImageSize.X * .25f, ImageSize.Y, 1300), ImageSize.Y/2f, ImageSize.X * .1875f, 200);
 
-            Shapes.AddRange(cube.buildCube());
+            //Shapes.AddRange(cube.buildCube());
+            cube.buildCube();
+
+            Shapes.Add(cube);
 
             /*Shapes.Add(new Sphere()
             {

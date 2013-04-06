@@ -17,7 +17,17 @@ namespace Funky
             throw new Exception("INTERSECTION NOT IMPLEMENTED!!!");
         }
 
+        public virtual Tuple<double,Triangle> intersection2(Ray ray)
+        {
+            throw new Exception("INTERSECTION NOT IMPLEMENTED!!!");
+        }
+
         public virtual Vector3 NormalAt(Vector3 i, Vector3 from)
+        {
+            throw new Exception("INTERSECTION NOT IMPLEMENTED!!!");
+        }
+
+        public virtual Vector3 NormalAt2(Vector3 i, Vector3 from, Triangle tri)
         {
             throw new Exception("INTERSECTION NOT IMPLEMENTED!!!");
         }

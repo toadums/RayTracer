@@ -16,6 +16,7 @@ namespace Funky
         float width;
         float depth;
         List<GeometricObject> planes;
+        Triangle hitTri;
 
         Vector3 white = new Vector3(.76f, .75f, .5f);
         Vector3 red = new Vector3(.63f, .06f, .04f);
@@ -29,6 +30,22 @@ namespace Funky
         //Sphere constructor
         public Cube(Vector3 frontFloor, float h, float w, float d)
         {
+            surface = new SurfaceType()
+            {
+                type = textureType.standard,
+                ambient = new Vector3(0, 0.4f, 1),
+                diffuse = new Vector3(0.4f, 0.1f, 0.2f),
+                specular = new Vector3(0.2f, 0.2f, 0.2f),
+                color = new Vector3(.76f, .75f, .5f),
+                reflectiveness = 0,
+                SpecExponent = 1000,
+                RefractionIndex = 0
+            };
+
+            planes = new List<GeometricObject>();
+
+            hitTri = new Triangle();
+
             frontFloorPoint = frontFloor;
             height = h;
             width = w;
@@ -44,11 +61,12 @@ namespace Funky
             backTopPoint = backFloorPoint - new Vector3(0, height, 0);
             rightTopPoint = rightFloorPoint - new Vector3(0, height, 0);
 
+
+
         }
 
-        public List<GeometricObject> buildCube()
+        public void buildCube()
         {
-            planes = new List<GeometricObject>();
 
             //Front left plane
             planes.Add(new Triangle(
@@ -104,17 +122,66 @@ namespace Funky
                 leftFloorPoint, rightFloorPoint, backFloorPoint, 
                 new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
 
-            return planes;
+            //return planes;
         }
 
-
-
-            
-
-        //This function draws a sphere.
-        public void draw()
+        public override Tuple<double,Triangle> intersection2(Ray ray)
         {
+            float closest = float.PositiveInfinity;
+
+            foreach (Triangle triangle in planes)
+            {
+                Vector3 p0 = triangle.Vertices[0];
+                Vector3 p1 = triangle.Vertices[2];
+                Vector3 p2 = triangle.Vertices[1];
+
+                Vector3 e1 = p1 - p0;
+                Vector3 e2 = p2 - p0;
+
+                Vector3 p = Vector3.Cross(ray.Direction, e2);
+
+                float a = Vector3.Dot(e1, p);
+
+                if (a < 0.000001) continue;// return 0.0;
+
+                float f = 1.0f / a;
+
+                Vector3 s = ray.Start - p0;
+
+                float u = f * Vector3.Dot(s, p);
+
+                if (u < 0.0 || u > 1.0) continue;// return 0.0;
+
+                Vector3 q = Vector3.Cross(s, e1);
+                float v = f * Vector3.Dot(ray.Direction, q);
+                if (v < 0.0 || u + v > 1.0) continue;// return 0.0;
+
+                float t = f * Vector3.Dot(e2, q);
+
+                //return t;
+                if (t < closest)
+                {
+                    closest = t;
+                    hitTri = triangle;
+                }
+            }
+
+            if (closest < float.PositiveInfinity)
+            {
+                return new Tuple<double,Triangle>(closest,hitTri);
+            }
+            else
+                return new Tuple<double, Triangle>(0.0, null) ;
+
 
         }
+
+        public override Vector3 NormalAt2(Vector3 i, Vector3 from, Triangle tri)
+        {
+            if (tri.Normal.X != float.MaxValue) return tri.Normal;
+            else return Vector3.Cross(tri.Vertices[0] - tri.Vertices[1], tri.Vertices[2] - tri.Vertices[1]);
+        }
+
+
     }
 }

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Funky
 {
-    class Triangle : GeometricObject
+    public class Triangle : GeometricObject
     {
 
-        Vector3[] Vertices;
-        Vector3 Normal;
+        public Vector3[] Vertices;
+        public Vector3 Normal;
 
         public Triangle()
         {

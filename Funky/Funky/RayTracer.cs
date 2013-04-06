@@ -236,11 +236,24 @@ namespace Funky
             Vector3 vNormal;
             Vector3 hp;
             float LightValue = 0.0f;
+            Triangle hitTri = new Triangle();
 
             foreach (GeometricObject shape in Shapes)
             {
                 if (shape == null) continue;
-                double t = shape.intersection(ray);
+
+                double t;
+
+                if (shape is Cube)
+                {
+                    Tuple<double, Triangle> temp = shape.intersection2(ray);
+                    t = temp.Item1;
+                    hitTri = temp.Item2;
+                }
+                else
+                {
+                    t = shape.intersection(ray);
+                }
 
                 if (t > 0.0 && t < hitShapeDist)
                 {
@@ -258,25 +271,35 @@ namespace Funky
             else
             {
                 hp = FindPointOnRay(ray, hitShapeDist);
-                vNormal = hitShape.NormalAt(hp, Eye);
-                vNormal.Normalize();
-                if (hitShape.surface.type == textureType.bump)
+                if (hitShape is Cube)
                 {
-
-                    const double bumpLevel = 0.2;
-                    double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
-                    double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
-                    double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
-
-                    vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
-                    vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
-                    vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
-
-                    double temp = Vector3.Dot(vNormal, vNormal);
-                    if (temp != 0.0)
+                    vNormal = hitShape.NormalAt2(hp, Eye, hitTri);
+                }
+                else
+                {
+                    vNormal = hitShape.NormalAt(hp, Eye);
+                }
+                vNormal.Normalize();
+                if (hitShape is Sphere)
+                {
+                    if (hitShape.surface.type == textureType.bump)
                     {
-                        temp = 1.0 / Math.Sqrt(temp);
-                        vNormal = (float)temp * vNormal;
+
+                        const double bumpLevel = 0.2;
+                        double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
+                        double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
+                        double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
+
+                        vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
+                        vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
+                        vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
+
+                        double temp = Vector3.Dot(vNormal, vNormal);
+                        if (temp != 0.0)
+                        {
+                            temp = 1.0 / Math.Sqrt(temp);
+                            vNormal = (float)temp * vNormal;
+                        }
                     }
                 }
                 if (hitShape is Sphere)
@@ -350,7 +373,7 @@ namespace Funky
 
         }
 
-        private Vector3 calcLightRay(Ray ray, Light light)
+        /*private Vector3 calcLightRay(Ray ray, Light light)
         {
             GeometricObject hitShape = null;
             double closestShape = float.MaxValue;
@@ -371,7 +394,7 @@ namespace Funky
             }
             else
                 return light.position;
-        }
+        }*/
 
         private float isVisible(Light L, Vector3 hitPoint, Ray ray)
         {
@@ -416,13 +439,21 @@ namespace Funky
 
             foreach (GeometricObject shape in Shapes)
             {
-                double t=shape.intersection(r);
+                double t;
+                if (shape is Cube)
+                {
+                    Tuple<double, Triangle> temp = shape.intersection2(r);
+                    t = temp.Item1;
+                }
+                else
+                {
+                    t = shape.intersection(r);
+                }
                 if (t < dist && t > 0.0f && shape.surface.RefractionIndex < 1)
                 {
                     closest = shape;
                     dist = t;
                 }
-
             }
 
             foreach (Light light in Lights)
