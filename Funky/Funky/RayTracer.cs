@@ -53,7 +53,7 @@ namespace Funky
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 0;
-        public static Vector2 ImageSize = new Vector2(400);
+        public static Vector2 ImageSize = new Vector2(1600);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -65,6 +65,8 @@ namespace Funky
         private List<Light> Lights;
         private List<Light> VirtualLights;
 
+        public static byte[] TexturePixels;
+        public static Vector2 TexSize;
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
             perlinTexture = new Perlin();
@@ -105,7 +107,7 @@ namespace Funky
                 DateTime start = DateTime.Now;
                 // Asynchronously graph the Mandelbrot set on a background thread
                 byte[] result = null;
-                await ThreadPool.RunAsync(new WorkItemHandler(
+                await ThreadPool.RunAsync(  new WorkItemHandler(
                     (IAsyncAction action) =>
                     {
                         result = Trace(pixelWidth, pixelHeight);
@@ -170,21 +172,21 @@ namespace Funky
                 for (int x = 0; x < width; x++)
                 {
                     color = new Vector3(0, 0, 0);
-
-                    for (float innerPixelY = 1.0f / numInnerPixels; innerPixelY <= 1; innerPixelY += 1.0f / numInnerPixels)
-                    {
-                        for (float innerPixelX = 1.0f / numInnerPixels; innerPixelX <= 1; innerPixelX += 1.0f / numInnerPixels)
+                    
+                        for (float innerPixelY = 1.0f / numInnerPixels; innerPixelY <= 1; innerPixelY += 1.0f / numInnerPixels)
                         {
+                            for (float innerPixelX = 1.0f / numInnerPixels; innerPixelX <= 1; innerPixelX += 1.0f / numInnerPixels)
+                            {
 
-                            Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f / numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f / numInnerPixels * 2.0f)), 0)) - Eye;
-                            dir.Normalize();
-                            Ray ray = new Ray(Eye, dir);
-                            float ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable = 0;
-                            color += AddRay(ray, 0, 1.0f, ref ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable);
+                                Vector3 dir = (new Vector3(x + (innerPixelX - (1.0f / numInnerPixels * 2.0f)), y + (innerPixelY - (1.0f / numInnerPixels * 2.0f)), 0)) - Eye;
+                                dir.Normalize();
+                                Ray ray = new Ray(Eye, dir);
+                                float ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable = 0;
+                                color += AddRay(ray, 0, 1.0f, ref ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable);
 
+                            }
                         }
-                    }
-
+                    
 
 
                     color /= (numInnerPixels * numInnerPixels);
@@ -302,9 +304,23 @@ namespace Funky
                     if ((LightValue = isVisible(light, hp, lightRay)) > 0)
                     {
 
+                        Vector3 color = new Vector3();
+
+                        if (hitShape is Triangle)
+                        {
+                            if (((Triangle)hitShape).HasTexture)
+                            {
+                                color = GetPixelColorFromTexture(hp, hitShape as Triangle);
+                            }
+                            else
+                            {
+                                color = hitShape.surface.color;
+                            }
+                        }
+
                         //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                         float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
-                        curColor += light.intensity * lambert * ((light.color)) * (hitShape.surface.color);
+                        curColor += light.intensity * lambert * ((light.color)) * (color);
 
                         Vector3 blinn = lightRay.Direction - ray.Direction;
                         blinn.Normalize();
@@ -352,8 +368,38 @@ namespace Funky
                 }
 
             }
-
             return Clamp(curColor);
+        }
+
+        private Vector3 GetPixelColorFromTexture(Vector3 hp, Triangle hitShape){
+
+            KeyValuePair<Vector3,Vector2>[] posTex = new KeyValuePair<Vector3,Vector2>[3];
+            posTex[0] = new KeyValuePair<Vector3,Vector2>(hitShape.Vertices[0], hitShape.TextureCoords[0]);
+            posTex[1] = new KeyValuePair<Vector3,Vector2>(hitShape.Vertices[1], hitShape.TextureCoords[1]);
+            posTex[2] = new KeyValuePair<Vector3,Vector2>(hitShape.Vertices[2], hitShape.TextureCoords[2]);
+
+
+
+            Vector2 xRange = posTex[0].Value.X == posTex[1].Value.X ?
+                new Vector2((posTex[0].Value.X > posTex[2].Value.X ? 2 : 0), (posTex[0].Value.X > posTex[2].Value.X ? 0 : 2)) :
+                new Vector2((posTex[0].Value.X > posTex[1].Value.X ? 1 : 0), (posTex[0].Value.X > posTex[1].Value.X ? 0 : 1));
+
+            Vector2 yRange = posTex[0].Value.Y == posTex[1].Value.Y ?
+                new Vector2((posTex[0].Value.Y > posTex[2].Value.Y ? 2 : 0), (posTex[0].Value.Y > posTex[2].Value.Y ? 0 : 2)) :
+                new Vector2((posTex[0].Value.Y > posTex[1].Value.Y ? 1 : 0), (posTex[0].Value.Y > posTex[1].Value.Y ? 0 : 1));
+
+            float xDist = Vector3.Distance(posTex[(int)xRange.X].Key, posTex[(int)xRange.Y].Key);
+            float yDist = Vector3.Distance(posTex[(int)yRange.X].Key, posTex[(int)yRange.Y].Key);
+
+            float xPercent = Vector3.Distance(hp, posTex[(int)xRange.X].Key)/xDist;
+            float yPercent = Vector3.Distance(hp, posTex[(int)yRange.X].Key)/yDist;
+
+            float xIndex = posTex[(int)xRange.X].Value.X + (posTex[(int)xRange.Y].Value.X - posTex[(int)xRange.X].Value.X) / xPercent;
+            float yIndex = posTex[(int)yRange.X].Value.Y + (posTex[(int)yRange.Y].Value.Y - posTex[(int)yRange.X].Value.Y) / yPercent;
+
+            int index = (int)((xIndex * TexSize.X + yIndex) * 4.0f);
+
+            return new Vector3((float)TexturePixels[index + 2] / 255.0f, (float)TexturePixels[index + 1] / 255.0f, (float)TexturePixels[index] / 255.0f);
 
         }
 

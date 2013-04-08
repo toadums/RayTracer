@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 
 namespace Funky
 {
+
+
+
     class Triangle : GeometricObject
     {
-
-        Vector3[] Vertices;
+        public Vector2[] TextureCoords;
+        public Vector3[] Vertices;
         Vector3 Normal;
 
         public Triangle()
         {
+            TextureCoords = new Vector2[]{new Vector2(float.MaxValue, float.MaxValue)};
             Normal = new Vector3(float.MaxValue);
         }
 
@@ -29,6 +33,27 @@ namespace Funky
         {
             Vertices = new Vector3[] { a, b, c };
             this.surface = st;
+
+            Normal = new Vector3(float.MaxValue);
+
+        }
+
+        public bool HasTexture{
+            get { if (TextureCoords != null && TextureCoords.Length > 0 && TextureCoords[0].X != float.MaxValue)return true; else return false; }
+        }
+
+        /// <summary>
+        /// Constructor for a triangle. Points must be added in a clockwise manner
+        /// </summary>
+        /// <param name="a">first point</param>
+        /// <param name="b">second point</param>
+        /// <param name="c">third point</param>
+        /// <param name="st">the surface texture (color, texture, etc)</param>
+        public Triangle(Vector3 a, Vector3 b, Vector3 c, Vector2[] textures, SurfaceType st)
+        {
+            Vertices = new Vector3[] { a, b, c };
+            this.surface = st;
+            TextureCoords = textures;
 
             Normal = new Vector3(float.MaxValue);
 

@@ -219,7 +219,6 @@ C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit W
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\resources.pri
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\AppxManifest.xml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\Funky.build.appxrecipe
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.xml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.pri
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\App.g.i.cs
@@ -250,13 +249,6 @@ C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\priconfig.xml.int
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\layout.resfiles.intermediate
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\resources.resfiles.intermediate
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles.intermediate
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\Facebook.xml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WinRTXamlToolkit.dll
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WriteableBitmapEx.WinRT.dll
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WinRTXamlToolkit.pdb
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WinRTXamlToolkit.pri
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WriteableBitmapEx.WinRT.pdb
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WriteableBitmapEx.WinRT.xml
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WriteableBitmapEx.WinRT.pri
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\WinRTXamlToolkit.pri.xml
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\WriteableBitmapEx.WinRT.pri.xml

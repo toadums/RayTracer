@@ -43,8 +43,9 @@ namespace Funky
             var file = await folder.GetFileAsync(filename);
             var wholeFile = await FileIO.ReadTextAsync(file);
 
-            int count = 0;
-
+            int v = 0;
+            int t = 0;
+            int n = 0;
             string[] read = wholeFile.Split('\n');
             byte[] pixels = new byte[1];
             WriteableBitmap wbmp = null;
@@ -57,7 +58,7 @@ namespace Funky
                 if (s.Length == 0) continue;
                 if (s[0] == 'v' && s[1] == ' ')
                 {
-                    count++;
+                    v++;
                     string[] temp = s.Split(' ');
                     float x = float.Parse(temp[1]);
                     if (x < X.X) X.X = x;
@@ -71,41 +72,52 @@ namespace Funky
                     if (z < Z.X) Z.X = z;
                     if (z > Z.Y) Z.Y = z;
 
+                }else if(s[0] == 'v' && s[1] == 't'){
+                    t++;
+                }
+                else if (s[0] == 'v' && s[1] == 'n')
+                {
+                    n++;
                 }
                 else if (s.Contains("mtllib"))
                 {
+                    
                     mtlFilename = s.Split(' ')[1];
                     var mtlFile = await folder.GetFileAsync(mtlFilename);
                     var mtlText = await FileIO.ReadTextAsync(mtlFile);
-
+                    
                     foreach (string ms in mtlText.Split('\n'))
                     {
                         if (ms.Contains("map_Kd"))
                         {
                             string texFilename = ms.Split(' ')[1];
-                            var texFile = await folder.GetFileAsync(texFilename);
-                                                        var properties = await texFile.Properties.GetImagePropertiesAsync();
 
-                            wbmp = new WriteableBitmap((Int32)properties.Width, (Int32)properties.Height);
+                    var texFile = await folder.GetFileAsync(texFilename);
+                                                var properties = await texFile.Properties.GetImagePropertiesAsync();
 
-                            await wbmp.LoadAsync(texFile);
+                    wbmp = new WriteableBitmap((Int32)properties.Width, (Int32)properties.Height);
 
-                            pixels = new byte[wbmp.PixelWidth * wbmp.PixelHeight * 4];
+                    await wbmp.LoadAsync(texFile);
 
-                            using (Stream pixelStream = wbmp.PixelBuffer.AsStream())
-                            {
-                                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-                            }
-                            wbmp.Invalidate();
+                    pixels = new byte[wbmp.PixelWidth * wbmp.PixelHeight * 4];
+
+                    using (Stream pixelStream = wbmp.PixelBuffer.AsStream())
+                    {
+                        await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                    }
+                    wbmp.Invalidate();
+                    RayTracer.TexturePixels = pixels;
+                    RayTracer.TexSize = new Vector2(wbmp.PixelWidth, wbmp.PixelHeight);
+
                         }
                     }
                 }
 
             }
 
-            Vector3[] vertices = new Vector3[count];
-            Vector3[] Normals = new Vector3[count];
-            Vector2[] Texture = new Vector2[count];
+            Vector3[] vertices = new Vector3[v];
+            Vector3[] Normals = new Vector3[n];
+            Vector2[] Texture = new Vector2[t];
 
             int cV = 0, cN = 0, cT = 0;
 
@@ -155,7 +167,7 @@ namespace Funky
                 }
             }
 
-            count = 0;
+            int count = 0;
             foreach (string s in read)
             {
                 if (s.Length == 0) continue;
@@ -174,26 +186,20 @@ namespace Funky
                         int bb = int.Parse(temp[2].Split('/')[1]) - 1;
                         int cc = int.Parse(temp[3].Split('/')[1]) - 1;
 
-                        Vector2 texPos = new Vector2((Texture[aa].X + Texture[bb].X + Texture[cc].X) / 2.0f, (Texture[aa].Y + Texture[bb].Y + Texture[cc].Y) / 2.0f);
+                        Vector2 texPos = new Vector2((Texture[aa].X + Texture[bb].X + Texture[cc].X) / 3.0f, (Texture[aa].Y + Texture[bb].Y + Texture[cc].Y) / 3.0f);
 
                         int index = (int)((texPos.X * wbmp.PixelWidth + texPos.Y) * 4.0f);
 
-                        
-
-
-
-
-
-
-                        Triangles.Add(new Triangle(vertices[a], vertices[b], vertices[c],
+                        Triangles.Add(new Triangle(vertices[a], vertices[b], vertices[c], new Vector2[]{
+                            Texture[aa], Texture[bb], Texture[cc]},
                          new SurfaceType()
                          {
-                             color = new Vector3((float)pixels[index]/255.0f, (float)pixels[index+1]/255.0f,(float)pixels[index+2]/255.0f),
+                             color = new Vector3((float)pixels[index+2]/255.0f, (float)pixels[index+1]/255.0f,(float)pixels[index + 1]/255.0f),
+                             
                              type = textureType.standard,
                              specular = new Vector3(1, 1, 1),
-                             SpecExponent = 500,
+                             SpecExponent = 9999999999,
                          }));
-
 
                     }
                     else
@@ -210,7 +216,7 @@ namespace Funky
                              color = new Vector3(0.64253f, 0.12354f, 0986345f),
                              type = textureType.standard,
                              specular = new Vector3(1, 1, 1),
-                             SpecExponent = 500,
+                             SpecExponent = 0,
                          }));
 
                     }
