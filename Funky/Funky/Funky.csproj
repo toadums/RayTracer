@@ -104,6 +104,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="DrawGeometry.cs" />
+    <Compile Include="FunkyTexture.cs" />
     <Compile Include="objLoader.cs" />
     <Compile Include="Perlin.cs" />
     <Compile Include="Square.cs" />
@@ -127,6 +128,8 @@
     </AppxManifest>
     <None Include="capsule.mtl" />
     <None Include="capsule.obj" />
+    <None Include="Jonas Furniture Set.mtl" />
+    <None Include="Jonas Furniture Set.obj" />
     <None Include="packages.config" />
     <None Include="SharpDX Toolkit WinRT (XAML)_TemporaryKey.pfx" />
     <None Include="teapot.obj">
@@ -140,6 +143,8 @@
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="capsule0.jpg" />
+    <Content Include="Jonas Furniture Set_bp.png" />
+    <Content Include="Jonas Furniture Set_df.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

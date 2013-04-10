@@ -14,7 +14,9 @@ namespace Funky
     {
         public Vector2[] TextureCoords;
         public Vector3[] Vertices;
-        Vector3 Normal;
+        public Vector3 Normal;
+
+        public FunkyTexture TextureToUse;
 
         public Triangle()
         {
@@ -36,6 +38,11 @@ namespace Funky
 
             Normal = new Vector3(float.MaxValue);
 
+        }
+
+        public void SetTexture(ref FunkyTexture tex)
+        {
+            TextureToUse = tex;
         }
 
         public bool HasTexture{

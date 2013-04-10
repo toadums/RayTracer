@@ -72,7 +72,9 @@ namespace Funky
                     if (z < Z.X) Z.X = z;
                     if (z > Z.Y) Z.Y = z;
 
-                }else if(s[0] == 'v' && s[1] == 't'){
+                }
+                else if (s[0] == 'v' && s[1] == 't')
+                {
                     t++;
                 }
                 else if (s[0] == 'v' && s[1] == 'n')
@@ -81,39 +83,67 @@ namespace Funky
                 }
                 else if (s.Contains("mtllib"))
                 {
-                    
+
                     mtlFilename = s.Split(' ')[1];
                     var mtlFile = await folder.GetFileAsync(mtlFilename);
                     var mtlText = await FileIO.ReadTextAsync(mtlFile);
-                    
-                    foreach (string ms in mtlText.Split('\n'))
+
+                    foreach (string ms in mtlText.Trim().Split('\n'))
                     {
                         if (ms.Contains("map_Kd"))
                         {
                             string texFilename = ms.Split(' ')[1];
 
-                    var texFile = await folder.GetFileAsync(texFilename);
-                                                var properties = await texFile.Properties.GetImagePropertiesAsync();
+                            var texFile = await folder.GetFileAsync(texFilename);
+                            var properties = await texFile.Properties.GetImagePropertiesAsync();
 
-                    wbmp = new WriteableBitmap((Int32)properties.Width, (Int32)properties.Height);
+                            wbmp = new WriteableBitmap((Int32)properties.Width, (Int32)properties.Height);
 
-                    await wbmp.LoadAsync(texFile);
+                            await wbmp.LoadAsync(texFile);
 
-                    pixels = new byte[wbmp.PixelWidth * wbmp.PixelHeight * 4];
+                            pixels = new byte[wbmp.PixelWidth * wbmp.PixelHeight * 4];
 
-                    using (Stream pixelStream = wbmp.PixelBuffer.AsStream())
-                    {
-                        await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-                    }
-                    wbmp.Invalidate();
-                    RayTracer.TexturePixels = pixels;
-                    RayTracer.TexSize = new Vector2(wbmp.PixelWidth, wbmp.PixelHeight);
+                            using (Stream pixelStream = wbmp.PixelBuffer.AsStream())
+                            {
+                                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                            }
+                            wbmp.Invalidate();
+                       //     RayTracer.TexturePixels = new Vector3[wbmp.PixelHeight, wbmp.PixelWidth];
+                            int r = 0, c = 0;
+                            for (int i = 0; i < pixels.Length; i++)
+                            {
+
+ 
+                           //     RayTracer.TexturePixels[r, c] = new Vector3(pixels[i+2], pixels[i+1], pixels[i+0])/255.0f;
+
+
+                                c = (c + 1) % wbmp.PixelWidth;
+
+                                if (c == 0)
+                                {
+                                    r = (r + 1) % wbmp.PixelHeight;
+
+                                }
+
+                                i+=3;
+
+                            }
+
+                            //RayTracer.TexSize = new Vector2(wbmp.PixelWidth, wbmp.PixelHeight);
 
                         }
                     }
                 }
 
             }
+            if (X.X == 0) X.X = float.MinValue;
+            if (X.Y == 0) X.Y = float.MinValue;
+
+            if (Y.X == 0) Y.X = float.MinValue;
+            if (Y.Y == 0) Y.Y = float.MinValue;
+
+            if (Z.X == 0) Z.X = float.MinValue;
+            if (Z.Y == 0) Z.Y = float.MinValue;
 
             Vector3[] vertices = new Vector3[v];
             Vector3[] Normals = new Vector3[n];
@@ -138,7 +168,7 @@ namespace Funky
 
                             (a >= 0 ? (a / X.Y) : -(a / X.X)) * scale + position.X,
                             (b >= 0 ? (b / Y.Y) : -(b / Y.X)) * scale + position.Y,
-                            c + position.Z
+                            (c >= 0 ? (c / Z.Y) : -(c / Z.X)) * scale + position.Z
                             );
                         cV++;
                     }
@@ -186,20 +216,30 @@ namespace Funky
                         int bb = int.Parse(temp[2].Split('/')[1]) - 1;
                         int cc = int.Parse(temp[3].Split('/')[1]) - 1;
 
-                        Vector2 texPos = new Vector2((Texture[aa].X + Texture[bb].X + Texture[cc].X) / 3.0f, (Texture[aa].Y + Texture[bb].Y + Texture[cc].Y) / 3.0f);
+                        int aaa = int.Parse(temp[1].Split('/')[2]) - 1;
+                        int bbb = int.Parse(temp[2].Split('/')[2]) - 1;
+                        int ccc = int.Parse(temp[3].Split('/')[2]) - 1;
 
-                        int index = (int)((texPos.X * wbmp.PixelWidth + texPos.Y) * 4.0f);
+                       
+                        Vector3 v1 = vertices[b - a];
+                        Vector3 v2 = vertices[c - a];
 
-                        Triangles.Add(new Triangle(vertices[a], vertices[b], vertices[c], new Vector2[]{
+                        v1 = Vector3.Cross(v1,v2);
+                        v1.Normalize();
+
+                        v2= new Vector3(RayTracer.ImageSize.X/2.0f, RayTracer.ImageSize.Y/2.0f,0) - RayTracer.Eye;
+                        v2.Normalize();
+
+                      Triangles.Add(new Triangle(vertices[a], vertices[b], vertices[c], new Vector2[]{
                             Texture[aa], Texture[bb], Texture[cc]},
-                         new SurfaceType()
-                         {
-                             color = new Vector3((float)pixels[index+2]/255.0f, (float)pixels[index+1]/255.0f,(float)pixels[index + 1]/255.0f),
-                             
-                             type = textureType.standard,
-                             specular = new Vector3(1, 1, 1),
-                             SpecExponent = 9999999999,
-                         }));
+                       new SurfaceType()
+                       {
+                           color = (new Vector3(1, 1, 0)),
+
+                           type = textureType.standard,
+                           specular = new Vector3(1, 1, 1),
+                           SpecExponent = 9999999999,
+                       }) );
 
                     }
                     else

@@ -15,6 +15,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
 using SharpDX;
+using Windows.UI.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,7 +29,7 @@ namespace Funky
 
         WriteableBitmap WB;
         RayTracer Tracer;
-
+        public static CoreDispatcher d;
 
         public static Vector2 WindowSize;
 
@@ -49,7 +50,7 @@ namespace Funky
 
                 Tracer.Draw();
 
-                
+                d = this.Dispatcher;
 
                    
 

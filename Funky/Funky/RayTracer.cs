@@ -48,32 +48,33 @@ namespace Funky
     partial class RayTracer
     {
 
-            private const bool UseVPL = false;
+        private const bool UseVPL = false;
 
-        private const float numInnerPixels = 1;
+        private const float numInnerPixels = 3;
 
-        private const int NumBounces = 0;
+        private const int NumBounces = 2;
         public static Vector2 ImageSize = new Vector2(1600);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
         public WriteableBitmap WB;
         private TextBlock FPS;
-        public Vector3 Eye;
+        public static Vector3 Eye;
 
         private List<GeometricObject> Shapes;
         private List<Light> Lights;
         private List<Light> VirtualLights;
 
-        public static byte[] TexturePixels;
-        public static Vector2 TexSize;
+      //  public static Vector3[,] TexturePixels;
+      //  public static Vector2 TexSize;
+        private bool DontPornIt = false;
         public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
         {
             perlinTexture = new Perlin();
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y* 0.8f, 10000);
+            Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y/2.0f, 10000);
 
             System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path);      
 
@@ -97,7 +98,38 @@ namespace Funky
         {
 
             await DrawGeometry();
+            /*
+            
+            WriteableBitmap bmp = new WriteableBitmap((int)TexSize.X, (int)TexSize.Y);
+            byte[] buff = new byte[(int)TexSize.X * (int)TexSize.Y * 4];
+                
+            int ind = 0;
 
+            for (int y = 0; y < TexSize.Y; y++)
+            {
+
+                for (int x = 0; x < TexSize.X; x++)
+                {
+
+
+                    buff[ind++] = Convert.ToByte(TexturePixels[y, x].Z * 255.0f);
+                    buff[ind++] = Convert.ToByte(TexturePixels[y, x].Y * 255.0f);
+                    buff[ind++] = Convert.ToByte(TexturePixels[y, x].X * 255.0f);
+                    buff[ind++] = Convert.ToByte(255);
+                }
+            }
+
+            
+            // Open a stream to copy the graph to the WriteableBitmap's pixel buffer
+            using (Stream stream = bmp.PixelBuffer.AsStream())
+            {
+                await stream.WriteAsync(buff, 0, buff.Length);
+            }
+
+            StorageFolder folder2 = ApplicationData.Current.LocalFolder;
+
+            await WriteableBitmapSaveExtensions.SaveToFile(bmp, folder2, "SHITTY.jpg");
+            */
 
             int pixelWidth = WB.PixelWidth;
             int pixelHeight = WB.PixelHeight;
@@ -110,7 +142,7 @@ namespace Funky
                 await ThreadPool.RunAsync(  new WorkItemHandler(
                     (IAsyncAction action) =>
                     {
-                        result = Trace(pixelWidth, pixelHeight);
+                        result = Trace(pixelWidth, pixelHeight).Result;
                     }
                     ));
 
@@ -124,9 +156,12 @@ namespace Funky
 
                 await WriteableBitmapSaveExtensions.SaveToFile(WB, folder, "img" + i++ + ".jpg");
 
+
+
                 // Redraw the WriteableBitmap
                 WB.Invalidate();
                 FPS.Text = "FPS = " + Utility.CalculateFrameRate().ToString();
+                DontPornIt = true;
                 /*
                 foreach (Light l in Lights)
                 {
@@ -150,8 +185,8 @@ namespace Funky
 
             }
         }
-
-        private byte[] Trace(int width, int height)
+        int m = 0;
+        private async Task<byte[]> Trace(int width, int height)
         {
 
             string s = "0 =                                                                                                    100";
@@ -168,11 +203,10 @@ namespace Funky
 
             for (int y = 0; y < height; y++)
             {
-
                 for (int x = 0; x < width; x++)
                 {
                     color = new Vector3(0, 0, 0);
-                    
+                   //if(y>ImageSize.Y / 2.0f  )
                         for (float innerPixelY = 1.0f / numInnerPixels; innerPixelY <= 1; innerPixelY += 1.0f / numInnerPixels)
                         {
                             for (float innerPixelX = 1.0f / numInnerPixels; innerPixelX <= 1; innerPixelX += 1.0f / numInnerPixels)
@@ -195,7 +229,7 @@ namespace Funky
 
                     if (color.X < 0 || color.Y < 0 || color.Z < 0)
                     {
-                        color = new Vector3(1, 1, 0);
+                        color = new Vector3(0,0, 0);
                     }
 
                     result[resultIndex++] = Convert.ToByte(color.Z);    // Green value of pixel
@@ -207,6 +241,20 @@ namespace Funky
 
                     if (n == (int)n)
                     {
+                        if (!DontPornIt)
+                        {
+                            MainPage.d.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, new Windows.UI.Core.DispatchedHandler(async () =>
+                            {
+                                // Open a stream to copy the graph to the WriteableBitmap's pixel buffer
+                                using (Stream stream = WB.PixelBuffer.AsStream())
+                                {
+                                    byte[] tempr = result;
+                                    await stream.WriteAsync(tempr, 0, tempr.Length);
+                                }
+
+                                WB.Invalidate();
+                            }));
+                        }
 
                         s = s.Replace("= ", " =");
 
@@ -269,6 +317,18 @@ namespace Funky
                 hp = FindPointOnRay(ray, hitShapeDist);
                 vNormal = hitShape.NormalAt(hp, Eye);
                 vNormal.Normalize();
+
+                if (Vector3.Dot(vNormal, ray.Direction) < 0)
+                {
+                    int i = 0;
+                }
+                else
+                {
+                    int k = 0;
+                }
+
+
+
                 if (hitShape.surface.type == textureType.bump)
                 {
 
@@ -319,8 +379,8 @@ namespace Funky
                         }
 
                         //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
-                        float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
-                        curColor += light.intensity * lambert * ((light.color)) * (color);
+                        float lambert = Vector3.Dot(lightRay.Direction, vNormal) ;
+                        curColor += light.intensity * lambert * ((light.color)) * (color) * coef;
 
                         Vector3 blinn = lightRay.Direction - ray.Direction;
                         blinn.Normalize();
@@ -373,35 +433,167 @@ namespace Funky
 
         private Vector3 GetPixelColorFromTexture(Vector3 hp, Triangle hitShape){
 
+
+
             KeyValuePair<Vector3,Vector2>[] posTex = new KeyValuePair<Vector3,Vector2>[3];
             posTex[0] = new KeyValuePair<Vector3,Vector2>(hitShape.Vertices[0], hitShape.TextureCoords[0]);
             posTex[1] = new KeyValuePair<Vector3,Vector2>(hitShape.Vertices[1], hitShape.TextureCoords[1]);
             posTex[2] = new KeyValuePair<Vector3,Vector2>(hitShape.Vertices[2], hitShape.TextureCoords[2]);
 
 
+            Vector3 B1, B2;
+            Vector2 C1, C2;
 
-            Vector2 xRange = posTex[0].Value.X == posTex[1].Value.X ?
-                new Vector2((posTex[0].Value.X > posTex[2].Value.X ? 2 : 0), (posTex[0].Value.X > posTex[2].Value.X ? 0 : 2)) :
-                new Vector2((posTex[0].Value.X > posTex[1].Value.X ? 1 : 0), (posTex[0].Value.X > posTex[1].Value.X ? 0 : 1));
+            C1 = posTex[1].Value - posTex[0].Value;
+            C2 = posTex[2].Value - posTex[0].Value;
 
-            Vector2 yRange = posTex[0].Value.Y == posTex[1].Value.Y ?
-                new Vector2((posTex[0].Value.Y > posTex[2].Value.Y ? 2 : 0), (posTex[0].Value.Y > posTex[2].Value.Y ? 0 : 2)) :
-                new Vector2((posTex[0].Value.Y > posTex[1].Value.Y ? 1 : 0), (posTex[0].Value.Y > posTex[1].Value.Y ? 0 : 1));
+            B1 = posTex[1].Key - posTex[0].Key;
+            B2 = posTex[2].Key - posTex[0].Key;
 
-            float xDist = Vector3.Distance(posTex[(int)xRange.X].Key, posTex[(int)xRange.Y].Key);
-            float yDist = Vector3.Distance(posTex[(int)yRange.X].Key, posTex[(int)yRange.Y].Key);
+            float p1 = hp.X, p2 = hp.Y;
+            float a, b, c, d;
 
-            float xPercent = Vector3.Distance(hp, posTex[(int)xRange.X].Key)/xDist;
-            float yPercent = Vector3.Distance(hp, posTex[(int)yRange.X].Key)/yDist;
+            a = B1.X; b = B2.X; c = B1.Y; d = B2.Y;
 
-            float xIndex = posTex[(int)xRange.X].Value.X + (posTex[(int)xRange.Y].Value.X - posTex[(int)xRange.X].Value.X) / xPercent;
-            float yIndex = posTex[(int)yRange.X].Value.Y + (posTex[(int)yRange.Y].Value.Y - posTex[(int)yRange.X].Value.Y) / yPercent;
+            float det = 1 / (a * d - b * c);
 
-            int index = (int)((xIndex * TexSize.X + yIndex) * 4.0f);
+            float alpha = d * p1 - b * p2;
+            float beta = -c * p1 + a * p2;
 
-            return new Vector3((float)TexturePixels[index + 2] / 255.0f, (float)TexturePixels[index + 1] / 255.0f, (float)TexturePixels[index] / 255.0f);
+            alpha *= det;
+            beta *= det;
 
+            Vector2 UV = alpha * C1 + beta * C2;
+
+            UV += posTex[0].Value;
+/*
+            if (posTex[0].Value.X > 0.5f) UV.X = posTex[0].Value.X - UV.X;
+            else if (posTex[0].Value.X < 0.5f) UV.X = posTex[0].Value.X + UV.X;
+            if (posTex[0].Value.Y > 0.5f) UV.Y = posTex[0].Value.Y - UV.Y;
+            else if (posTex[0].Value.Y < 0.5f) UV.Y = posTex[0].Value.Y + UV.Y;
+            */
+            if (UV.X > 1) UV.X = 1;
+            if (UV.Y > 1) UV.Y = 1;
+
+            float xReal = UV.Y * hitShape.TextureToUse.TexSize.Y - 1;
+            float yReal = UV.X * hitShape.TextureToUse.TexSize.X - 1;
+
+            int x0 = (int)xReal, y0 = (int)yReal;
+        //    if(y0 != 1023)
+           // System.Diagnostics.Debug.WriteLine(x0 + "..." + y0);
+
+            float dx = xReal - x0, dy = yReal - y0, omdx = 1 - dx, omdy = 1 - dy;
+            if (x0 == hitShape.TextureToUse.TexSize.Y - 1 || y0 == hitShape.TextureToUse.TexSize.X - 1 || x0 == 0 || y0 == 0) return hitShape.TextureToUse.TexturePixels[x0, y0];
+
+            Vector3 color = omdx * omdy * hitShape.TextureToUse.TexturePixels[x0, y0] + omdx * dy * hitShape.TextureToUse.TexturePixels[x0, y0 - 1] + dx * omdy * hitShape.TextureToUse.TexturePixels[x0 - 1, y0] + dx * dy * hitShape.TextureToUse.TexturePixels[x0 - 1, y0 - 1];
+
+            return color;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+            float totalDist = Vector3.Distance(hp, posTex[0].Key) + Vector3.Distance(hp, posTex[1].Key) + Vector3.Distance(hp, posTex[2].Key);
+
+            float[] weights = new float[3];
+
+            weights[0] = Vector3.Distance(hp, posTex[0].Key) / totalDist;
+            weights[1] = Vector3.Distance(hp, posTex[1].Key) / totalDist;
+            weights[2] = Vector3.Distance(hp, posTex[2].Key) / totalDist;
+
+            if (hp.X > ImageSize.X * 0.5f && hp.X < ImageSize.X * 0.51f && hp.Y > ImageSize.Y * 0.5f && hp.Y < ImageSize.Y * 0.51f)
+            {
+                int i = 0;
+            }
+
+            //Vector3 bary = Vector3.Barycentric(posTex[0].Key, posTex[1].Key, posTex[2].Key, weights[1], weights[2]);
+            
+            
+            int minWeight = 0;
+
+            if (weights[0] <= weights[1] && weights[0] <= weights[2])
+            {
+                minWeight = 0;
+            }
+            else if (weights[1] <= weights[0] && weights[1] <= weights[2])
+            {
+                minWeight = 1;
+            }
+            else
+            {
+                minWeight = 2;
+            }
+
+            float newWeight = 1 - weights[minWeight];
+
+            switch (minWeight)
+            {
+                case 0: weights[0] = newWeight;
+                    weights[1] = (weights[1] / newWeight) * (1 - newWeight);
+                    weights[2] = (weights[2] / newWeight) * (1 - newWeight);
+                    break;
+                case 1: weights[1] = newWeight;
+                    weights[0] = (weights[0] / newWeight) * (1 - newWeight);
+                    weights[2] = (weights[2] / newWeight) * (1 - newWeight);
+                    break; break;
+                case 2: weights[2] = newWeight;
+                    weights[1] = (weights[1] / newWeight) * (1 - newWeight);
+                    weights[0] = (weights[0] / newWeight) * (1 - newWeight);
+                    break; break;
+            }
+            
+            Vector2 UVPos = posTex[0].Value * weights[0] + posTex[1].Value * weights[1] + posTex[2].Value * weights[2];
+            //int index = (int)((UVPos.X * TexSize.X - 1) * TexSize.Y + (UVPos.Y * TexSize.Y - 1)) * 4;
+
+            float xReal = UVPos.Y * hitShape.TextureToUse.TexSize.Y;
+            float yReal = UVPos.X * hitShape.TextureToUse.TexSize.X;
+
+            int x0 = (int)xReal, y0 = (int)yReal;
+
+            float dx = xReal - x0, dy = yReal - y0, omdx = 1 - dx, omdy = 1 - dy;
+            if (x0 == hitShape.TextureToUse.TexSize.Y - 1 || y0 == hitShape.TextureToUse.TexSize.X - 1 || x0 == 0 || y0 == 0) return hitShape.TextureToUse.TexturePixels[x0, y0];
+
+            Vector3 color2 = omdx * omdy * hitShape.TextureToUse.TexturePixels[x0, y0] + omdx * dy * hitShape.TextureToUse.TexturePixels[x0, y0 - 1] + dx * omdy * hitShape.TextureToUse.TexturePixels[x0 - 1, y0] + dx * dy * hitShape.TextureToUse.TexturePixels[x0 - 1, y0 - 1];
+      //      System.Diagnostics.Debug.WriteLine(UVPos);
+           
+
+            return color2;
+            /*
+            Vector3 color2 = omdx * omdy * TexturePixels[x0, y0] + omdx * dy * TexturePixels[x0,y0 - 1] +  dx * omdy * TexturePixels[x0 - 1,y0] + dx * dy * TexturePixels[x0 - 1,y0 - 1];
+
+            Vector3 color = TexturePixels[x0 - 1, y0 - 1] + TexturePixels[x0, y0 - 1] + TexturePixels[x0 + 1, y0 - 1] +
+                            TexturePixels[x0 - 1, y0] +     TexturePixels[x0, y0 ] +    TexturePixels[x0 + 1, y0] +
+                            TexturePixels[x0 - 1, y0 + 1] + TexturePixels[x0, y0 + 1] + TexturePixels[x0 + 1, y0 + 1];
+            color = color / 9.0f;
+
+            return (color + color2)/2.0f;
+            */
         }
+
+
+
+
+
 
         private Vector3 calcLightRay(Ray ray, Light light)
         {
