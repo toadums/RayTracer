@@ -19,6 +19,8 @@ using WinRTXamlToolkit.Imaging;
 
 namespace Funky
 {
+
+
     class FunkyTexture
     {
         public Vector3[,] TexturePixels;

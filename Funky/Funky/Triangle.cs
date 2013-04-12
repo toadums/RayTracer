@@ -8,15 +8,20 @@ using System.Threading.Tasks;
 namespace Funky
 {
 
-
+    public enum TextureCoordConst
+    {
+        X, Y, Z, None
+    }
 
     class Triangle : GeometricObject
     {
         public Vector2[] TextureCoords;
         public Vector3[] Vertices;
         public Vector3 Normal;
+        public string Tag = string.Empty;
 
         public FunkyTexture TextureToUse;
+        public TextureCoordConst TCC = TextureCoordConst.None;
 
         public Triangle()
         {
@@ -107,7 +112,7 @@ namespace Funky
 
         public override string ToString()
         {
-            return "Triangle: 1: " + Vertices[0] + ", 2: " + Vertices[1] + ", 3: " + Vertices[2];
+            return "Triangle: " + Tag != string.Empty? "Tag: " + Tag : "" +" 1: " + Vertices[0] + ", 2: " + Vertices[1] + ", 3: " + Vertices[2];
         }
 
     }

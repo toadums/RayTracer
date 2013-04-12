@@ -244,7 +244,6 @@ C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\LanguageQualifiers.txt
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\SharpDX.pri.xml
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\ProjectArchitectures.txt
-C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WriteableBitmapEx.WinRT.dll
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WriteableBitmapEx.WinRT.pdb
 C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WriteableBitmapEx.WinRT.xml

@@ -51,6 +51,8 @@ namespace Funky
             WriteableBitmap wbmp = null;
             Vector2 X = new Vector2(float.MaxValue, float.MinValue), Y = new Vector2(float.MaxValue, float.MinValue), Z = new Vector2(float.MaxValue, float.MinValue);
 
+            FunkyTexture texture = new FunkyTexture();
+
             string mtlFilename = string.Empty;
 
             foreach (string s in read)
@@ -108,13 +110,13 @@ namespace Funky
                                 await pixelStream.ReadAsync(pixels, 0, pixels.Length);
                             }
                             wbmp.Invalidate();
-                       //     RayTracer.TexturePixels = new Vector3[wbmp.PixelHeight, wbmp.PixelWidth];
+                            texture.TexturePixels = new Vector3[wbmp.PixelHeight, wbmp.PixelWidth];
                             int r = 0, c = 0;
                             for (int i = 0; i < pixels.Length; i++)
                             {
 
  
-                           //     RayTracer.TexturePixels[r, c] = new Vector3(pixels[i+2], pixels[i+1], pixels[i+0])/255.0f;
+                           texture.TexturePixels[r, c] = new Vector3(pixels[i+2], pixels[i+1], pixels[i+0])/255.0f;
 
 
                                 c = (c + 1) % wbmp.PixelWidth;
@@ -129,7 +131,7 @@ namespace Funky
 
                             }
 
-                            //RayTracer.TexSize = new Vector2(wbmp.PixelWidth, wbmp.PixelHeight);
+                            texture.TexSize = new Vector2(wbmp.PixelWidth, wbmp.PixelHeight);
 
                         }
                     }
@@ -239,7 +241,7 @@ namespace Funky
                            type = textureType.standard,
                            specular = new Vector3(1, 1, 1),
                            SpecExponent = 9999999999,
-                       }) );
+                       }) {TextureToUse = texture, TCC = TextureCoordConst.Z} );
 
                     }
                     else

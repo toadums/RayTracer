@@ -22,7 +22,7 @@
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\Facebook.dll">
       <PackagePath>Facebook.dll</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\SharpDX_2.5\Bin\Signed-winrt\SharpDX.dll">
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll">
       <PackagePath>SharpDX.dll</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WinRTXamlToolkit.dll">
@@ -31,7 +31,7 @@
     <AppxPackagedFile Include="C:\Users\paul\Downloads\WriteableBitmapEx_v1.0.7.0\WriteableBitmapEx_v1.0.7.0\WinRT\WriteableBitmapEx.WinRT.dll">
       <PackagePath>WriteableBitmapEx.WinRT.dll</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\SharpDX_2.5\Bin\Signed-winrt\SharpDX.xml">
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.xml">
       <PackagePath>SharpDX.xml</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Downloads\WriteableBitmapEx_v1.0.7.0\WriteableBitmapEx_v1.0.7.0\WinRT\WriteableBitmapEx.WinRT.xml">

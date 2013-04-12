@@ -433,7 +433,10 @@ namespace Funky
 
         private Vector3 GetPixelColorFromTexture(Vector3 hp, Triangle hitShape){
 
-
+            if (hitShape.Tag == "t3")
+            {
+                int i = 0;
+            }
 
             KeyValuePair<Vector3,Vector2>[] posTex = new KeyValuePair<Vector3,Vector2>[3];
             posTex[0] = new KeyValuePair<Vector3,Vector2>(hitShape.Vertices[0], hitShape.TextureCoords[0]);
@@ -443,17 +446,62 @@ namespace Funky
 
             Vector3 B1, B2;
             Vector2 C1, C2;
+            Vector2 Offset;
+            if (posTex[0].Key.Length() < posTex[1].Key.Length() && posTex[0].Key.Length() < posTex[2].Key.Length())
+            {
 
-            C1 = posTex[1].Value - posTex[0].Value;
-            C2 = posTex[2].Value - posTex[0].Value;
+                C1 = posTex[1].Value - posTex[0].Value;
+                C2 = posTex[2].Value - posTex[0].Value;
 
-            B1 = posTex[1].Key - posTex[0].Key;
-            B2 = posTex[2].Key - posTex[0].Key;
+                B1 = posTex[1].Key - posTex[0].Key;
+                B2 = posTex[2].Key - posTex[0].Key;
 
-            float p1 = hp.X, p2 = hp.Y;
+
+                Offset = posTex[0].Value;
+
+            }
+            else if (posTex[1].Key.Length() < posTex[0].Key.Length() && posTex[1].Key.Length() < posTex[2].Key.Length())
+            {
+                C1 = posTex[0].Value - posTex[1].Value;
+                C2 = posTex[2].Value - posTex[1].Value;
+
+                B1 = posTex[0].Key - posTex[1].Key;
+                B2 = posTex[2].Key - posTex[1].Key;
+                Offset = posTex[1].Value;
+            }
+            else
+            {
+                C1 = posTex[1].Value - posTex[2].Value;
+                C2 = posTex[0].Value - posTex[2].Value;
+
+                B1 = posTex[1].Key - posTex[2].Key;
+                B2 = posTex[0].Key - posTex[2].Key;
+                Offset = posTex[2].Value;
+            }
+
+            float p1, p2;
             float a, b, c, d;
 
-            a = B1.X; b = B2.X; c = B1.Y; d = B2.Y;
+            if (hitShape.TCC == TextureCoordConst.Z)
+            {
+                a = B1.X; b = B2.X; c = B1.Y; d = B2.Y;
+                p1 = hp.X; p2 = hp.Y;
+            }
+            else if (hitShape.TCC == TextureCoordConst.X)
+            {
+                a = B1.Z; b = B2.Z; c = B1.Y; d = B2.Y;
+                p1 = hp.Z; p2 = hp.Y;
+            }
+            else if (hitShape.TCC == TextureCoordConst.Y)
+            {
+                a = B1.X; b = B2.X; c = B1.Z; d = B2.Z;
+                p1 = hp.X; p2 = hp.Z;
+            }
+            else
+            {
+                throw new Exception("No Texture Coord Const set");
+            }
+
 
             float det = 1 / (a * d - b * c);
 
@@ -465,7 +513,7 @@ namespace Funky
 
             Vector2 UV = alpha * C1 + beta * C2;
 
-            UV += posTex[0].Value;
+            UV += Offset;
 /*
             if (posTex[0].Value.X > 0.5f) UV.X = posTex[0].Value.X - UV.X;
             else if (posTex[0].Value.X < 0.5f) UV.X = posTex[0].Value.X + UV.X;
@@ -479,10 +527,11 @@ namespace Funky
             float yReal = UV.X * hitShape.TextureToUse.TexSize.X - 1;
 
             int x0 = (int)xReal, y0 = (int)yReal;
-        //    if(y0 != 1023)
-           // System.Diagnostics.Debug.WriteLine(x0 + "..." + y0);
 
             float dx = xReal - x0, dy = yReal - y0, omdx = 1 - dx, omdy = 1 - dy;
+            if (x0 < 1) x0 = 1;
+            if (y0 < 1) y0 = 1;
+
             if (x0 == hitShape.TextureToUse.TexSize.Y - 1 || y0 == hitShape.TextureToUse.TexSize.X - 1 || x0 == 0 || y0 == 0) return hitShape.TextureToUse.TexturePixels[x0, y0];
 
             Vector3 color = omdx * omdy * hitShape.TextureToUse.TexturePixels[x0, y0] + omdx * dy * hitShape.TextureToUse.TexturePixels[x0, y0 - 1] + dx * omdy * hitShape.TextureToUse.TexturePixels[x0 - 1, y0] + dx * dy * hitShape.TextureToUse.TexturePixels[x0 - 1, y0 - 1];
