@@ -9,8 +9,8 @@ namespace Funky
 {
     partial class RayTracer
     {
-        int NumVirtualLights = 20;
-        bool drawSpheres = false;
+        int NumVirtualLights = 40;
+        bool drawSpheres = true;
 
         public void spawnVPL(Light light,float width,float height)
         {
@@ -76,7 +76,16 @@ namespace Funky
 
             foreach (GeometricObject shape in Shapes)
             {
-                double t = shape.intersection(ray);
+                double t;
+                if (shape is Cube)
+                {
+                    Tuple<double, Triangle> temp = shape.intersectionCube(ray);
+                    t = temp.Item1;
+                }
+                else
+                {
+                    t = shape.intersection(ray);
+                }
 
                 if (t > 0.0 && t < closestShape)
                 {
@@ -100,8 +109,16 @@ namespace Funky
 
             foreach (GeometricObject shape in Shapes)
             {
-                double t = shape.intersection(ray);
-
+                double t;
+                if (shape is Cube)
+                {
+                    Tuple<double, Triangle> temp = shape.intersectionCube(ray);
+                    t = temp.Item1;
+                }
+                else
+                {
+                    t = shape.intersection(ray);
+                }
 
                 if (t > 0.0 && t < closestShape)
                 {

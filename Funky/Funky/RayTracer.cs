@@ -47,7 +47,7 @@ namespace Funky
     partial class RayTracer
     {
 
-        private const bool UseVPL = false;
+        private const bool UseVPL = true;
 
         private const float numInnerPixels = 1;
 
@@ -208,14 +208,6 @@ namespace Funky
                 }
 
             }
-
-            /*Parallel.ForEach(tasks, task =>
-                {
-                    task.RunSynchronously();
-                }
-            );*/
-
-
             return result;
         }
 
@@ -246,7 +238,7 @@ namespace Funky
 
                 if (shape is Cube)
                 {
-                    Tuple<double, Triangle> temp = shape.intersection2(ray);
+                    Tuple<double, Triangle> temp = shape.intersectionCube(ray);
                     t = temp.Item1;
                     hitTri = temp.Item2;
                 }
@@ -273,7 +265,7 @@ namespace Funky
                 hp = FindPointOnRay(ray, hitShapeDist);
                 if (hitShape is Cube)
                 {
-                    vNormal = hitShape.NormalAt2(hp, Eye, hitTri);
+                    vNormal = hitShape.NormalAtCube(hp, Eye, hitTri);
                 }
                 else
                 {
@@ -442,7 +434,7 @@ namespace Funky
                 double t;
                 if (shape is Cube)
                 {
-                    Tuple<double, Triangle> temp = shape.intersection2(r);
+                    Tuple<double, Triangle> temp = shape.intersectionCube(r);
                     t = temp.Item1;
                 }
                 else

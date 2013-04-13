@@ -125,7 +125,7 @@ namespace Funky
             //return planes;
         }
 
-        public override Tuple<double,Triangle> intersection2(Ray ray)
+        public override Tuple<double,Triangle> intersectionCube(Ray ray)
         {
             float closest = float.PositiveInfinity;
 
@@ -176,7 +176,7 @@ namespace Funky
 
         }
 
-        public override Vector3 NormalAt2(Vector3 i, Vector3 from, Triangle tri)
+        public override Vector3 NormalAtCube(Vector3 i, Vector3 from, Triangle tri)
         {
             if (tri.Normal.X != float.MaxValue) return tri.Normal;
             else return Vector3.Cross(tri.Vertices[0] - tri.Vertices[1], tri.Vertices[2] - tri.Vertices[1]);
