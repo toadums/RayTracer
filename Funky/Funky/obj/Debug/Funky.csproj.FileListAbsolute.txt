@@ -240,3 +240,7 @@ C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\resources.resfil
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\LanguageQualifiers.txt
 C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\ProjectArchitectures.txt
+C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\priconfig.xml.intermediate
+C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\layout.resfiles.intermediate
+C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\resources.resfiles.intermediate
+C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\obj\Debug\pri.resfiles.intermediate

@@ -103,6 +103,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Blob.cs" />
     <Compile Include="Cube.cs" />
     <Compile Include="DrawGeometry.cs" />
     <Compile Include="objLoader.cs" />

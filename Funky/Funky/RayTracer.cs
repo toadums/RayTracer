@@ -84,7 +84,11 @@ namespace Funky
             if (UseVPL)
             {
                 VirtualLights = new List<Light>();
-                spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
+
+                foreach (Light light in Lights)
+                {
+                    spawnVPL(light, ImageSize.X, ImageSize.Y);
+                }
 
                 Lights.AddRange(VirtualLights);
 
