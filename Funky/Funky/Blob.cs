@@ -45,16 +45,15 @@ namespace Funky
         }
     }
 
-    public class Blob
+    public class Blob : GeometricObject
     {
-        List<Vector3> centerList;
-        float size;
-        float invSizeSquare;
-        int materialId;
+        public List<Vector3> centerList;
+        public float size;
+        public float invSizeSquare;
         int zoneNumber = 10;
         List<ZoneTab> zoneTab;
 
-        public Blob()
+        public Blob(Vector3 a, Vector3 b, Vector3 c, float Size)
         {
             zoneTab = new List<ZoneTab>() { new ZoneTab(10.0f, 0, 0, 0),
                                                           new ZoneTab(5.0f, 0, 0, 0),
@@ -67,6 +66,24 @@ namespace Funky
                                                           new ZoneTab(1.11111f, 0, 0, 0),
                                                           new ZoneTab(1.0f, 0, 0, 0)
                                                         };
+
+            centerList = new List<Vector3>();
+            centerList.Add(a);
+            centerList.Add(b);
+            centerList.Add(c);
+            size = Size;
+
+            surface = new SurfaceType()
+            {
+                type = textureType.standard,
+                ambient = new Vector3(0, 0.4f, 1),
+                diffuse = new Vector3(0.4f, 0.1f, 0.2f),
+                specular = new Vector3(0.2f, 0.2f, 0.2f),
+                color = new Vector3(.76f, .75f, .5f),
+                reflectiveness = 0,
+                SpecExponent = 1000,
+                RefractionIndex = 0
+            };
         }
 
         public void initBlobZones()
@@ -93,9 +110,9 @@ namespace Funky
             zoneTab[zoneTab.Count - 1].fBeta = 0.0f;
         }
 
-        public double isBlobIntersected(Ray r)
+        public override double intersection(Ray r)
         {
-            float t = 2000.0f;
+            float t = (r.Direction.X * r.Direction.X + r.Direction.Y * r.Direction.Y + r.Direction.Z * r.Direction.Z);
             List<poly> polynomMap = new List<poly>();
 
             float rSquare, rInvSquare;

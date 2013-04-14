@@ -47,12 +47,12 @@ namespace Funky
     partial class RayTracer
     {
 
-        private const bool UseVPL = true;
+        private const bool UseVPL = false;
 
         private const float numInnerPixels = 1;
 
         private const int NumBounces = 0;
-        public static Vector2 ImageSize = new Vector2(800);
+        public static Vector2 ImageSize = new Vector2(400);
         private float SphereDist = 1000;
 
         private Perlin perlinTexture;
@@ -246,6 +246,15 @@ namespace Funky
                     t = temp.Item1;
                     hitTri = temp.Item2;
                 }
+                else if (shape is Blob)
+                {
+                    t = shape.intersection(ray);
+                    if (t != 0.0)
+                    {
+                        t = t;
+                    }
+
+                }
                 else
                 {
                     t = shape.intersection(ray);
@@ -276,7 +285,7 @@ namespace Funky
                     vNormal = hitShape.NormalAt(hp, Eye);
                 }
                 vNormal.Normalize();
-                if (hitShape is Sphere)
+                if (!(hitShape is Cube))
                 {
                     if (hitShape.surface.type == textureType.bump)
                     {

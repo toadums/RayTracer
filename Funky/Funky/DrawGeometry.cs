@@ -172,6 +172,17 @@ namespace Funky
                 }
             });
 
+            Blob myBlob = new Blob(new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f, SphereDist),
+                                new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 3.0f, SphereDist),
+                                new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f + 50f, SphereDist),
+                                1000.0f);
+
+            myBlob.initBlobZones();
+
+            Shapes.Add(myBlob);
+
+            
+
             Cube cube = new Cube(new Vector3(ImageSize.X * .25f, ImageSize.Y, 1300), ImageSize.Y/2f, ImageSize.X * .1875f, 200);
 
             //Shapes.AddRange(cube.buildCube());

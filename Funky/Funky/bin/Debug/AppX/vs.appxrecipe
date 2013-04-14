@@ -16,17 +16,17 @@
     <AppXManifest Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2013-04-13T18:43:56.540</Modified>
+      <Modified>2013-04-14T22:29:43.640</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.exe">
       <PackagePath>SharpDX Toolkit WinRT %28XAML%29.exe</PackagePath>
-      <Modified>2013-04-13T18:47:13.182</Modified>
+      <Modified>2013-04-14T22:49:44.804</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.pdb">
       <PackagePath>SharpDX Toolkit WinRT %28XAML%29.pdb</PackagePath>
-      <Modified>2013-04-13T18:47:13.168</Modified>
+      <Modified>2013-04-14T22:49:44.782</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Griff\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll">
       <PackagePath>SharpDX.dll</PackagePath>
