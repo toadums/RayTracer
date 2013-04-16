@@ -47,7 +47,7 @@ namespace Funky
     partial class RayTracer
     {
 
-        private const bool UseVPL = false;
+        private const bool UseVPL = true;
 
         private const float numInnerPixels = 1;
 
@@ -177,6 +177,12 @@ namespace Funky
                             dir.Normalize();
                             Ray ray = new Ray(Eye, dir);
                             float ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable = 0;
+
+                            if (x == 196 && y == 96)
+                            {
+                                int i = 0;
+                            }
+
                             color += AddRay(ray, 0, 1.0f, ref ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable);
 
                         }
@@ -190,7 +196,7 @@ namespace Funky
 
                     if (color.X < 0 || color.Y < 0 || color.Z < 0)
                     {
-                        color = new Vector3(1, 1, 0);
+                        color = new Vector3(0, 0, 0);
                     }
 
                     result[resultIndex++] = Convert.ToByte(color.Z);    // Green value of pixel
@@ -246,15 +252,6 @@ namespace Funky
                     t = temp.Item1;
                     hitTri = temp.Item2;
                 }
-                else if (shape is Blob)
-                {
-                    t = shape.intersection(ray);
-                    if (t != 0.0)
-                    {
-                        t = t;
-                    }
-
-                }
                 else
                 {
                     t = shape.intersection(ray);
@@ -282,36 +279,12 @@ namespace Funky
                 }
                 else
                 {
+
                     vNormal = hitShape.NormalAt(hp, Eye);
                 }
+
+
                 vNormal.Normalize();
-                if (!(hitShape is Cube))
-                {
-                    if (hitShape.surface.type == textureType.bump)
-                    {
-
-                        const double bumpLevel = 0.2;
-                        double noiseX = perlinTexture.noise(0.1 * (double)hp.X, 0.1 * (double)hp.Y, 0.1 * (double)hp.Z);
-                        double noiseY = perlinTexture.noise(0.1 * (double)hp.Y, 0.1 * (double)hp.Z, 0.1 * (double)hp.X);
-                        double noiseZ = perlinTexture.noise(0.1 * (double)hp.Z, 0.1 * (double)hp.X, 0.1 * (double)hp.Y);
-
-                        vNormal.X = (float)((1.0 - bumpLevel) * vNormal.X + bumpLevel * noiseX);
-                        vNormal.Y = (float)((1.0 - bumpLevel) * vNormal.Y + bumpLevel * noiseY);
-                        vNormal.Z = (float)((1.0 - bumpLevel) * vNormal.Z + bumpLevel * noiseZ);
-
-                        double temp = Vector3.Dot(vNormal, vNormal);
-                        if (temp != 0.0)
-                        {
-                            temp = 1.0 / Math.Sqrt(temp);
-                            vNormal = (float)temp * vNormal;
-                        }
-                    }
-                }
-                if (hitShape is Sphere)
-                    if (((Sphere)hitShape).position.X > ImageSize.X / 2.0f)
-                    {
-
-                    }
 
                 foreach (Light light in Lights)
                 {
@@ -319,10 +292,9 @@ namespace Funky
                     dir.Normalize();
                     Ray lightRay = new Ray(hp, dir);
 
-
-                    if ((LightValue = isVisible(light, hp, lightRay)) > 0)
+                    bool inhere = false;
+                    if ((LightValue = isVisible(light, hp, lightRay, hitShape)) > 0)
                     {
-
                         //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                         float lambert = Vector3.Dot(lightRay.Direction, vNormal) * coef;
                         curColor += light.intensity * lambert * ((light.color)) * (hitShape.surface.color);
@@ -335,7 +307,10 @@ namespace Funky
                         curColor += hitShape.surface.specular * light.intensity * light.color * blinnValue * coef;
 
                         curColor *= LightValue;
+                        inhere = true;
                     }
+
+
                 }
 
             }
@@ -401,7 +376,7 @@ namespace Funky
                 return light.position;
         }*/
 
-        private float isVisible(Light L, Vector3 hitPoint, Ray ray)
+        private float isVisible(Light L, Vector3 hitPoint, Ray ray, GeometricObject theShape = null)
         {
 
             float retVal = 0.0f;
@@ -426,7 +401,7 @@ namespace Funky
 
                     r = new Ray(ray.Start, dir);
 
-                    if (FindClosestShape(r, L) == L)
+                    if (FindClosestShape(r, L, theShape) == L)
                         retVal += 1.0f / (numSegments * numAlongSegment);
 
                 }
@@ -437,7 +412,7 @@ namespace Funky
 
         }
 
-        private GeometricObject FindClosestShape(Ray r, Light l)
+        private GeometricObject FindClosestShape(Ray r, Light l, GeometricObject theShape)
         {
             double dist = float.MaxValue;
             GeometricObject closest = null;
@@ -454,7 +429,7 @@ namespace Funky
                 {
                     t = shape.intersection(r);
                 }
-                if (t < dist && t > 0.0f && shape.surface.RefractionIndex < 1)
+                if (theShape != shape && t < dist && t > 0.0f && shape.surface.RefractionIndex < 1)
                 {
                     closest = shape;
                     dist = t;

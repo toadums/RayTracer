@@ -72,18 +72,7 @@ namespace Funky
             centerList.Add(b);
             centerList.Add(c);
             size = Size;
-
-            surface = new SurfaceType()
-            {
-                type = textureType.standard,
-                ambient = new Vector3(0, 0.4f, 1),
-                diffuse = new Vector3(0.4f, 0.1f, 0.2f),
-                specular = new Vector3(0.2f, 0.2f, 0.2f),
-                color = new Vector3(.76f, .75f, .5f),
-                reflectiveness = 0,
-                SpecExponent = 1000,
-                RefractionIndex = 0
-            };
+            invSizeSquare = 1.0f / (size * size);
         }
 
         public void initBlobZones()
@@ -112,7 +101,7 @@ namespace Funky
 
         public override double intersection(Ray r)
         {
-            float t = (r.Direction.X * r.Direction.X + r.Direction.Y * r.Direction.Y + r.Direction.Z * r.Direction.Z);
+            float t = float.MaxValue;//(r.Direction.X * r.Direction.X + r.Direction.Y * r.Direction.Y + r.Direction.Z * r.Direction.Z);
             List<poly> polynomMap = new List<poly>();
 
             float rSquare, rInvSquare;
@@ -197,7 +186,7 @@ namespace Funky
                     {
                         continue;
                     }
-
+                    if(A == 0) A = float.MinValue;
                     float fInvA = (0.5f / A);
                     float fSqrtDelta = (float)Math.Sqrt(fDelta);
 
@@ -224,23 +213,29 @@ namespace Funky
             return 0;
         }
 
-        void blobInterpolation(Vector3 pos, Blob b, Vector3 vOut)
+        //public override n blobInterpolation(Vector3 pos, Blob b, Vector3 vOut)
+        public override Vector3 NormalAt(Vector3 i, Vector3 from)
         {
             Vector3 gradient = new Vector3(0.0f,0.0f,0.0f);
 
-            float fRSquare = b.size * b.size;
-            for (int i= 0; i< b.centerList.Count; i++)
+            float fRSquare = size * size;
+            for (int k= 0; k< centerList.Count; k++)
             {
-                Vector3 normal = pos - b.centerList[i];
-                float fDistSquare = normal.X*normal.X + normal.Y*normal.Y + normal.Z*normal.Z;
+                Vector3 normal = i - centerList[k];
+                float fDistSquare = Vector3.Dot(normal, normal);
                 if (fDistSquare <= 0.001f) 
                     continue;
                 float fDistFour = fDistSquare * fDistSquare;
                 normal = (fRSquare/fDistFour) * normal;
+                gradient += normal;
 
-                gradient = gradient + normal;
+                //gradient = gradient + normal;
             }
-            vOut = gradient;
+            //vOut = gradient;
+       
+            return gradient;
+
+
         }
 
     }

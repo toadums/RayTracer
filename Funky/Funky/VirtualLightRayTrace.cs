@@ -9,7 +9,7 @@ namespace Funky
 {
     partial class RayTracer
     {
-        int NumVirtualLights = 5;
+        int NumVirtualLights = 10;
         bool drawSpheres = false;
 
         public void spawnVPL(Light light,float width,float height)
