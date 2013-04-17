@@ -24,140 +24,11 @@ namespace Funky
             
             Shapes = new List<GeometricObject>();
             
-            
             Lights = new List<Light>();
-            /*
-            
-            */
-            
-            /*objLoader loader = new objLoader();
-
-            Task tas = loader.CreateTriangles(@"teapot.obj", ImageSize.X / 5.0f, new Vector3(ImageSize.X / 2.0f, ImageSize.Y/ 2.0f, SphereDist));
-            await tas;
-            Task addTask = Task.Factory.StartNew(new Action(() =>
-            {
-                foreach (Triangle t in loader.Triangles)
-                {
-                    Shapes.Add(t);
-                }
-
-            }));
-
-            await addTask;
-            */
-            
-
-
-            /*
-            for (float i = ImageSize.X / 50.0f; i < ImageSize.X - ImageSize.X / 50.0f; i += ImageSize.X / 10)
-            {
-                for (float j = ImageSize.X / 50.0f; j < ImageSize.X - ImageSize.X / 50.0f; j += ImageSize.X / 10)
-                {
-
-                    float r = new Random().NextFloat(0, 1);
-                    Sleep(ImageSize.X*.25f);
-                    float g = new Random().NextFloat(0, 1);
-                    Sleep(ImageSize.X*.25f);
-                    float b = new Random().NextFloat(0, 1);
-
-                    Vector3 col = new Vector3(r,g,b);
-
-                    Shapes.Add(new Sphere()
-                    {
-                        position = new Vector3(i, j, SphereDist * 2.0f),
-                        radius = ImageSize.X / 30,
-                        surface = new SurfaceType()
-                        {
-                            type = textureType.standard,
-                            ambient = new Vector3(.4f, .4f, .4f),
-                            diffuse = new Vector3(.4f, .4f, .4f),
-                            specular = new Vector3(1, 1, 1),
-                            color = col,
-                            reflectiveness = new Random().Next(0,ImageSize.X*.25f),
-                            SpecExponent = new Random().NextFloat(1000,3000),
-                            RefractionIndex = 0
-                        }
-                    });
-
-
-                }
-            }
-            */
-
-            
-            
-            /*Shapes.Add(new Sphere()
-            {
-                position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f - ImageSize.Y / 8.0f, SphereDist * 2.0f),
-                radius = ImageSize.X / 15.0f,
-                surface = new SurfaceType()
-                {
-                    type = textureType.standard,
-                    ambient = new Vector3(0, 0.4f, 1),
-                    diffuse = new Vector3(0.4f, 0.1f, 0.2f),
-                    specular = new Vector3(0.2f, 0.2f, 0.2f),
-                    color = new Vector3(0.234f, 0.62f, 0.1ImageSize.X*.0624f6f),
-                    reflectiveness = 50,
-                    SpecExponent = 5,
-                    RefractionIndex = 0
-                }
-            });
-            
-            
+          
             Shapes.Add(new Sphere()
             {
-                position = new Vector3(ImageSize.X / 2.0f - ImageSize.X / 3.0f, ImageSize.Y / 2.0f, SphereDist),
-                radius = ImageSize.X / 15.0f,
-                surface = new SurfaceType()
-                {
-                    type = textureType.standard,
-                    ambient = new Vector3(0, 0.4f, 1),
-                    diffuse = new Vector3(0.4f, 0.1f, 0.2f),
-                    specular = new Vector3(0.2f, 0.2f, 0.2f),
-                    color = new Vector3(0.734f,0.3f, 0.12344f),
-                    reflectiveness = 50,
-                    SpecExponent = 5,
-                    RefractionIndex = 0
-                }
-            });
-
-            Shapes.Add(new Sphere()
-            {
-                position = new Vector3(ImageSize.X / 2.0f + ImageSize.X / 3.0f, ImageSize.Y / 2.0f, SphereDist),
-                radius = ImageSize.X / 15.0f,
-                surface = new SurfaceType()
-                {
-                    type = textureType.standard,
-                    ambient = new Vector3(0, 0.4f, 1),
-                    diffuse = new Vector3(0.4f, 0.1f, 0.2f),
-                    specular = new Vector3(0.2f, 0.2f, 0.2f),
-                    color = new Vector3(0.312321312312312f, 0.96f, 0.38f),
-                    reflectiveness = 50,
-                    SpecExponent = 5,
-                    RefractionIndex = 0
-                }
-            });
-            Shapes.Add(new Sphere()
-            {
-                position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f, SphereDist),
-                radius = ImageSize.X / 15.0f,
-                surface = new SurfaceType()
-                {
-                    type = textureType.standard,
-                    ambient = new Vector3(0, 0.4f, 1),
-                    diffuse = new Vector3(0.4f, 0.1f, 0.2f),
-                    specular = new Vector3(0.2f, 0.2f, 0.2f),
-                    color = new Vector3(0.414f, 0.62314f, 0.99999f),
-                    reflectiveness = 50,
-                    SpecExponent = 5,
-                    RefractionIndex = 0
-                }
-            });*/
-
-
-            Shapes.Add(new Sphere()
-            {
-                position = new Vector3(ImageSize.X * .25f + ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 8.0f), SphereDist + 500),
+                position = new Vector3(ImageSize.X * .05f + ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 8.0f), SphereDist),
                 radius = ImageSize.X / 8.0f,
                 surface = new SurfaceType()
                 {
@@ -167,15 +38,15 @@ namespace Funky
                     specular = new Vector3(0.2f, 0.2f, 0.2f),
                     color = white,
                     reflectiveness = 0,
-                    SpecExponent = 1000,
+                    SpecExponent = 50,
                     RefractionIndex = 0
                 }
             });
 
-            Blob myBlob = new Blob(new Vector3(ImageSize.X / 2.0f + ImageSize.X/5, ImageSize.Y / 2.0f, SphereDist + 200),
-                                new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 3.0f, SphereDist + 200),
-                                new Vector3(ImageSize.X / 2.0f - ImageSize.X/5, ImageSize.Y / 2.0f + ImageSize.Y/8, SphereDist + 200),
-                                ImageSize.X/6)
+            Blob myBlob = new Blob(new Vector3(ImageSize.X / 1.6f + ImageSize.X/5, ImageSize.Y / 2.0f + ImageSize.Y/12, SphereDist + 500),
+                                new Vector3(ImageSize.X / 1.6f + ImageSize.X/14, ImageSize.Y / 3.0f, SphereDist + 500),
+                                new Vector3(ImageSize.X / 1.6f - ImageSize.X / 5, ImageSize.Y / 4.0f - ImageSize.Y / 12, SphereDist + 500),
+                                ImageSize.X/7)
                                 {
                                     surface = new SurfaceType()
                                     {
@@ -194,57 +65,25 @@ namespace Funky
 
             Shapes.Add(myBlob);
 
-            
             //CUBEEEEEEE
-            Cube cube = new Cube(new Vector3(ImageSize.X * .25f, ImageSize.Y, 1300), ImageSize.Y/2f, ImageSize.X * .1875f, 200);
+            Cube cube = new Cube(new Vector3(ImageSize.X * .3f, ImageSize.Y, 1500), ImageSize.Y / 2f, ImageSize.X * .1875f, 200)
+                {
+                    surface = new SurfaceType()
+                    {
+                        type = textureType.standard,
+                        ambient = new Vector3(0, 0.4f, 1),
+                        diffuse = new Vector3(0.4f, 0.1f, 0.2f),
+                        specular = new Vector3(0.2f, 0.2f, 0.2f),
+                        color = green,
+                        reflectiveness = 0,
+                        SpecExponent = 70,
+                        RefractionIndex = 0
+                    }
+                };
 
-            //Shapes.AddRange(cube.buildCube());
             cube.buildCube();
 
             Shapes.Add(cube);
-
-            /*Shapes.Add(new Sphere()
-            {
-                position = new Vector3(ImageSize.X / 2.0f + ImageSize.X / 3.0f, ImageSize.Y / 2.0f, SphereDist),
-                radius = ImageSize.X / 15.0f,
-                surface = new SurfaceType()
-                {
-                    type = textureType.standard,
-                    ambient = new Vector3(0, 0.4f, 1),
-                    diffuse = new Vector3(0.4f, 0.1f, 0.2f),
-                    specular = new Vector3(0.2f, 0.2f, 0.2f),
-                    color = new Vector3(0,1f, .3f),
-                    reflectiveness = 0,
-                    SpecExponent = 1000,
-                    RefractionIndex = 0
-                }
-            });
-
-
-            Shapes.Add(new Sphere()
-            {
-                position = new Vector3(ImageSize.X / 2.0f - ImageSize.X / 3.0f, ImageSize.Y / 2.0f, SphereDist),
-                radius = ImageSize.X / 15.0f,
-                surface = new SurfaceType()
-                {
-                    type = textureType.standard,
-                    ambient = new Vector3(0, 0.4f, 1),
-                    diffuse = new Vector3(0.4f, 0.1f, 0.2f),
-                    specular = new Vector3(0.2f, 0.2f, 0.2f),
-                    color = new Vector3(1f, 0, .33f),
-                    reflectiveness = 0,
-                    SpecExponent = 1000,
-                    RefractionIndex = 0
-                }
-            });*/
-
-            /*Lights.Add(new Light()
-            {
-                position = new Vector3(278,545.7f,279.5f),
-                color = new Vector3(1, .85f, .43f),
-                radius = ImageSize.X / 20,
-                intensity = 1.0f
-            });*/
 
             Lights.Add(new Light()
             {
@@ -261,8 +100,6 @@ namespace Funky
 
         private void DrawBox()
         {
-            
-
             //Left side 1
             Shapes.Add(new Triangle(
                 new Vector3(0, -1, 0),
@@ -337,123 +174,6 @@ namespace Funky
                 new Vector3(ImageSize.X, 0, 0),
                 new Vector3(ImageSize.X, ImageSize.X, SphereDist * 2),
                 new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 1), new Vector3(0, 0, 0), green, 0)));
-
-            
-
-            
-
-            /*//Cornell Box
-            Shapes.Add(new Triangle(
-                new Vector3(556,0,0),
-                new Vector3(0,0,0),
-                new Vector3(0,0,0),
-                new SurfaceType(textureType.standard, 
-                    new Vector3(1, 0, 1), 
-                    new Vector3(1, 0, 1), 
-                    new Vector3(0, 0, 0), 
-                    white, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(556, 0, 0),
-                new Vector3(0, 0, 559.2f),
-                new Vector3(556, 0, 559.2f),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    white, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(556, 548.8f, 0),
-                new Vector3(556, 548.8f, 559.2f),
-                new Vector3(0, 548.8f, 559.2f),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    white, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(556, 548.8f, 0),
-                new Vector3(0, 548.8f, 559.2f),
-                new Vector3(0, 548.8f, 0),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    white, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(556, 0, 559.2f),
-                new Vector3(0, 0, 559.2f),
-                new Vector3(0, 548.8f, 559.2f),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    white, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(556, 0, 559.2f),
-                new Vector3(0, 548.8f, 559.2f),
-                new Vector3(556, 548.8f, 559.2f),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    white, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(556, 0, 559.2f),
-                new Vector3(0, 0, 559.2f),
-                new Vector3(0, 548.8f, 559.2f),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    white, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(556, 0, 0),
-                new Vector3(556, 0, 559.2f),
-                new Vector3(556, 548.8f, 559.2f),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    red, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(556, 0, 0),
-                new Vector3(556, 548.8f, 559.2f),
-                new Vector3(556, 548.8f, 0),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    red, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(0, 0, 559.2f),
-                new Vector3(0, 0, 0),
-                new Vector3(0, 548.8f, 0),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    green, 0)));
-
-            Shapes.Add(new Triangle(
-                new Vector3(0, 0, 559.2f),
-                new Vector3(0, 548.8f, 0),
-                new Vector3(0, 548.8f, 559.2f),
-                new SurfaceType(textureType.standard,
-                    new Vector3(1, 0, 1),
-                    new Vector3(1, 0, 1),
-                    new Vector3(0, 0, 0),
-                    green, 0)));
-
-            */
         }
 
     }

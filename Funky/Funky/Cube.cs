@@ -30,17 +30,7 @@ namespace Funky
         //Sphere constructor
         public Cube(Vector3 frontFloor, float h, float w, float d)
         {
-            surface = new SurfaceType()
-            {
-                type = textureType.standard,
-                ambient = new Vector3(0, 0.4f, 1),
-                diffuse = new Vector3(0.4f, 0.1f, 0.2f),
-                specular = new Vector3(0.2f, 0.2f, 0.2f),
-                color = new Vector3(.76f, .75f, .5f),
-                reflectiveness = 0,
-                SpecExponent = 1000,
-                RefractionIndex = 0
-            };
+            
 
             planes = new List<GeometricObject>();
 
@@ -71,56 +61,56 @@ namespace Funky
             //Front left plane
             planes.Add(new Triangle(
                 frontFloorPoint, leftFloorPoint, leftTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             planes.Add(new Triangle(
                 frontFloorPoint, leftTopPoint, frontTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             //Front Right plane
             planes.Add(new Triangle(
                 rightFloorPoint,frontFloorPoint,rightTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             planes.Add(new Triangle(
                 rightTopPoint, frontFloorPoint,frontTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
             
             //Back left plane
             planes.Add(new Triangle(
                 backFloorPoint, leftFloorPoint, leftTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             planes.Add(new Triangle(
                 backFloorPoint, leftTopPoint, backTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             //Back right plane
             planes.Add(new Triangle(
                 rightFloorPoint,backFloorPoint, rightTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             planes.Add(new Triangle(
                 rightTopPoint, backFloorPoint, backTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             //Top plane
             planes.Add(new Triangle(
                 leftTopPoint, rightTopPoint,frontTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             planes.Add(new Triangle(
                 leftTopPoint, rightTopPoint,backTopPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             //Bottom plane
             planes.Add(new Triangle(
                 leftFloorPoint, rightFloorPoint, frontFloorPoint,
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             planes.Add(new Triangle(
                 leftFloorPoint, rightFloorPoint, backFloorPoint, 
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), white, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), surface.color, 0)));
 
             //return planes;
         }
