@@ -10,9 +10,10 @@ namespace Funky
     partial class RayTracer
     {
 
-        Vector3 white = new Vector3(.76f, .75f, .5f);
-        Vector3 red = new Vector3(.63f, .06f, .04f);
-        Vector3 green = new Vector3(.15f, .48f, .09f);
+        Vector3 white = new Vector3(.7f,.7f,.7f);
+        Vector3 red = new Vector3(1,0,0);
+        Vector3 blue = new Vector3(0, 171f/255f, 1);
+        Vector3 yellow = new Vector3(1, 1, 0);
 
         public static void Sleep(int ms)
         {
@@ -28,8 +29,42 @@ namespace Funky
           
             Shapes.Add(new Sphere()
             {
-                position = new Vector3(ImageSize.X * .05f + ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 8.0f), SphereDist),
+                position = new Vector3(ImageSize.X * .25f + ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 8.0f), SphereDist+500),
                 radius = ImageSize.X / 8.0f,
+                surface = new SurfaceType()
+                {
+                    type = textureType.standard,
+                    ambient = new Vector3(0, 0.4f, 1),
+                    diffuse = new Vector3(0.4f, 0.1f, 0.2f),
+                    specular = new Vector3(0.2f, 0.2f, 0.2f),
+                    color = yellow,
+                    reflectiveness = 0,
+                    SpecExponent = 1000,
+                    RefractionIndex = 0
+                }
+            });
+
+            Shapes.Add(new Sphere()
+            {
+                position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 8.0f), SphereDist),
+                radius = ImageSize.X / 8.0f,
+                surface = new SurfaceType()
+                {
+                    type = textureType.standard,
+                    ambient = new Vector3(0, 0.4f, 1),
+                    diffuse = new Vector3(0.4f, 0.1f, 0.2f),
+                    specular = new Vector3(0.2f, 0.2f, 0.2f),
+                    color = red,
+                    reflectiveness = 0,
+                    SpecExponent = 1000,
+                    RefractionIndex = 0
+                }
+            });
+
+            Shapes.Add(new Sphere()
+            {
+                position = new Vector3(-ImageSize.X * .25f + ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 6.0f), SphereDist + 700),
+                radius = ImageSize.X/6f,
                 surface = new SurfaceType()
                 {
                     type = textureType.standard,
@@ -38,12 +73,12 @@ namespace Funky
                     specular = new Vector3(0.2f, 0.2f, 0.2f),
                     color = white,
                     reflectiveness = 0,
-                    SpecExponent = 50,
+                    SpecExponent = 100,
                     RefractionIndex = 0
                 }
             });
 
-            Blob myBlob = new Blob(new Vector3(ImageSize.X / 1.6f + ImageSize.X/5, ImageSize.Y / 2.0f + ImageSize.Y/12, SphereDist + 500),
+            /*Blob myBlob = new Blob(new Vector3(ImageSize.X / 1.6f + ImageSize.X/5, ImageSize.Y / 2.0f + ImageSize.Y/12, SphereDist + 500),
                                 new Vector3(ImageSize.X / 1.6f + ImageSize.X/14, ImageSize.Y / 3.0f, SphereDist + 500),
                                 new Vector3(ImageSize.X / 1.6f - ImageSize.X / 5, ImageSize.Y / 4.0f - ImageSize.Y / 12, SphereDist + 500),
                                 ImageSize.X/7)
@@ -63,10 +98,10 @@ namespace Funky
 
             myBlob.initBlobZones();
 
-            Shapes.Add(myBlob);
+            Shapes.Add(myBlob);*/
 
             //CUBEEEEEEE
-            Cube cube = new Cube(new Vector3(ImageSize.X * .3f, ImageSize.Y, 1500), ImageSize.Y / 2f, ImageSize.X * .1875f, 200)
+            /*Cube cube = new Cube(new Vector3(ImageSize.X * .3f, ImageSize.Y, 1500), ImageSize.Y / 2f, ImageSize.X * .1875f, 200)
                 {
                     surface = new SurfaceType()
                     {
@@ -74,7 +109,7 @@ namespace Funky
                         ambient = new Vector3(0, 0.4f, 1),
                         diffuse = new Vector3(0.4f, 0.1f, 0.2f),
                         specular = new Vector3(0.2f, 0.2f, 0.2f),
-                        color = green,
+                        color = yellow,
                         reflectiveness = 0,
                         SpecExponent = 70,
                         RefractionIndex = 0
@@ -83,13 +118,13 @@ namespace Funky
 
             cube.buildCube();
 
-            Shapes.Add(cube);
+            Shapes.Add(cube);*/
 
             Lights.Add(new Light()
             {
                 position = new Vector3(ImageSize.X / 2.0f, 5, SphereDist),
                 //position = new Vector3(ImageSize.X/2 , ImageSize.Y/2, -2000),
-                color = new Vector3(1, .85f, .43f),
+                color = new Vector3(1),
                 //color = new Vector3(1, 1, 1),
                 radius = ImageSize.X / 20,
                 intensity = 1.0f
@@ -165,7 +200,7 @@ namespace Funky
                 new Vector3(ImageSize.X, -1, 0),
                 new Vector3(ImageSize.X, ImageSize.Y, 0),
                 new Vector3(ImageSize.X, ImageSize.X, (SphereDist * 2) + 1),
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 1), new Vector3(0, 0, 0), green, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 1), new Vector3(0, 0, 0), blue, 0)));
 
 
             //Top side 1
@@ -173,7 +208,7 @@ namespace Funky
                 new Vector3(ImageSize.X, 0, SphereDist * 2),
                 new Vector3(ImageSize.X, 0, 0),
                 new Vector3(ImageSize.X, ImageSize.X, SphereDist * 2),
-                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 1), new Vector3(0, 0, 0), green, 0)));
+                new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 1), new Vector3(0, 0, 0), blue, 0)));
         }
 
     }

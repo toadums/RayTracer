@@ -9,7 +9,7 @@ namespace Funky
 {
     partial class RayTracer
     {
-        int NumVirtualLights = 10;
+        int NumVirtualLights = 30;
         bool drawSpheres = false;
 
         public void spawnVPL(Light light,float width,float height)
@@ -17,10 +17,21 @@ namespace Funky
             Random r = new Random();
 
             List<Vector3> virtualLightPositions = new List<Vector3>();
-            for (int i = 0; i < NumVirtualLights; i++)
+            for (int i = 0; i < NumVirtualLights/3; i++)
             {
-                virtualLightPositions.Add(new Vector3(r.Next(0, (int)width), r.Next(0, (int)height), 0));
+                virtualLightPositions.Add(new Vector3(r.Next(0, (int)width), r.Next(0, (int)height/3), 0));
             }
+
+            for (int i = 0; i < NumVirtualLights/3; i++)
+            {
+                virtualLightPositions.Add(new Vector3(r.Next(0, (int)width), r.Next((int)height/3, 2*(int)height/3), 0));
+            }
+
+            for (int i = 0; i < NumVirtualLights/3; i++)
+            {
+                virtualLightPositions.Add(new Vector3(r.Next(0, (int)width), r.Next(2 * (int)height / 3, (int)height), 0));
+            }
+
 
             foreach (Vector3 VPLPos in virtualLightPositions)
             {

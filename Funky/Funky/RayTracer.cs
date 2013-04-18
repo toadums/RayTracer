@@ -49,9 +49,9 @@ namespace Funky
 
         private const bool UseVPL = true;
 
-        private const float numInnerPixels = 1;
+        private const float numInnerPixels = 3;
 
-        private const int NumBounces = 0;
+        private const int NumBounces = 2;
         public static Vector2 ImageSize = new Vector2(1600);
         private float SphereDist = 1000;
 
