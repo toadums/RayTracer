@@ -48,7 +48,8 @@ namespace Funky
     partial class RayTracer
     {
 
-        private const bool UseVPL = false;
+
+        private const bool UseVPL = true;
 
         private const float numInnerPixels = 3;
 
@@ -74,23 +75,12 @@ namespace Funky
             WB = wb;
             FPS = fps;
 
-            Eye = new Vector3(ImageSize.X/2.0f, ImageSize.Y/2.0f, 10000);
 
-            System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path);      
+            //Eye = new Vector3(278,273,-800);
+            Eye = new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f - 100, -4000);
 
-            //Drawing Objects is done in the DrawGeometry.cs file
+            System.Diagnostics.Debug.WriteLine("Picture Path: " + ApplicationData.Current.LocalFolder.Path); 
 
-            if (UseVPL)
-            {
-                VirtualLights = new List<Light>();
-                spawnVPL(Lights[0], ImageSize.X, ImageSize.Y);
-
-                Lights.AddRange(VirtualLights);
-
-                Lights.Remove(Lights[0]);
-                Lights.Remove(Lights[0]);
-
-            }
         }
 
 
@@ -98,38 +88,21 @@ namespace Funky
         {
 
             await DrawGeometry();
-            /*
-            
-            WriteableBitmap bmp = new WriteableBitmap((int)TexSize.X, (int)TexSize.Y);
-            byte[] buff = new byte[(int)TexSize.X * (int)TexSize.Y * 4];
-                
-            int ind = 0;
 
-            for (int y = 0; y < TexSize.Y; y++)
+
+            if (UseVPL)
             {
+                VirtualLights = new List<Light>();
 
-                for (int x = 0; x < TexSize.X; x++)
+                foreach (Light light in Lights)
                 {
-
-
-                    buff[ind++] = Convert.ToByte(TexturePixels[y, x].Z * 255.0f);
-                    buff[ind++] = Convert.ToByte(TexturePixels[y, x].Y * 255.0f);
-                    buff[ind++] = Convert.ToByte(TexturePixels[y, x].X * 255.0f);
-                    buff[ind++] = Convert.ToByte(255);
+                    spawnVPL(light, ImageSize.X, ImageSize.Y);
                 }
+
+                Lights.AddRange(VirtualLights);
+
+                //Lights.Remove(Lights[0]);
             }
-
-            
-            // Open a stream to copy the graph to the WriteableBitmap's pixel buffer
-            using (Stream stream = bmp.PixelBuffer.AsStream())
-            {
-                await stream.WriteAsync(buff, 0, buff.Length);
-            }
-
-            StorageFolder folder2 = ApplicationData.Current.LocalFolder;
-
-            await WriteableBitmapSaveExtensions.SaveToFile(bmp, folder2, "SHITTY.jpg");
-            */
 
             int pixelWidth = WB.PixelWidth;
             int pixelHeight = WB.PixelHeight;
@@ -156,12 +129,11 @@ namespace Funky
 
                 await WriteableBitmapSaveExtensions.SaveToFile(WB, folder, "img" + i++ + ".jpg");
 
-
-
                 // Redraw the WriteableBitmap
                 WB.Invalidate();
                 FPS.Text = "FPS = " + Utility.CalculateFrameRate().ToString();
                 DontPornIt = true;
+
                 /*
                 foreach (Light l in Lights)
                 {
@@ -194,7 +166,6 @@ namespace Funky
             // 4 bytes required for each pixel
             byte[] result = new byte[width * height * 4];
             int resultIndex = 0;
-            int count = 0;
 
             float totalNum = width * height;
 
@@ -203,9 +174,11 @@ namespace Funky
 
             for (int y = 0; y < height; y++)
             {
+
                 for (int x = 0; x < width; x++)
                 {
                     color = new Vector3(0, 0, 0);
+
                    //if(y>ImageSize.Y / 2.0f  )
                         for (float innerPixelY = 1.0f / numInnerPixels; innerPixelY <= 1; innerPixelY += 1.0f / numInnerPixels)
                         {
@@ -218,9 +191,9 @@ namespace Funky
                                 float ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable = 0;
                                 color += AddRay(ray, 0, 1.0f, ref ThisVariableDoesAbsolutelyNothingInThisSpotButYouNeedItForTheRefVariable);
 
+
                             }
                         }
-                    
 
 
                     color /= (numInnerPixels * numInnerPixels);
@@ -229,7 +202,9 @@ namespace Funky
 
                     if (color.X < 0 || color.Y < 0 || color.Z < 0)
                     {
-                        color = new Vector3(0,0, 0);
+
+                        color = new Vector3(0, 0, 0);
+
                     }
 
                     result[resultIndex++] = Convert.ToByte(color.Z);    // Green value of pixel
@@ -265,14 +240,6 @@ namespace Funky
                 }
 
             }
-
-            /*Parallel.ForEach(tasks, task =>
-                {
-                    task.RunSynchronously();
-                }
-            );*/
-
-
             return result;
         }
 
@@ -294,10 +261,24 @@ namespace Funky
             Vector3 hp;
             float LightValue = 0.0f;
 
+            Triangle hitTri = new Triangle();
+
             foreach (GeometricObject shape in Shapes)
             {
                 if (shape == null) continue;
-                double t = shape.intersection(ray);
+
+                double t;
+
+                if (shape is Cube)
+                {
+                    Tuple<double, Triangle> temp = shape.intersectionCube(ray);
+                    t = temp.Item1;
+                    hitTri = temp.Item2;
+                }
+                else
+                {
+                    t = shape.intersection(ray);
+                }
 
                 if (t > 0.0 && t < hitShapeDist)
                 {
@@ -315,8 +296,6 @@ namespace Funky
             else
             {
                 hp = FindPointOnRay(ray, hitShapeDist);
-                vNormal = hitShape.NormalAt(hp, Eye);
-                vNormal.Normalize();
 
                 if (Vector3.Dot(vNormal, ray.Direction) < 0)
                 {
@@ -327,6 +306,15 @@ namespace Funky
                     int k = 0;
                 }
 
+                if (hitShape is Cube)
+                {
+                    vNormal = hitShape.NormalAtCube(hp, Eye, hitTri);
+                }
+                else
+                {
+
+                    vNormal = hitShape.NormalAt(hp, Eye);
+                }
 
 
                 if (hitShape.surface.type == textureType.bump)
@@ -348,18 +336,15 @@ namespace Funky
                         vNormal = (float)temp * vNormal;
                     }
                 }
-                if (hitShape is Sphere)
-                    if (((Sphere)hitShape).position.X > ImageSize.X / 2.0f)
-                    {
-                        int i = 0;
-                    }
 
+                vNormal.Normalize();
+
+            
                 foreach (Light light in Lights)
                 {
                     Vector3 dir = light.position - hp;
                     dir.Normalize();
                     Ray lightRay = new Ray(hp, dir);
-
 
                     if ((LightValue = isVisible(light, hp, lightRay)) > 0)
                     {
@@ -422,10 +407,12 @@ namespace Funky
                         Vector3 absorbance = hitShape.surface.color * 0.0000015f * -dist;
                         Vector3 trans = new Vector3((float)Math.Exp(absorbance.X), (float)Math.Exp(absorbance.Y), (float)Math.Exp(absorbance.Z));
 
+
                         curColor += theColor * trans;
 
                     }
                 }
+
 
             }
             return Clamp(curColor);
@@ -436,6 +423,7 @@ namespace Funky
             if (hitShape.Tag == "t3")
             {
                 int i = 0;
+
             }
 
             KeyValuePair<Vector3,Vector2>[] posTex = new KeyValuePair<Vector3,Vector2>[3];
@@ -514,12 +502,7 @@ namespace Funky
             Vector2 UV = alpha * C1 + beta * C2;
 
             UV += Offset;
-/*
-            if (posTex[0].Value.X > 0.5f) UV.X = posTex[0].Value.X - UV.X;
-            else if (posTex[0].Value.X < 0.5f) UV.X = posTex[0].Value.X + UV.X;
-            if (posTex[0].Value.Y > 0.5f) UV.Y = posTex[0].Value.Y - UV.Y;
-            else if (posTex[0].Value.Y < 0.5f) UV.Y = posTex[0].Value.Y + UV.Y;
-            */
+
             if (UV.X > 1) UV.X = 1;
             if (UV.Y > 1) UV.Y = 1;
 
@@ -539,135 +522,10 @@ namespace Funky
             return color;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-            float totalDist = Vector3.Distance(hp, posTex[0].Key) + Vector3.Distance(hp, posTex[1].Key) + Vector3.Distance(hp, posTex[2].Key);
-
-            float[] weights = new float[3];
-
-            weights[0] = Vector3.Distance(hp, posTex[0].Key) / totalDist;
-            weights[1] = Vector3.Distance(hp, posTex[1].Key) / totalDist;
-            weights[2] = Vector3.Distance(hp, posTex[2].Key) / totalDist;
-
-            if (hp.X > ImageSize.X * 0.5f && hp.X < ImageSize.X * 0.51f && hp.Y > ImageSize.Y * 0.5f && hp.Y < ImageSize.Y * 0.51f)
-            {
-                int i = 0;
-            }
-
-            //Vector3 bary = Vector3.Barycentric(posTex[0].Key, posTex[1].Key, posTex[2].Key, weights[1], weights[2]);
-            
-            
-            int minWeight = 0;
-
-            if (weights[0] <= weights[1] && weights[0] <= weights[2])
-            {
-                minWeight = 0;
-            }
-            else if (weights[1] <= weights[0] && weights[1] <= weights[2])
-            {
-                minWeight = 1;
-            }
-            else
-            {
-                minWeight = 2;
-            }
-
-            float newWeight = 1 - weights[minWeight];
-
-            switch (minWeight)
-            {
-                case 0: weights[0] = newWeight;
-                    weights[1] = (weights[1] / newWeight) * (1 - newWeight);
-                    weights[2] = (weights[2] / newWeight) * (1 - newWeight);
-                    break;
-                case 1: weights[1] = newWeight;
-                    weights[0] = (weights[0] / newWeight) * (1 - newWeight);
-                    weights[2] = (weights[2] / newWeight) * (1 - newWeight);
-                    break; break;
-                case 2: weights[2] = newWeight;
-                    weights[1] = (weights[1] / newWeight) * (1 - newWeight);
-                    weights[0] = (weights[0] / newWeight) * (1 - newWeight);
-                    break; break;
-            }
-            
-            Vector2 UVPos = posTex[0].Value * weights[0] + posTex[1].Value * weights[1] + posTex[2].Value * weights[2];
-            //int index = (int)((UVPos.X * TexSize.X - 1) * TexSize.Y + (UVPos.Y * TexSize.Y - 1)) * 4;
-
-            float xReal = UVPos.Y * hitShape.TextureToUse.TexSize.Y;
-            float yReal = UVPos.X * hitShape.TextureToUse.TexSize.X;
-
-            int x0 = (int)xReal, y0 = (int)yReal;
-
-            float dx = xReal - x0, dy = yReal - y0, omdx = 1 - dx, omdy = 1 - dy;
-            if (x0 == hitShape.TextureToUse.TexSize.Y - 1 || y0 == hitShape.TextureToUse.TexSize.X - 1 || x0 == 0 || y0 == 0) return hitShape.TextureToUse.TexturePixels[x0, y0];
-
-            Vector3 color2 = omdx * omdy * hitShape.TextureToUse.TexturePixels[x0, y0] + omdx * dy * hitShape.TextureToUse.TexturePixels[x0, y0 - 1] + dx * omdy * hitShape.TextureToUse.TexturePixels[x0 - 1, y0] + dx * dy * hitShape.TextureToUse.TexturePixels[x0 - 1, y0 - 1];
-      //      System.Diagnostics.Debug.WriteLine(UVPos);
-           
-
-            return color2;
-            /*
-            Vector3 color2 = omdx * omdy * TexturePixels[x0, y0] + omdx * dy * TexturePixels[x0,y0 - 1] +  dx * omdy * TexturePixels[x0 - 1,y0] + dx * dy * TexturePixels[x0 - 1,y0 - 1];
-
-            Vector3 color = TexturePixels[x0 - 1, y0 - 1] + TexturePixels[x0, y0 - 1] + TexturePixels[x0 + 1, y0 - 1] +
-                            TexturePixels[x0 - 1, y0] +     TexturePixels[x0, y0 ] +    TexturePixels[x0 + 1, y0] +
-                            TexturePixels[x0 - 1, y0 + 1] + TexturePixels[x0, y0 + 1] + TexturePixels[x0 + 1, y0 + 1];
-            color = color / 9.0f;
-
-            return (color + color2)/2.0f;
-            */
         }
 
 
-
-
-
-
-        private Vector3 calcLightRay(Ray ray, Light light)
-        {
-            GeometricObject hitShape = null;
-            double closestShape = float.MaxValue;
-
-            foreach (GeometricObject shape in Shapes)
-            {
-                double t = shape.intersection(ray);
-
-                if (t > 0.0 && t < closestShape)
-                {
-                    hitShape = shape;
-                    closestShape = t;
-                }
-            }
-            if (hitShape != null)
-            {
-                return FindPointOnRay(ray, closestShape);
-            }
-            else
-                return light.position;
-        }
-
-        private float isVisible(Light L, Vector3 hitPoint, Ray ray)
+        private float isVisible(Light L, Vector3 hitPoint, Ray ray, GeometricObject theShape = null)
         {
 
             float retVal = 0.0f;
@@ -692,7 +550,7 @@ namespace Funky
 
                     r = new Ray(ray.Start, dir);
 
-                    if (FindClosestShape(r, L) == L)
+                    if (FindClosestShape(r, L, theShape) == L)
                         retVal += 1.0f / (numSegments * numAlongSegment);
 
                 }
@@ -703,20 +561,30 @@ namespace Funky
 
         }
 
-        private GeometricObject FindClosestShape(Ray r, Light l)
+        private GeometricObject FindClosestShape(Ray r, Light l, GeometricObject theShape)
         {
             double dist = float.MaxValue;
             GeometricObject closest = null;
 
             foreach (GeometricObject shape in Shapes)
             {
-                double t=shape.intersection(r);
-                if (t < dist && t > 0.0f && shape.surface.RefractionIndex < 1)
+
+                double t;
+                if (shape is Cube)
+                {
+                    Tuple<double, Triangle> temp = shape.intersectionCube(r);
+                    t = temp.Item1;
+                }
+                else
+                {
+                    t = shape.intersection(r);
+                }
+                if (theShape != shape && t < dist && t > 0.0f && shape.surface.RefractionIndex < 1)
+
                 {
                     closest = shape;
                     dist = t;
                 }
-
             }
 
             foreach (Light light in Lights)

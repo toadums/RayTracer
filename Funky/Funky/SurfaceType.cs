@@ -20,7 +20,6 @@ namespace Funky
         public float SpecExponent;
         public float RefractionIndex = 0;
 
-
         //public Vector3 transmissive;
 
         public SurfaceType()
