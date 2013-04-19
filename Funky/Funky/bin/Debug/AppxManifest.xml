@@ -7,7 +7,7 @@
 
     For more information on package manifest files, see http://go.microsoft.com/fwlink/?LinkID=241727
   -->
-  <Identity Name="770fa47c-a1cc-4f39-84ed-790f084ea031" Publisher="CN=paul" Version="1.0.0.0" ProcessorArchitecture="neutral" />
+  <Identity Name="770fa47c-a1cc-4f39-84ed-790f084ea031f" Publisher="CN=paul" Version="1.0.0.0" ProcessorArchitecture="neutral" />
   <Properties>
     <DisplayName>SharpDX Toolkit WinRT (XAML)</DisplayName>
     <PublisherDisplayName>paul</PublisherDisplayName>

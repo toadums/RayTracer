@@ -49,9 +49,9 @@ namespace Funky
     {
 
 
-        private const bool UseVPL = true;
+        private const bool UseVPL = false;
 
-        private const float numInnerPixels = 3;
+        private const float numInnerPixels = 1;
 
         private const int NumBounces = 2;
         public static Vector2 ImageSize = new Vector2(1600);
@@ -59,7 +59,6 @@ namespace Funky
 
         private Perlin perlinTexture;
         public WriteableBitmap WB;
-        private TextBlock FPS;
         public static Vector3 Eye;
 
         private List<GeometricObject> Shapes;
@@ -69,11 +68,10 @@ namespace Funky
       //  public static Vector3[,] TexturePixels;
       //  public static Vector2 TexSize;
         private bool DontPornIt = false;
-        public RayTracer(ref WriteableBitmap wb, ref TextBlock fps, int width, int height)
+        public RayTracer(ref WriteableBitmap wb,  int width, int height)
         {
             perlinTexture = new Perlin();
             WB = wb;
-            FPS = fps;
 
 
             //Eye = new Vector3(278,273,-800);
@@ -131,7 +129,6 @@ namespace Funky
 
                 // Redraw the WriteableBitmap
                 WB.Invalidate();
-                FPS.Text = "FPS = " + Utility.CalculateFrameRate().ToString();
                 DontPornIt = true;
 
                 /*
@@ -155,9 +152,26 @@ namespace Funky
                 System.Diagnostics.Debug.WriteLine("Time to render = " + time);
 
 
+                float s = (float)Math.Sin(value);
+                float c = (float)Math.Cos(value);
+
+
+
+
+                ((Sphere)Shapes[0]).position = new Vector3(c * ImageSize.X / 3.0f, s * ImageSize.Y / 3.0f, 0) + new Vector3(ImageSize.X / 2.0f, ImageSize.Y / 2.0f, SphereDist) - new Vector3(((Sphere)Shapes[0]).radius, ((Sphere)Shapes[0]).radius, 0);
+
+                System.Diagnostics.Debug.WriteLine(((Sphere)Shapes[0]).position);
+
+                value += 2 * (float)Math.PI / 100;
+
             }
         }
-        int m = 0;
+
+
+        float value = 0;
+
+
+
         private async Task<byte[]> Trace(int width, int height)
         {
 
@@ -212,6 +226,8 @@ namespace Funky
                     result[resultIndex++] = Convert.ToByte(color.X);    // Red value of pixel
                     result[resultIndex++] = Convert.ToByte(255);        // Alpha value of pixel
 
+
+
                     float n = (((float)y) * height + x) / totalNum * 100;
 
                     if (n == (int)n)
@@ -235,6 +251,7 @@ namespace Funky
 
                         System.Diagnostics.Debug.WriteLine(s);
                     }
+
 
 
                 }
@@ -297,15 +314,6 @@ namespace Funky
             {
                 hp = FindPointOnRay(ray, hitShapeDist);
 
-                if (Vector3.Dot(vNormal, ray.Direction) < 0)
-                {
-                    int i = 0;
-                }
-                else
-                {
-                    int k = 0;
-                }
-
                 if (hitShape is Cube)
                 {
                     vNormal = hitShape.NormalAtCube(hp, Eye, hitTri);
@@ -362,6 +370,11 @@ namespace Funky
                                 color = hitShape.surface.color;
                             }
                         }
+                        else
+                        {
+                            color = hitShape.surface.color;
+                        }
+
 
                         //TODO to add ambient just do Llight[ambient] * hitShape[ambiemt]
                         float lambert = Vector3.Dot(lightRay.Direction, vNormal) ;
@@ -372,7 +385,7 @@ namespace Funky
 
                         float blinnValue = (float)Math.Pow(Math.Max(0, Vector3.Dot(vNormal, blinn)), hitShape.surface.SpecExponent);
 
-                        curColor += hitShape.surface.specular * light.color * blinnValue * coef;
+                        curColor += hitShape.surface.specular * light.intensity * light.color * blinnValue * coef;
 
                         curColor *= LightValue;
                     }

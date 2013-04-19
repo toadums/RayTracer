@@ -26,7 +26,7 @@ namespace Funky
             Shapes = new List<GeometricObject>();
             
             Lights = new List<Light>();
-          
+          /*
             Shapes.Add(new Sphere()
             {
                 position = new Vector3(ImageSize.X * .25f + ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 8.0f), SphereDist+500),
@@ -43,10 +43,12 @@ namespace Funky
                     RefractionIndex = 0
                 }
             });
+            */
+
 
             Shapes.Add(new Sphere()
             {
-                position = new Vector3(ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 8.0f), SphereDist),
+                position = new Vector3(ImageSize.X / 3, ImageSize.Y / 2.0f, SphereDist),
                 radius = ImageSize.X / 8.0f,
                 surface = new SurfaceType()
                 {
@@ -54,13 +56,50 @@ namespace Funky
                     ambient = new Vector3(0, 0.4f, 1),
                     diffuse = new Vector3(0.4f, 0.1f, 0.2f),
                     specular = new Vector3(0.2f, 0.2f, 0.2f),
-                    color = red,
+                    color = new Vector3(.3f, .3f, .3f),
                     reflectiveness = 0,
-                    SpecExponent = 1000,
-                    RefractionIndex = 0
+                    SpecExponent = 500,
+                    RefractionIndex = 1.0f
                 }
             });
 
+            for (float i = ImageSize.X / 50.0f; i < ImageSize.X - ImageSize.X / 50.0f; i += ImageSize.X / 5)
+            {
+                for (float j = ImageSize.X / 50.0f; j < ImageSize.X - ImageSize.X / 50.0f; j += ImageSize.X / 5)
+                {
+
+                    float r = new Random().NextFloat(0, 1);
+                    Sleep(100);
+                    float g = new Random().NextFloat(0, 1);
+                    Sleep(100);
+                    float b = new Random().NextFloat(0, 1);
+
+                    Vector3 col = new Vector3(r, g, b);
+
+                    Shapes.Add(new Sphere()
+                    {
+                        position = new Vector3(i, j, SphereDist * 2.0f),
+                        radius = ImageSize.X / 20.0f,
+                        surface = new SurfaceType()
+                        {
+                            type = textureType.standard,
+                            ambient = new Vector3(.4f, .4f, .4f),
+                            diffuse = new Vector3(.4f, .4f, .4f),
+                            specular = new Vector3(1, 1, 1),
+                            color = col,
+                            reflectiveness = new Random().Next(0, 0),
+                            SpecExponent = new Random().NextFloat(1000, 3000),
+                            RefractionIndex = 0
+                        }
+                    });
+
+
+                }
+            }
+
+
+
+            /*
             Shapes.Add(new Sphere()
             {
                 position = new Vector3(-ImageSize.X * .25f + ImageSize.X / 2.0f, ImageSize.Y - (ImageSize.X / 6.0f), SphereDist + 700),
@@ -77,7 +116,7 @@ namespace Funky
                     RefractionIndex = 0
                 }
             });
-
+            */
             /*Blob myBlob = new Blob(new Vector3(ImageSize.X / 1.6f + ImageSize.X/5, ImageSize.Y / 2.0f + ImageSize.Y/12, SphereDist + 500),
                                 new Vector3(ImageSize.X / 1.6f + ImageSize.X/14, ImageSize.Y / 3.0f, SphereDist + 500),
                                 new Vector3(ImageSize.X / 1.6f - ImageSize.X / 5, ImageSize.Y / 4.0f - ImageSize.Y / 12, SphereDist + 500),
@@ -120,9 +159,24 @@ namespace Funky
 
             Shapes.Add(cube);*/
 
+
+
+
+            /*
             Lights.Add(new Light()
             {
-                position = new Vector3(ImageSize.X / 2.0f, 5, SphereDist),
+                position = new Vector3(ImageSize.X / 2.0f, 40, SphereDist),
+                //position = new Vector3(ImageSize.X/2 , ImageSize.Y/2, -2000),
+                color = new Vector3(1),
+                //color = new Vector3(1, 1, 1),
+                radius = ImageSize.X / 10,
+                intensity = 1.0f
+            });
+            */
+
+            Lights.Add(new Light()
+            {
+                position = new Vector3(ImageSize.X-400, ImageSize.Y / 2.0f , 600),
                 //position = new Vector3(ImageSize.X/2 , ImageSize.Y/2, -2000),
                 color = new Vector3(1),
                 //color = new Vector3(1, 1, 1),
@@ -130,11 +184,13 @@ namespace Funky
                 intensity = 1.0f
             });
 
-           DrawBox();
+
+           //DrawBox();
         }
 
         private void DrawBox()
         {
+            /*
             //Left side 1
             Shapes.Add(new Triangle(
                 new Vector3(0, -1, 0),
@@ -148,7 +204,7 @@ namespace Funky
                 new Vector3(0, 0, SphereDist * 2),
                 new Vector3(0, ImageSize.Y, SphereDist * 2),
                 new SurfaceType(textureType.standard, new Vector3(1,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), red, 0)));
-                        
+                   */     
             //Bottom side 1
             Shapes.Add(new Triangle(
                 new Vector3(0, ImageSize.Y, 0),
@@ -178,7 +234,7 @@ namespace Funky
                 new Vector3(ImageSize.X, 0, SphereDist * 2),
                 new Vector3(ImageSize.X, ImageSize.Y+1, SphereDist * 2),
                 new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 0), new Vector3(0, 0, 0), white, 0)));
-            
+            /*
             //Top side 1
             Shapes.Add(new Triangle(
                 new Vector3(0, 0, 0),
@@ -209,7 +265,9 @@ namespace Funky
                 new Vector3(ImageSize.X, 0, 0),
                 new Vector3(ImageSize.X, ImageSize.X, SphereDist * 2),
                 new SurfaceType(textureType.standard, new Vector3(1, 0, 0), new Vector3(1, 0, 1), new Vector3(0, 0, 0), blue, 0)));
-        }
+        
+            */
+              }
 
     }
 }

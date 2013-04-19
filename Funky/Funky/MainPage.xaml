@@ -8,6 +8,5 @@
     mc:Ignorable="d" >
 
     <Image x:Name="TheShit" VerticalAlignment="Center" HorizontalAlignment="Center" />
-    <TextBlock x:Name="FPS"  HorizontalAlignment="Left" Margin="10,703,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="156" Height="55" Foreground="White" FontSize="36"/>
 
 </SwapChainBackgroundPanel>

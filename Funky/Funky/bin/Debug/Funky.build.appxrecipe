@@ -19,26 +19,14 @@
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX Toolkit WinRT %28XAML%29.pdb">
       <PackagePath>SharpDX Toolkit WinRT %28XAML%29.pdb</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\Facebook.dll">
-      <PackagePath>Facebook.dll</PackagePath>
-    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.dll">
       <PackagePath>SharpDX.dll</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\WinRTXamlToolkit.dll">
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit.dll">
       <PackagePath>WinRTXamlToolkit.dll</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Downloads\WriteableBitmapEx_v1.0.7.0\WriteableBitmapEx_v1.0.7.0\WinRT\WriteableBitmapEx.WinRT.dll">
-      <PackagePath>WriteableBitmapEx.WinRT.dll</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\SharpDX.xml">
       <PackagePath>SharpDX.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Downloads\WriteableBitmapEx_v1.0.7.0\WriteableBitmapEx_v1.0.7.0\WinRT\WriteableBitmapEx.WinRT.xml">
-      <PackagePath>WriteableBitmapEx.WinRT.xml</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Downloads\WriteableBitmapEx_v1.0.7.0\WriteableBitmapEx_v1.0.7.0\WinRT\WriteableBitmapEx.WinRT.pdb">
-      <PackagePath>WriteableBitmapEx.WinRT.pdb</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\Assets\Logo.png">
       <PackagePath>Assets\Logo.png</PackagePath>
@@ -56,15 +44,6 @@
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\Jonas Furniture Set_bp.png">
-      <PackagePath>Jonas Furniture Set_bp.png</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\Jonas Furniture Set_df.png">
-      <PackagePath>Jonas Furniture Set_df.png</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\capsule0.jpg">
-      <PackagePath>capsule0.jpg</PackagePath>
-    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\App.xaml">
       <PackagePath>App.xaml</PackagePath>
     </AppxPackagedFile>
@@ -73,6 +52,63 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\MainPage.xaml">
       <PackagePath>MainPage.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\AnimatingContainer.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\AnimatingContainer.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\CascadingTextBlock.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\CascadingTextBlock.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\CountdownControl.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\CountdownControl.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\CameraCaptureControl\CameraCaptureControl.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\CameraCaptureControl\CameraCaptureControl.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\CascadingImageControl\CascadingImageControl.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\CascadingImageControl\CascadingImageControl.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\ColorPicker\ColorPicker.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\ColorPicker\ColorPicker.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\CustomAppBar\CustomAppBar.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\CustomAppBar\CustomAppBar.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\DelayedLoadControl\DelayedLoadControl.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\DelayedLoadControl\DelayedLoadControl.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\ImageButton\ImageButton.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\ImageButton\ImageButton.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\ImageToggleButton\ImageToggleButton.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\ImageToggleButton\ImageToggleButton.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\InputDialog\InputDialog.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\InputDialog\InputDialog.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\NumericUpDown\NumericUpDown.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\NumericUpDown\NumericUpDown.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\TreeView\TreeView.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\TreeView\TreeView.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\TreeView\TreeViewItem.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\TreeView\TreeViewItem.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\TreeView\TreeViewMouse.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\TreeView\TreeViewMouse.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\TreeView\TreeViewTouch.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\TreeView\TreeViewTouch.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\WatermarkTextBox\WatermarkTextBox.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\WatermarkTextBox\WatermarkTextBox.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Controls\WebBrowser\WebBrowser.xaml">
+      <PackagePath>WinRTXamlToolkit\Controls\WebBrowser\WebBrowser.xaml</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit\Themes\Generic.xaml">
+      <PackagePath>WinRTXamlToolkit\Themes\Generic.xaml</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\paul\Documents\GitHub\RayTracer\Funky\Funky\bin\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>

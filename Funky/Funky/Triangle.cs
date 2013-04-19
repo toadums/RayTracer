@@ -13,7 +13,7 @@ namespace Funky
         X, Y, Z, None
     }
 
-    class Triangle : GeometricObject
+    public class Triangle : GeometricObject
     {
         public Vector2[] TextureCoords;
         public Vector3[] Vertices;

@@ -46,7 +46,7 @@ namespace Funky
                 TheShit.Source = WB;
 
 
-                Tracer = new RayTracer(ref WB, ref FPS, (int)RayTracer.ImageSize.X, (int)RayTracer.ImageSize.Y);
+                Tracer = new RayTracer(ref WB, (int)RayTracer.ImageSize.X, (int)RayTracer.ImageSize.Y);
 
                 Tracer.Draw();
 

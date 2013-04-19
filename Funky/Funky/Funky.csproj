@@ -106,6 +106,7 @@
     <Compile Include="Blob.cs" />
     <Compile Include="Cube.cs" />
     <Compile Include="DrawGeometry.cs" />
+    <Compile Include="FunkyTexture.cs" />
     <Compile Include="objLoader.cs" />
     <Compile Include="Perlin.cs" />
     <Compile Include="Square.cs" />
@@ -122,7 +123,6 @@
     <Compile Include="Sphere.cs" />
     <Compile Include="SurfaceType.cs" />
     <Compile Include="VirtualLightRayTrace.cs" />
-    <Compile Include="WriteableBitmapSaveExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -156,6 +156,10 @@
   <ItemGroup>
     <Reference Include="SharpDX">
       <HintPath>..\..\..\..\SharpDX_2.5\Bin\Signed-winrt\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="WinRTXamlToolkit, Version=1.3.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\winrtxamltoolkit.1.3.6.0\lib\netcore45\WinRTXamlToolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

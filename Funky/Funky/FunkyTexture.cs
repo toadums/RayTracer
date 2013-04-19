@@ -21,7 +21,7 @@ namespace Funky
 {
 
 
-    class FunkyTexture
+    public class FunkyTexture
     {
         public Vector3[,] TexturePixels;
         public Vector2 TexSize;
